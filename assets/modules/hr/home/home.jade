@@ -1,0 +1,65 @@
+md-content(ng-controller='HomeCtrl as homeCtrl', layout="column")
+  md-content.md-hue-2()
+    md-button.md-primary.md-raised(ng-click='showAdvanced($event)')
+      | Create a post
+    md-button.md-primary.md-raised.md-hue-3(ng-click="") Edit Post
+    md-button.md-primary.md-raised.md-hue-2(ng-click="") Delete Post
+    md-button.md-primary.md-raised.md-hue-1(ng-click="") Explode
+    md-button.md-accent.md-raised(ng-click="") Push
+    md-card(flex="50")
+      md-card-content
+        h2.md-title Dashboard
+      md-content(layout="row")
+        // Div that will hold the pie chart
+        #chart_div(style='width:400; height:300')
+        #bar_chart(style='width:450; height:300')
+
+  md-content.md-hue-2(layout-gt-lg="row")
+    md-card(flex="40")
+      md-card-content
+        
+        h2.md-title
+          i.mdi.mdi-36px.mdi-account-check(style="vertical-align:middle;margin:5px 10px")
+          | Logged in users
+
+
+      md-divider
+      
+      md-list
+        md-list-item(ng-repeat="item in list", ng-click="test()")
+          md-list-item(layout="row", flex)
+            div(flex="25") First {{item}}
+            div(flex="25") Second {{item}}
+            div(flex="25") Third {{item}}
+            div(flex="25") Fourth {{item}}
+
+          md-divider
+        md-list-item(ng-repeat="item in list", ng-click="test()")
+          md-list-item(layout="row", flex)
+            div(flex="25") First {{item}}
+            div(flex="25") Second {{item}}
+            div(flex="25") Third {{item}}
+            div(flex="25") Fourth {{item}}
+
+          md-divider
+    md-card(flex)
+      md-card-content
+        h2.md-title Dashboard Window {{window}}
+      md-divider
+
+      md-list.table-cozy
+        md-list-item(ng-repeat="item in list")
+          div(flex="20") First {{item}}
+          div(flex="20") Second {{item}}
+          div(flex="20") Third {{item}}
+          div(flex="10") Fourth {{item}}
+          div(flex="30") 
+            md-content(layout="row")
+              md-button.md-raised.md-accent( ng-click="confirmDialog($event)") Open
+              md-button.md-raised.md-accent( ng-click="test()") Copy
+
+        
+md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")
+  i.mdi.mdi-24px.mdi-plus
+
+

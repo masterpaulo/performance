@@ -1,0 +1,70 @@
+div
+  div(layout='row')
+    div(flex='75')
+      md-card(style="height:800px;")
+
+        md-toolbar(layout='row' style='background-color:#0288d1;')
+          .md-toolbar-tools
+            //- md-input-container
+            //-   label SEARCH
+            //-   input(type='text' ng-model='search')
+            div(flex ng-hide='!searchOn')
+              md-input-container(layout='row' style='padding-bottom:5px')
+                md-button.md-icon-button(ng-click='toggleSearch()' style='padding-top:15px')
+                  md-icon.mdi.mdi-arrow-right-bold
+                input(type='text' ng-model='searchEmployee')
+
+            div(flex offset='95' ng-hide='searchOn')
+              md-button.md-icon-button(ng-click='toggleSearch()')
+                md-icon.mdi.mdi-account-search
+
+
+
+
+          //- h3(flex='20' style='padding-top:5px;margin-top:8px; padding-left:10px') Avatar
+          //- h3(flex='25' style='padding-top:5px;margin-top:8px') Last Name
+          //- h3(flex='25' style='padding-top:5px;margin-top:8px') First Name
+          //- h3(flex='30' style='padding-top:5px;margin-top:8px') Email Address
+
+
+        .table-responsive
+          table.table.table-hover
+            thead
+              tr
+                th
+                th Last Name
+                th First Name
+                th Email Address
+            //- md-content(flex style='padding-top:1px')
+
+            tbody
+              tr(ng-repeat='e in employees | filter:searchEmployee')
+                td
+                  img(src='{{e.photo}}' style='height:50px;width:50px;padding:1px;border-radius: 48px;')
+                td {{e.lastname}}
+                td {{e.firstname}}
+                td {{e.email}}
+
+    div(flex='25')
+      md-card(style='height:500px;' layout-padding)
+        div( style="margin:10px 20px;")
+          .table-responsive
+            table.table.table-hover
+              thead
+                tr
+                  td Recently Added Employee
+
+              tbody
+                tr
+                  td Gerald Miral
+                tr
+                  td Gerald Miral
+                tr
+                  td Gerald Miral
+                tr
+                  td Gerald Miral
+
+
+
+
+

@@ -1,0 +1,70 @@
+html(ng-app="StarterApp")
+  head
+    title Template
+    // Viewport mobile tag for sensible mobile support
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+
+    // STYLES
+    link(rel="stylesheet", href="/styles/angular-material.min.css")
+    link(rel="stylesheet", href="/styles/importer.css")
+    link(rel="stylesheet", href="/styles/styles.css")
+    // STYLES END
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
+
+
+
+  body(layout='column', ng-controller='AppCtrl')
+    md-toolbar(layout='row')
+      .md-toolbar-tools
+        md-button.md-icon-button(ng-click="toggleSidenav('left')", hide-gt-sm='')
+          md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
+        h1 Awesome Application - Home
+        span(flex)
+        md-button(ng-click="logout()") Logout
+        span(flex="5")
+    div(layout='row', flex='')
+      md-sidenav.md-sidenav-left.md-whiteframe-z2(layout='column', md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')")
+        md-list(ng-init="list = [1,2,3,4,5]")
+          md-subheader.md-no-sticket Menu
+          md-list-item
+            md-button(flex) Option {{item}}
+      #content(layout='column', flex='')
+        md-content#appContent.md-padding(layout='column', flex='')
+
+          //This should be ng-view
+          div(ng-controller='AppCtrl as appCtrl')
+            md-button.md-primary.md-raised(ng-click='showAdvanced($event)', flex='', flex-md='100')
+              | Create a post
+            md-progress-circular(ng-hide='determinateValue === 100', md-mode='determinate', value='{{determinateValue}}', style='margin: 0 auto;')
+            md-grid-list(ng-show='determinateValue === 100', md-cols-sm='1', md-cols-md='2', md-cols-gt-md='6', md-row-height-gt-md='1:1', md-row-height='2:2', md-gutter='12px', md-gutter-gt-sm='8px')
+              md-grid-tile(ng-init='isOpen = false', ng-repeat='post in posts', class='{{post.color}}', md-rowspan='{{post.r}}', md-colspan='{{post.c}}', md-colspan-sm='1')
+                div
+                  md-fab-speed-dial(md-open='isOpen', md-direction='{{demo.selectedDirection}}', ng-class='demo.selectedMode')
+                    md-fab-trigger
+                      md-button.md-fab.md-primary(aria-label='menu')
+                        md-icon(md-svg-src='/images/menu.svg')
+                    md-fab-actions
+                      md-button.md-fab.md-primary.md-hue-1.md-mini(aria-label='twitter')
+                        md-icon(md-svg-src='/images/edit.svg')
+                      md-button.md-fab.md-primary.md-hue-1.md-mini(aria-label='facebook')
+                        md-icon(md-svg-src='/images/settings.svg')
+                  md-button.md-mini.deletePost(ng-click='deletePost(post.id)', aria-label='delete')
+                    md-icon(md-svg-src='/images/delete.svg')
+                md-grid-tile-footer
+                  h3 {{$index}} {{post.name}}: ({{post.r}}r x {{post.c}}c)
+
+          
+    // TEMPLATES
+    script(type="text/javascript", src="/jst.js")
+    // TEMPLATES END
+
+    
+    // SCRIPTS
+    script(src="/js/dependencies/sails.io.js")
+    script(src="/js/dependencies/angular.min.js")
+    script(src="/js/dependencies/angular-sails.min.js")
+    script(src="/js/dependencies/angular-animate.min.js")
+    script(src="/js/dependencies/angular-aria.min.js")
+    script(src="/js/dependencies/angular-material.min.js")
+    script(src="/js/app.js")
+    // SCRIPTS END

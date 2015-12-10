@@ -1,0 +1,54 @@
+html(ng-app="PerformanceApp")
+  head
+    title Public
+    // $location service used by AngularJS
+    base(href="http://#{base}/")
+    // Viewport mobile tag for sensible mobile support
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+
+    // STYLES
+    link(rel="stylesheet", href="/styles/angular-material.css")
+    link(rel="stylesheet", href="/styles/bootstrap.css")
+    link(rel="stylesheet", href="/styles/layout.css")
+    link(rel="stylesheet", href="/styles/materialdesignicons.css")
+    link(rel="stylesheet", href="/styles/styles.css")
+    // STYLES END
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
+
+
+
+  body(layout='column', ng-controller='PublicCtrl')
+    md-toolbar(layout='row')
+      .md-toolbar-tools
+        h1 Performance Management System
+
+    #content(layout='column', flex='')
+      md-content#appContent.md-padding.md-hue-2(layout='row', flex='', layout-align="center start")
+        md-card.md-whiteframe-z5(layout-padding, flex="20", flex-md="50", flex-sm="80",  layout="column", style="margin-top:100px; height:300px")
+          md-card-content(ng-show="!loginStatus", layout-align="center center", layout="column")
+            //- .md-display-3 Welcome
+            img(layout-margin ,src="images/mslogo.svg", width="200px", height="200px")
+            md-button.md-primary.md-raised.blue.darken-2(ng-click="login()", style="width: 100%;", layout-margin, flex) Login
+          md-card-content(ng-show="loginStatus")
+            md-progress-circular(md-mode="indeterminate")
+
+    // TEMPLATES
+    
+    // TEMPLATES END
+
+
+    // SCRIPTS
+    script(src="/js/dependencies/sails.io.js")
+    script(src="/js/dependencies/angular.min.js")
+    script(src="/js/dependencies/angular-animate.min.js")
+    script(src="/js/dependencies/angular-aria.min.js")
+    script(src="/js/dependencies/angular-cache.js")
+    script(src="/js/dependencies/angular-material.js")
+    script(src="/js/dependencies/angular-resource.js")
+    script(src="/js/dependencies/angular-route.js")
+    script(src="/js/dependencies/angular-sails.min.js")
+    script(src="/js/dependencies/angular-ui-router.js")
+    script(src="/js/dependencies/lodash.js")
+    script(src="/js/public/app.js")
+    script(src="/js/global.js")
+    // SCRIPTS END

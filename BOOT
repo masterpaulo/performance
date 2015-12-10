@@ -1,0 +1,11 @@
+#!/bin/bash
+file="/src/app.js"
+
+if [ -f "$file" ]
+then
+	echo "Running /src/START script..."
+	cd /src
+	./START
+else
+	echo "APPLICATION NOT MOUNTED"
+fi
