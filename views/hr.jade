@@ -57,7 +57,7 @@ html(ng-app='HR')
               md-button(ng-click='')
                 i.mdi.mdi-folder
                 | Files
-            md-menu-item
+            md-menu-item 
               md-button(ng-click='')
                 i.mdi.mdi-folder
                 | Files
@@ -75,7 +75,7 @@ html(ng-app='HR')
         md-content(style='height:94%', layout="column")
           md-content.sidenav-header(layout-padding style='padding-left:20px')
             div(style="height:100px;")
-              img(src='{{userSession.photo}}' style='height:100px;width:100px;padding-bottom:10px;border-radius:50%;')
+              img(src='{{userSession.photo}}' style='height:100px;width:100px;border-radius:50%;')
             .md-title {{userSession.firstname + " " + userSession.lastname}}
             .md-subhead {{userSession.email}}
 
@@ -107,7 +107,7 @@ html(ng-app='HR')
             md-list-item
               md-button.md-raised.md-primary(ng-click="logout()", flex="grow") Logout
 
-      md-content#appContent.md-padding.md-hue-2(layout='column' flex)
+      md-content#appContent.md-padding.md-hue-2(layout='row' flex style="overflow-y: auto;")
         //- p {{userSession |json}} //- uncomment to see user sessoin data
 
         //- //This should be ng-view

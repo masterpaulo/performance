@@ -63,9 +63,9 @@ app.controller 'HrCtrl', [
 
 
     # #Toggl Sidenav
-    # $scope.toggleSidenav = (menuId) ->
-    #   $mdSidenav(menuId).toggle()
-    #   return
+    $scope.toggleSidenav = (menuId) ->
+      $mdSidenav(menuId).toggle()
+      return
 
     $scope.logout = ->
       console.log "send request to logout"
