@@ -3,8 +3,8 @@ if [ -z "$1" ]
 then
 	echo "Deploying project in [ DEVELOPMENT ]..."
 	
-	docker run -itd --name coreMongo -p 9005:27017  mongo:latest --smallfiles
-	docker run -itd --name coreApp --link coreMongo:mongo -p 9000:1337 -v `pwd`:/src masterpaulo315/node:patch-0.1
+	docker run -itd --name perMongo -p 8005:27017  mongo:latest --smallfiles
+	docker run -itd --name performance --link perMongo:mongo -p 8000:1337 -v `pwd`:/src masterpaulo315/node:patch-0.1
 
 	echo "Deployment done."
 else
