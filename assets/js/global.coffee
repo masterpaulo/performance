@@ -1,6 +1,7 @@
 app.config [
   "$mdThemingProvider"
-  ($mdThemingProvider)->
+  "$mdIconProvider"
+  ($mdThemingProvider, $mdIconProvider)->
 
     $mdThemingProvider.theme "default"
     .primaryPalette 'light-blue', 
@@ -13,6 +14,12 @@ app.config [
       "default" : "500"
       "hue-1" : "300"
       "hue-2" : "700"
+      "hue-3" : "800"
+
+    .warnPalette 'red',
+      "default" : "500"
+      "hue-1" : "100"
+      "hue-2" : "200"
       "hue-3" : "800"
 
     .backgroundPalette 'grey',
@@ -38,4 +45,7 @@ app.config [
       "hue-3" : "900"
 
     .dark()
+
+    $mdIconProvider
+    .defaultIconSet('font/mdi.svg')
 ]

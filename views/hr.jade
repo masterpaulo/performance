@@ -14,6 +14,7 @@ html(ng-app='HR')
     link(rel="stylesheet", href="/styles/styles.css")
     link(rel="stylesheet", href="/styles/hr/home/home.css")
     link(rel="stylesheet", href="/styles/hr/schedule/schedule.css")
+    link(rel="stylesheet", href="/styles/hr/team/team.css")
     // STYLES END
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
 
@@ -50,7 +51,7 @@ html(ng-app='HR')
           md-menu-content(width='4', md-menu-align-target)
             md-menu-item
               md-button(ng-click='')
-                i.mdi.mdi-email(style="font-size:24px;vertical-align:middle;")
+                i.mdi.mdi-email(style="vertical-align:middle;")
                 | Email
             md-menu-divider
             md-menu-item
@@ -71,7 +72,7 @@ html(ng-app='HR')
         span(hide-sm, flex="5")
 
     div(layout='row')
-      md-sidenav.md-whiteframe-z2( md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", md-theme="default" style='width:100px')
+      md-sidenav.md-whiteframe-2dp( md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", md-theme="default" style='width:100px')
         md-content(style='height:94%', layout="column")
           md-content.sidenav-header(layout-padding style='padding-left:20px')
             div(style="height:100px;")
@@ -138,5 +139,6 @@ html(ng-app='HR')
     script(src="/js/hr/employee/employeeCtrl.js")
     script(src="/js/hr/home/homeCtrl.js")
     script(src="/js/hr/schedule/scheduleCtrl.js")
+    script(src="/js/hr/team/teamCtrl.js")
     script(src="/js/common/cache.js")
     // SCRIPTS END

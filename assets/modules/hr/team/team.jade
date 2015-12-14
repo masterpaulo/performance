@@ -1,0 +1,85 @@
+md-content(layout="column", flex)
+  
+  md-content.md-hue-2(layout-gt-lg="row",  ng-init="list = ['Business Technology','The A Team', 'Power Rangers']")
+    md-content.md-hue-2(flex-gt-lg="40")
+      md-card(flex)
+        md-card-content
+          md-input-container.md-block(md-no-float='', style="padding-bottom:0")
+            md-icon
+              i.mdi.mdi-36px.mdi-magnify
+            input( type='text', placeholder='Search Team')
+
+      md-card(flex)
+        md-card-content(style="position:relative")
+          
+
+          h2.md-title
+            md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
+            | Teams
+
+          md-button.md-fab.md-primary(aria-label='Add team',style="position: absolute;right: 33px;top: 53px;", ng-click="addTeam()")
+            md-icon(md-svg-icon="plus")
+
+
+        md-divider
+
+        
+        md-list(style="max-height: 70%;overflow: auto;")
+          md-list-item(ng-repeat="team in teams", ng-click="selectTeam(team)") 
+            p {{team.name}}
+
+            md-divider
+      
+
+    md-content.md-hue-2(flex, style="overflow-x:hidden;")
+      md-card.team-window(ng-show="selectedTeam", flex)
+        md-toolbar(layout='row')
+          .md-toolbar-tools
+            md-button.md-icon-button( aria-label="Open Sidenav")
+              md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
+            h1 {{selectedTeam.name}}
+            span(flex)
+            md-button.md-icon-button( aria-label="Close Team Window", ng-click="closeTeam()")
+              md-icon(md-svg-icon="close", style="'font-size':36px;")
+        md-tabs.md-primary( md-no-ink='',  md-stretch-tabs='', md-border-bottom='')
+          md-tab.summary(label='summary')
+            md-content.md-padding(layout="row" layout-wrap layout-align="center center")
+              md-content(flex="30" )
+                .md-display-3 {{selectedTeam.members.length}}
+                h4 Members
+              md-content(flex="30")
+                .md-display-3 {{selectedTeam.latestScore | number : 2}}
+                h4 Team Score
+              md-content(flex="30")
+                .md-display-3 {{selectedTeam.average | number : 2}}
+                h4 Average
+          md-tab(label='members')
+            md-content.md-padding
+              
+              md-list(ng-init="members=[1,2,3,4,5]")
+                md-list-item(ng-repeat="member in selectedTeam.members") 
+                  p Member {{member}}
+                  span(flex)
+                  md-chips(style="box-shadow:0;")
+                    md-chip {{member.length/3 + 5 | number : 2}}
+                  md-divider
+          md-tab(label='schedules')
+            md-content.md-padding
+              h1.md-display-2 Schedules
+              p
+                | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+          md-tab(label='structure')
+            md-content.md-padding
+              h1.md-display-2 Schedules
+              p
+                | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+
+
+
+       
+
+        
+//- md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")
+//-   i.mdi.mdi-24px.mdi-plus
+
+

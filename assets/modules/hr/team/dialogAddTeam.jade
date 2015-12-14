@@ -1,0 +1,28 @@
+md-dialog(aria-label='Mango (Fruit)', ng-cloak='')
+      form( name="addTeamForm")
+        md-toolbar
+          .md-toolbar-tools
+            h2 Add Team
+            span(flex='')
+            md-button.md-icon-button(ng-click='cancel()')
+              md-icon(md-svg-src='close', aria-label='Close dialog')
+        md-dialog-content
+          .md-dialog-content(style="width:500px;")
+            
+            form
+              md-input-container
+                label Title
+                input(ng-model="team.name", required, md-maxlength="35")
+              md-input-container(ng-init="teams=[1,2,3,4,5,6,7,8,9]")
+                label Parent
+                md-select(ng-model="team.parent")
+                  md-option(ng-repeat="item in teams" value="{{item}}") {{item}}
+                
+
+        md-dialog-actions(layout='row', style="order:2;")
+          
+          span(flex='')
+          md-button(ng-click="cancel()")
+            | Cancel
+          md-button(ng-click="save()", style='margin-right:20px;', ng-disabled="addTeamForm.$invalid")
+            | Save

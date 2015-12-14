@@ -15,9 +15,9 @@ app.config [
     .when "/",
       template: JST["hr/schedule/schedule.html"]()
       controller:"ScheduleCtrl"
-    .when "/team",
-      template: JST["hr/home/home.html"]()
-      controller:"HomeCtrl"
+    .when "/teams",
+      template: JST["hr/team/team.html"]()
+      controller:"TeamCtrl"
     .when "/employee",
       template: JST['hr/employee/employee.html']()
       controller: 'EmployeeCtrl'

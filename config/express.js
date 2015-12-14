@@ -79,7 +79,7 @@ module.exports.http = {
 
     // callbackURL = app.settings.env === "production" ? 'http://template.app.com/auth/google/callback':'http://localhost:9000/auth/google/callback';
 
-    callbackURL = 'http://localhost:1337/auth/google/callback';
+    callbackURL = 'http://localhost:8000/auth/google/callback';
     passport.use(new GoogleStrategy({
       clientID: '106775020959-6v44v5h4jf8tja5q7s4r841vgkk5u1t6.apps.googleusercontent.com',
       clientSecret: 'CFiGE3gBhCvRQOI6Ck03yoRT',

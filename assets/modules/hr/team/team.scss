@@ -1,0 +1,43 @@
+#appContent {
+	ng-view  {
+		md-content  {
+			md-content {
+				md-content.md-hue-2.flex {
+
+					md-card.team-window {
+						opacity: 1;
+						right: 0px;
+						position:relative;
+
+						-webkit-transition:all cubic-bezier(0.02, 0.83, 0.37, 0.98) 0.5s;
+  						transition:all cubic-bezier(0.02, 0.83, 0.37, 0.98) 0.5s;
+
+
+						md-tabs {
+							height: 700px;
+							md-tab-content {
+								div {
+									md-content {
+										padding-top: 40px;
+										md-content{
+											text-align: center;
+										}
+									}
+								}
+							}
+						}
+
+					}
+					md-card.team-window.ng-hide{
+						opacity: 0;
+						right: -100px;
+						display: block !important;
+
+					}
+				}
+			}
+		}
+	}
+
+} 
+
