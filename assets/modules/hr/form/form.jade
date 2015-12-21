@@ -1,0 +1,97 @@
+md-content(layout="column", flex)
+  
+
+    //- md-content.md-hue-2(flex-gt-lg="40")
+    //-   md-card(flex)
+    //-     md-card-content
+    //-       md-input-container.md-block(md-no-float='', style="padding-bottom:0")
+    //-         md-icon
+    //-           i.mdi.mdi-36px.mdi-magnify
+    //-         input( type='text', placeholder='Search Team',ng-model="teamSearch")
+
+    //-   md-card(flex)
+    //-     md-card-content(style="position:relative")
+          
+
+    //-       h2.md-title
+    //-         md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
+    //-         | Teams
+
+    //-       md-button.md-fab.md-primary(aria-label='Add team',style="position: absolute;right: 33px;top: 53px;", ng-click="addTeam()")
+    //-         md-icon(md-svg-icon="plus")
+
+
+    //-     md-divider
+
+        
+    //-     md-list(style="max-height: 70%;overflow: auto;")
+    //-       md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch)", ng-click="selectTeam(team)") 
+    //-         p {{team.name}}
+
+    //-         md-divider
+      
+
+  md-content.md-hue-2(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in kra.kras")
+    md-card.team-window( flex, , id="member-tab")
+      md-toolbar.md-tall.md-hue-2(layout='row')
+        .md-toolbar-tools(flex="70", layout="column", layout-align="start start", style="height: 100%;flex-direction: column; text-align: left; align-items: flex-start;align-content: flex-start; padding-top: 25px;")
+          h1(style="font-weight:bold") Standards of Performance, Behavior, and Role Modeling
+          .md-caption Level of standards demonstrated in his field of expertise. Establishes and communicates measurable performance standards/expectations. (I know what's expected of me
+
+        span(flex)
+
+        .md-toolbar-tools.md-toolbar-tools-bottom(flex="25", style="height: 100%;flex-direction: column; text-align: left; align-items: center; padding-top: 25px;")
+          h1(style="font-size:60px") 90
+          .md-caption KRA Score
+      md-toolbar.md-hue-2(layout='row')
+        .md-toolbar-tools
+          .md-caption( flex="20", style="text-align:center") KPI
+          .md-caption( flex="40", style="text-align:center") Description
+          .md-caption( flex="10", style="text-align:center") Reverse
+          .md-caption( flex="10", style="text-align:center") Goal
+          .md-caption( flex="10", style="text-align:center") Weight
+          .md-caption( flex="10", style="text-align:center") Score
+        
+      md-card-content(style="padding:0;")
+        md-list
+          md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start", style="padding:5px")
+            .md-caption(flex="20") {{kpi.name}}
+            .md-caption(flex="40") {{kpi.description}}
+            .md-caption(flex="10", style="text-align:center") No
+            .md-caption(flex="10", style="text-align:center") 10
+            .md-caption(flex="10", style="text-align:center") 10
+            .md-caption(flex="10", style="text-align:center") 10
+            md-divider
+
+          
+         
+
+        
+md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;", ng-hide="editForm", ng-click="editForm=1")
+  i.mdi.mdi-24px.mdi-plus
+
+//- md-fab-toolbar( count='', md-direction='right')
+//-   md-fab-trigger.align-with-text
+//-     md-button.md-fab.md-primary(aria-label='menu', style="right: 25px;position: fixed;bottom: 30px;")
+//-       md-icon(md-svg-src='menu')
+//-   md-toolbar
+//-     md-fab-actions.md-toolbar-tools
+//-       md-button.md-icon-button(aria-label='comment')
+//-         md-icon(md-svg-src='close')
+//-       md-button.md-icon-button(aria-label='label')
+//-         md-icon(md-svg-src='close')
+//-       md-button.md-icon-button(aria-label='photo')
+//-         md-icon(md-svg-src='close')
+
+
+md-fab-speed-dial( md-direction='up', ng-class='md-fling', )
+  md-fab-trigger()
+    md-button.md-fab.md-warn(aria-label='menu')
+      md-icon(md-svg-src='menu')
+  md-fab-actions
+    md-button.md-fab.md-raised.md-mini(aria-label='Twitter')
+      md-icon(md-svg-src='twitter', aria-label='Twitter')
+    md-button.md-fab.md-raised.md-mini(aria-label='Facebook')
+      md-icon(md-svg-src='facebook', aria-label='Facebook')
+    md-button.md-fab.md-raised.md-mini(aria-label='Google Hangout')
+      md-icon(md-svg-src='hangouts', aria-label='Google Hangout')

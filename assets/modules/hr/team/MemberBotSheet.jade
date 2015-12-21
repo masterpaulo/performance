@@ -1,0 +1,9 @@
+md-bottom-sheet.md-list(layout='column', ng-cloak='')
+  md-subheader Add Member to {{name}}
+  md-input-container.md-block(md-no-float='', style="")
+    md-icon
+      i.mdi.mdi-36px.mdi-magnify
+    input( type='text', placeholder='Search Employee', ng-model="employeeSearch")
+  md-list(ng-init="", style="height:400px;overflow-y:auto;")
+    md-list-item(ng-repeat='user in list = (users | filter:employeeSearch) ', ng-click="addMember(user)")  
+      | {{ user.firstname }} {{user.lastname}}

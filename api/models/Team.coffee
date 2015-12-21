@@ -7,7 +7,7 @@ module.exports = {
     supervisor:
       type: 'STRING'
       model: 'account'
-    teammembers:
+    members:
       collection: 'teammember'
       via: 'teamId'
     parentId:

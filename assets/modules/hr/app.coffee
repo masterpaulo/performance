@@ -21,6 +21,9 @@ app.config [
     .when "/employee",
       template: JST['hr/employee/employee.html']()
       controller: 'EmployeeCtrl'
+    .when "/form",
+      template: JST['hr/form/form.html']()
+      controller: 'FormCtrl'
     # .otherwise redirectTo: '/'
 ]
 

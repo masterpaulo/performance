@@ -12,11 +12,11 @@ md-dialog(aria-label='Mango (Fruit)', ng-cloak='')
             form
               md-input-container
                 label Title
-                input(ng-model="team.name", required, md-maxlength="35")
-              md-input-container(ng-init="teams=[1,2,3,4,5,6,7,8,9]")
+                input(ng-model="newTeam.name", required, md-maxlength="35")
+              md-input-container(ng-init="")
                 label Parent
-                md-select(ng-model="team.parent")
-                  md-option(ng-repeat="item in teams" value="{{item}}") {{item}}
+                md-select(ng-model="newTeam.parent")
+                  md-option(ng-repeat="team in teams" value="{{team.id}}") {{team.name}}
                 
 
         md-dialog-actions(layout='row', style="order:2;")

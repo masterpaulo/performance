@@ -1,13 +1,13 @@
 md-content(layout="column", flex)
   
-  md-content.md-hue-2(layout-gt-lg="row",  ng-init="list = ['Business Technology','The A Team', 'Power Rangers']")
+  md-content.md-hue-2(layout-gt-lg="row")
     md-content.md-hue-2(flex-gt-lg="40")
       md-card(flex)
         md-card-content
           md-input-container.md-block(md-no-float='', style="padding-bottom:0")
             md-icon
               i.mdi.mdi-36px.mdi-magnify
-            input( type='text', placeholder='Search Team')
+            input( type='text', placeholder='Search Team',ng-model="teamSearch")
 
       md-card(flex)
         md-card-content(style="position:relative")
@@ -25,14 +25,14 @@ md-content(layout="column", flex)
 
         
         md-list(style="max-height: 70%;overflow: auto;")
-          md-list-item(ng-repeat="team in teams", ng-click="selectTeam(team)") 
+          md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch) track by $index", ng-click="selectTeam(team)") 
             p {{team.name}}
 
             md-divider
       
 
-    md-content.md-hue-2(flex, style="overflow-x:hidden;")
-      md-card.team-window(ng-show="selectedTeam", flex)
+    md-content.md-hue-2(flex, style="overflow:hidden;" )
+      md-card.team-window(ng-show="selectedTeam", flex, , id="member-tab")
         md-toolbar(layout='row')
           .md-toolbar-tools
             md-button.md-icon-button( aria-label="Open Sidenav")
@@ -41,7 +41,7 @@ md-content(layout="column", flex)
             span(flex)
             md-button.md-icon-button( aria-label="Close Team Window", ng-click="closeTeam()")
               md-icon(md-svg-icon="close", style="'font-size':36px;")
-        md-tabs.md-primary( md-no-ink='',  md-stretch-tabs='', md-border-bottom='')
+        md-tabs.md-primary( md-no-ink='',  md-stretch-tabs='', md-border-bottom='', )
           md-tab.summary(label='summary')
             md-content.md-padding(layout="row" layout-wrap layout-align="center center")
               md-content(flex="30" )
@@ -56,13 +56,20 @@ md-content(layout="column", flex)
           md-tab(label='members')
             md-content.md-padding
               
-              md-list(ng-init="members=[1,2,3,4,5]")
-                md-list-item(ng-repeat="member in selectedTeam.members") 
-                  p Member {{member}}
+              md-list()
+                md-list-item(ng-repeat="member in memberlist = (selectedTeam.members)") 
+                  p {{member.firstname}}  {{member.lastname}}
                   span(flex)
                   md-chips(style="box-shadow:0;")
-                    md-chip {{member.length/3 + 5 | number : 2}}
+                    md-chip {{member.fistname.length/3 + 5 | number : 2}}
                   md-divider
+                md-list-item(ng-hide="memberlist.length")
+                  p No members yet.
+            span(flex)
+            md-content(layout="row" layout-padding)
+              span(flex)
+              md-button.md-raised.md-warn(ng-click="test()", aria-label="Add memeber", md-ripple-size="full") Remove Members
+              md-button.md-raised.md-primary(ng-click="showMemberBottomSheet()", aria-label="Add memeber", md-ripple-size="full") Add Member
           md-tab(label='schedules')
             md-content.md-padding
               h1.md-display-2 Schedules
@@ -70,13 +77,30 @@ md-content(layout="column", flex)
                 | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
           md-tab(label='structure')
             md-content.md-padding
-              h1.md-display-2 Schedules
+              h1.md-display-2 Structure
               p
                 | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+          md-tab(label='settings')
+            md-content.md-padding()
+              h3.md-display-1 Team Info
+              form(name="updateTeamForm")
+                md-input-container
+                  label Team Name
+                  input(ng-model="updatedTeam.name", required, md-maxlength="35", ng-change="showUpdateButton=true")
+                md-input-container(ng-init="")
+                  label Parent
+                  md-select(ng-model="updatedTeam.parent", , ng-change="showUpdateButton=true")
+                    md-option(ng-repeat="team in teams track by $index" value="{{team.id}}") {{team.name}}
+                md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save 
+              h3.md-display-1 Delete Team
+              .md-caption Deleting this team will remove all evaluation records of the members. Forever... Are you sure you want to continue?
+              md-button.md-raised.md-warn(ng-click="button1=true" ng-disabled="button1") {{(button1)? "are you sure?":"Yes"}}
+              md-button.md-raised.md-warn(ng-show="button1" ng-click="button2=true"   ng-disabled="button2") {{(button2)? "Really?":"I'm Sure"}}
+              md-button.md-raised.md-warn(ng-show="button2" ng-click="button1 = button2 = false ;test()") DELETE TEAM
 
 
-
-       
+          
+         //- 2385820
 
         
 //- md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")

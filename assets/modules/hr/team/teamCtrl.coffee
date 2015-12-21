@@ -6,18 +6,21 @@ app.controller "TeamCtrl", [
   '$interval'
   '$mdSidenav'
   '$mdDialog'
+  '$mdBottomSheet'
   '$mdMedia'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdMedia) ->
+  'teamService'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, teamService) ->
 
+    $scope.teamSearch = ""
 
     $scope.selectedTeam = '';
     $scope.teams = []
 
-    $http.get 'team/list'
-      .success (data) ->
-        if data
-          console.log data
-          $scope.teams = data
+    teamService.listTeams()
+    .then (data) ->
+      console.log data
+      $scope.teams = data.data
+    
 
 
 
@@ -32,10 +35,22 @@ app.controller "TeamCtrl", [
           if data 
             console.log data
             $scope.selectedTeam = data
+            $scope.updatedTeam = angular.copy data
+            $scope.showUpdateButton = false
       return
 
+    $scope.updateTeam = () ->
+      update = {
+        name : $scope.updatedTeam.name
+        parent : $scope.updatedTeam.parent
+      }
+      teamService.updateTeam $scope.selectedTeam.id, update
+      .then (data) ->
+        $scope.selectedTeam = data[0]
+        $scope.showUpdateButton = false
+
     $scope.closeTeam = () ->
-      $scope.selectedTeam = {}
+      $scope.selectedTeam = ''
       return
 
     $scope.toggleSidenav = (menuId) ->
@@ -46,18 +61,27 @@ app.controller "TeamCtrl", [
       console.log "Testing"
       return
 
+
     $scope.showAddTeamForm = (ev) ->
       $mdDialog.show(
         controller: AddTeamController
         templateUrl: 'templates/hr/team/dialogAddTeam.html'
         parent: angular.element(document.body)
         targetEvent: ev
+        locals: {Teams:$scope.teams}
         clickOutsideToClose: true
         fullscreen: $mdMedia('sm') and $scope.customFullscreen).then ((newTeam) ->
-        console.log "I got the new Team"
-        console.log newTeam
-        $scope.teams.push newTeam
-        return
+          console.log "I got the new Team"
+          console.log newTeam
+          
+          teamService.addTeam newTeam
+          .then (data)->
+            console.log "in TeamCtrl"
+            console.log data
+
+            $scope.teams.push data
+            $scope.teamSearch = ''
+          return
       ), ->
         $scope.status = 'No data passed.'
         return
@@ -68,14 +92,37 @@ app.controller "TeamCtrl", [
         return
       return
 
+    $scope.showMemberBottomSheet = ($event) ->
+      $scope.alert = ''
+      $mdBottomSheet.show(
+        templateUrl: 'templates/hr/team/MemberBotSheet.html'
+        controller: MemberBottomSheetCtrl
+        parent: "#member-tab"
+        locals: {Team:$scope.selectedTeam}
+        targetEvent: $event).then (user) ->
+          newMembership = {
+            accountId : user.id
+            teamId : $scope.selectedTeam.id
+          }
+          teamService.addMember newMembership
+          .then (data) ->
+            console.log "in TeamCtrl"
+            console.log data
+            $scope.selectedTeam.members.push user
+
+        return
+      return
 
     return
 ]
 
-AddTeamController = ($scope, $mdDialog, $http) ->
 
-  $scope.team = {}
+# put in a separate file
 
+AddTeamController = ($scope, $mdDialog, Teams) ->
+
+  $scope.newTeam = {}
+  $scope.teams = Teams
   $scope.hide = ->
     $mdDialog.hide()
     return
@@ -85,16 +132,24 @@ AddTeamController = ($scope, $mdDialog, $http) ->
     return
 
   $scope.save = ->
-    console.log "Saving new team"
-    console.log $scope.team
+    $mdDialog.hide($scope.newTeam)
+    return
+
+  return
 
 
-    $http.put 'team/create', $scope.team
+# put in separate file
+ MemberBottomSheetCtrl = ($http, $scope, $mdBottomSheet, Team, teamService) ->
+  $scope.users = []
+
+  $http.get 'account/list'
       .success (data) ->
         if data
           console.log data
+          $scope.users = data
 
-          $mdDialog.hide(data)
+  $scope.name = Team.name
+  $scope.addMember = (user) ->
+    $mdBottomSheet.hide user
     return
-
   return
