@@ -1,0 +1,28 @@
+md-dialog(aria-label='Mango (Fruit)', ng-cloak='' )
+  form
+    md-toolbar
+      .md-toolbar-tools
+        h2 Employee Information
+        span(flex='')
+        md-button.md-icon-button(ng-click='cancel()')
+          md-icon.mdi.mdi-close
+    md-dialog-content(style='min-width:500px;min-height:500px;' )
+      md-tabs(md-dynamic-height='', md-border-bottom='')
+        md-tab
+          md-tab-label
+            md-icon.mdi.mdi-account-multiple
+          md-tab-body(layout-padding)
+            h3 {{account.firstname + "'s Team"}}
+        md-tab
+          md-tab-label
+            md-icon.mdi.mdi-account
+          md-tab-body
+            h5 two two
+        md-tab
+          md-tab-label
+            md-icon.mdi.mdi-account
+          md-tab-body
+            h5 three three
+
+      md-button.md-raised.md-primary(ng-click='submit(newSched)' ng-disabled='!(newSched.selected.length && newSched.notes && newSched.date)') Submit
+      md-button.md-raised.md-warn(ng-click='cancel()') Cancel

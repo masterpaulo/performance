@@ -16,10 +16,16 @@ module.exports = function(grunt) {
 
 	grunt.config.set('watch', {
 		api: {
-
 			// API files to watch:
 			files: ['api/**/*']
 		},
+    views: {
+        // Views to watch
+        files: ['views/**/*'],
+        options: {
+            livereload: true
+        }
+    },
 		assets: {
 
 			// Assets to watch:

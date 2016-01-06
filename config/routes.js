@@ -47,18 +47,40 @@ var routes = {
     controller: 'account',
     action: 'list'
   },
+
+  "GET team/list/:id" : {
+    controller: 'account',
+    action: 'list'
+  },
+
   "GET team/list" : {
     controller: 'team',
     action: 'list'
   },
-  "PUT evaluationschedule/create" : {
+  "POST evaluationschedule/create" : {
     controller: 'evaluationschedule',
     action: 'create'
   },
   "PUT evaluationschedule/list" : {
     controller: 'evaluationschedule',
     action: 'list'
+  },
+  // "PUT teammember/update" : {
+  //   controller: 'teammember',
+  //   action: 'update'
+  // },
+  "GET session/types" : {
+    controller: 'session',
+    action: 'types'
+  },
+  'PUT session/change' : {
+    controller: 'session',
+    action: 'change'
   }
+  // "GET team/:id/myteam": {
+  //   controller: 'team'
+  //   action: 'myteam'
+  // }
 
 
   // "GET /employee/account/list" :{

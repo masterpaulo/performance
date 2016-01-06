@@ -24,9 +24,13 @@ module.exports = {
     done:
       type: "boolean"
       defaultsTo: false
-    archive:
-      type: "boolean"
-      defaultsTo: false
+    # archive:
+    #   type: "boolean"
+    #   defaultsTo: false
+    status:
+      type: 'string'
+      enum: ['pending','cancelled','active','completed','archive']
+
     # evaluations:
     #   collections: "evaluation"
     #   via: "evaluationSchedule"

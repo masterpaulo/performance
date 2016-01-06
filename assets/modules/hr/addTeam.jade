@@ -1,0 +1,19 @@
+md-dialog(ng-cloak='' )
+  form
+    md-toolbar
+      .md-toolbar-tools
+        h2 Adding Team for {{account.firstname + " "+ account.lastname }}
+        span(flex='')
+        md-button.md-icon-button(ng-click='cancel()')
+          md-icon.mdi.mdi-close
+    md-dialog-content(style='min-width:300px;min-height:200px;' )
+      md-input-container(style='margin-right: 10px;')
+        label Teams
+        md-select(ng-model='teamName')
+          md-option(ng-repeat='team in allTeams' ng-click='teamSelected(team.id)') {{team.name}} {{teamSelected}}
+
+
+
+
+      md-button.md-raised.md-primary(ng-click='addTeam(account,teamName, notifId)' ng-disabled='!(teamName)') Submit
+      md-button.md-raised.md-warn(ng-click='cancel()') Cancel

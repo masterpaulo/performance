@@ -5,5 +5,6 @@ module.exports =
       if err
         console.log err
       if data
-        # console.log data
         res.json data
+
+
