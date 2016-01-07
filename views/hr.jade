@@ -12,9 +12,9 @@ html(ng-app='HR')
     link(rel="stylesheet", href="/styles/layout.css")
     link(rel="stylesheet", href="/styles/materialdesignicons.css")
     link(rel="stylesheet", href="/styles/styles.css")
-    link(rel="stylesheet", href="/styles/hr/home/home.css")
     link(rel="stylesheet", href="/styles/hr/schedule/schedule.css")
     link(rel="stylesheet", href="/styles/hr/team/team.css")
+    link(rel="stylesheet", href="/styles/common/showAlert/showAlert.css")
     // STYLES END
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
 
@@ -28,59 +28,50 @@ html(ng-app='HR')
     script(type='text/javascript', src='https://www.google.com/jsapi')
 
 
-  body(layout='column', ng-controller='HrCtrl' style='overflow:hidden;')
+  body(layout='column', ng-controller='HrCtrl' style='overflow:hidden; z-index:0;')
     div(ng-show="cover", style="position:fixed;width:100%;height:100%;background-color:white;z-index:100;")
       md-progress-circular(md-mode="indeterminate")
     md-toolbar(layout='row')
       .md-toolbar-tools
-        md-button.md-icon-button(ng-click="toggleSidenav('left')", hide-gt-sm='', aria-label="Open Sidenav")
-          md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
-        h1 Performance Management System
+
+        div(flex='80' layout='row')
+          //- md-button(ng-click ="toast1()") caching button1
+          //- md-button(ng-click ="toast2()") button2
+
+          h1 Performance Management System
           i.mdi.mdi-chevron-right
 
           h1 {{routes}}
 
-        span(flex)
+        div(flex='20' layout='row')
+          md-menu(md-position-mode="target-right target")
+            md-button.md-icon-button(ng-click='showNotifs(0)')
+              md-icon.mdi.mdi-account-plus
+          md-menu(md-position-mode='target-right target')
+            md-button.md-icon-button(ng-click='showNotifs(1)')
+              md-icon.mdi.mdi-calendar-plus
+          md-menu(md-position-mode="target-right target")
+            md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
+              md-icon.mdi.mdi-account(style="font-size:30px;", md-menu-origin)
+            md-menu-content(width='2')
+              md-menu-item
+                md-button(ng-click='logout()')
+                  i.mdi.mdi-logout(style="font-size:24px;vertical-align:middle;")
+                  | Logout
 
-        //- p(hide-sm) Welcome HR! {{child}}
-        //- md-button.md-icon-button
-        //-   i.mdi.mdi-chevron-down(style="font-size:30px;")
-        md-menu(md-position-mode="target-right target", md-offset="5 56")
-          md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
-            i.mdi.mdi-account(style="font-size:30px;", md-menu-origin)
-          md-menu-content(width='4', md-menu-align-target)
-            md-menu-item
-              md-button(ng-click='')
-                i.mdi.mdi-email(style="vertical-align:middle;")
-                | Email
-            md-menu-divider
-            md-menu-item
-              md-button(ng-click='')
-                i.mdi.mdi-folder
-                | Files
-            md-menu-item 
-              md-button(ng-click='')
-                i.mdi.mdi-folder
-                | Files
-            md-menu-item
-              md-button(ng-click='')
-                i.mdi.mdi-folder
-                | Files
+          md-icon.mdi.mdi-apps
 
-
-        //- md-button.md-raised.md-primary.md-hue-3(hide-sm, hide,ng-click="logout()") Logout
-        span(hide-sm, flex="5")
-
-    div(layout='row', style="height:93%")
-      md-sidenav.md-whiteframe-2dp( md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", md-theme="default" style='width:100px')
+    div(layout='row')
+      md-sidenav.md-whiteframe-z2( md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", md-theme="default" style='width:100px; z-index:0;')
         md-content(style='height:94%', layout="column")
           md-content.sidenav-header(layout-padding style='padding-left:20px')
             div(style="height:100px;")
-              img(src='{{userSession.photo}}' style='height:100px;width:100px;border-radius:50%;')
+              img.img-circle(src='{{userSession.photo}}')
+
             .md-title {{userSession.firstname + " " + userSession.lastname}}
             .md-subhead {{userSession.email}}
 
-          md-list
+          md-list(flex='60')
             md-subheader.md-no-sticket Menu
             md-divider
             md-list-item(flex ng-click="redirect('/')")
@@ -102,11 +93,16 @@ html(ng-app='HR')
               md-icon(class='mdi mdi-file-document')
               p Form
 
+            //- md-list-item
 
-          md-list
-            md-subheader Done?
-            md-list-item
-              md-button.md-raised.md-primary(ng-click="logout()", flex="grow") Logout
+
+          md-list(flex )
+              md-list-item
+                switch(position="bottom-left")
+
+            //- md-subheader Done?
+            //- md-list-item
+            //-   md-button.md-raised.md-primary(ng-click="logout()", flex="grow") Logout
 
       md-content#appContent.md-padding.md-hue-2(layout='row' flex style="overflow-y: auto;")
         //- p {{userSession |json}} //- uncomment to see user sessoin data
@@ -114,7 +110,46 @@ html(ng-app='HR')
         //- //This should be ng-view
         ng-view(flex)
 
-        //- switch(position="bottom-left")
+      md-sidenav.md-sidenav-right.md-whiteframe-24dp(md-component-id='notif', style="width:400px; max-width:none; height:100%;" )
+        div(layout='column')
+          md-content(layout-padding)
+            md-tabs.md-dynamic-height(md-selected='notifSelected')
+              md-tab(layout='column')
+                md-tab-label
+                  md-icon.mdi.mdi-account-plus
+                md-tab-body
+                  h5.md-title New Employees
+                  md-divider
+                  md-list
+                    md-list-item(ng-repeat='new in newEmployeeNotif' layout='row' ng-click='toAddTeam(new.sender,new.id)')
+
+                      img.img-circle(src='{{new.sender.photo}}' style='width:50px;height:auto;padding:5px' flex='20')
+                      div(flex='50')
+                        h5 {{new.sender.firstname + " " + new.sender.lastname}}
+                        h5 {{new.sender.email}}
+                        //- h5 {{new.sender.id}}
+                      md-divider
+              md-tab
+                md-tab-label
+                  md-icon.mdi.mdi-calendar-plus
+                md-tab-body
+                  h5.md-title New Member Evaluation Request
+                  md-divider
+                  md-list
+                    md-list-item(ng-repeat='new in newRequestNotif' layout='row' )
+
+                      h5 {{new.teamId.name}}
+                      md-button(ng-click="toConfirmRequest(new.id,'active')") ok
+                      md-button(ng-click="toConfirmRequest(new.id,'cancelled')")
+
+              md-tab
+                md-tab-label
+                  md-icon.mdi.mdi-message
+                md-tab-body
+                  p three
+
+
+
 
 
     // TEMPLATES
@@ -138,9 +173,10 @@ html(ng-app='HR')
     script(src="/js/global.js")
     script(src="/js/hr/employee/employeeCtrl.js")
     script(src="/js/hr/form/formCtrl.js")
-    script(src="/js/hr/home/homeCtrl.js")
     script(src="/js/hr/schedule/scheduleCtrl.js")
     script(src="/js/hr/team/teamCtrl.js")
     script(src="/js/common/TeamService.js")
     script(src="/js/common/cache.js")
+    script(src="/js/common/showAlert/showAlertDirv.js")
+    script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END

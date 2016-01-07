@@ -1,20 +1,70 @@
+var async = require('async')
 var passport = require('passport')
+// var deasync = require('deasync')
     // , GitHubStrategy = require('passport-github').Strategy
     // , FacebookStrategy = require('passport-facebook').Strategy
     , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
     // , TwitterStrategy = require('passport-twitter').Strategy;
 
 
+
+function addingRoles(accountId){
+  currentRole = 0
+
+  var ret;
+  roles = []
+  // Id = accountId
+  setTimeout(function(){
+      // console.log(Id)
+      UserRole.find({accountId:accountId})
+      .exec(function(err,data){
+        if (data) {
+          // console.log(data)
+          // console.log('dataaaaaaa')
+          data.forEach(function(d){
+            // console.log(d)
+            roles.push(d.roleId)
+          })
+          if (roles.length > 1 || roles[0] == '1')
+            currentRole = '1'
+          else
+            currentRole = '2'
+
+        }
+
+        ret = "hello";
+
+      })
+  },3000);
+  while(ret === undefined) {
+    require('deasync').sleep(100);
+  }
+  // returns hello with sleep; undefined without
+  return {
+    roles: roles,
+    currentRole: currentRole
+  }
+}
+
+
+
+
 var verifyHandler = function(token, tokenSecret, profile, done) {
   process.nextTick(function() {
     console.log("Do some verification");
-
-    // console.log(profile.photos[0].value);
+    // console.log('google',profile)
     x = profile.photos[0].value
     var profilePics = x.replace(/50/g, "100");
-    // console.log(profilePics);
     Account.findOne({uid: profile.id}, function(err, user) {
+
       if (user) {
+
+        console.log('express js')
+
+        a = addingRoles(user.id)
+        user.currentRole = a.currentRole
+        user.roles = a.roles
+
         return done(null, user);
       } else {
 
@@ -45,17 +95,104 @@ var verifyHandler = function(token, tokenSecret, profile, done) {
           return done(err, null);
         }
         else{
-          Account.create(data, function(err, user) {
-            return done(err, user);
-          });
-        }
-      }
-    });
-  });
+          console.log('registering new employee')
+          async.parallel([
+            function(callback) {
+              Account.create(data, function(err,account) {
+                if (account) {
+                  console.log('account')
+                  callback(null,account)
+                }
+              })
+            },
+            function(callback) {
+              UserRole.find({roleId:'1'})
+              .exec(function(err,res) {
+                // console.log('userrole finding',res.length)
+                if (res)
+                  console.log('finding 1')
+                callback(null,res)
+
+                // else
+                //   callback(null,null)
+              })
+            }
+          ], function(err,results) {
+            // console.log(results)
+            accountId = results[0].id
+
+            async.parallel([
+              function(callback) {
+                callback(null,results[0])
+              },
+              // function(callback) {
+              //   data = {
+              //     accountId: accountId,
+              //     teamId: ''
+              //   }
+              //   Teammember.create(data, function(err,member) {
+              //     if (member) {
+              //       console.log('teammembers')
+              //       callback(null, member)
+              //     }
+              //   })
+              // },
+              function(callback) {
+                data = {
+                  accountId: accountId
+                }
+                if (results[1].length)
+                  data.roleId = '2'
+                else
+                  data.roleId = '1'
+                UserRole.create(data, function(err,userrole) {
+                  if (userrole){
+                    console.log('userrole')
+                    callback(null,userrole)
+                  }
+                })
+              },
+              function(callback) {
+                notifs = []
+                if (results[1].length) {
+                  results[1].forEach(function(res) {
+                    data = {
+                      // type: 'New Employee',
+                      sender: accountId,
+                      receiver: res.accountId
+                    }
+                    Notification.create(data,function(err,notif) {
+                      if (notif)
+                        console.log('notification')
+                        callback(null)
+                    })
+                  })
+                }
+                else
+                  callback(null)
+              } /// notifs
+            ], function(err,results) {
+
+              if (results) {
+                user = results[0]
+                user.roles = []
+                roleId = results[1].roleId
+                user.roles.push(roleId)
+                user.currentRole = roleId
+                return done(null,user)
+              }
+            })
+            }
+          )
+        } // else
+      } // else
+    }) //find
+  })
 };
 
 //called from AuthController login
 passport.serializeUser(function(user, done) {
+  // console.log('serializing', user)
   // console.log("serialiezing");
   // console.log(user) // check user data
   done(null, user);// i don't know where this goes

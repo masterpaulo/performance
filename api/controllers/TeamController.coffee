@@ -6,7 +6,7 @@ module.exports =
         console.log err
       if data
         console.log data
-       
+
         res.json data
 
   get: (req,res) ->
@@ -25,16 +25,16 @@ module.exports =
           else if accounts
             data.members = accounts
             #
-            data.latestScore = 7 
+            data.latestScore = 7
             #
-            data.average = 100 
+            data.average = 100
             res.json data
 
 
-        
-        
 
-      
+
+
+
   create: (req, res) ->
     Team.create req.body
     .exec (err, data) ->
@@ -58,7 +58,7 @@ module.exports =
       else if data
         console.log data
         res.json data
-      
+
 
   addMember: (req, res) ->
     console.log "showing new membership"
@@ -73,3 +73,7 @@ module.exports =
         res.json data
 
     return
+
+
+
+

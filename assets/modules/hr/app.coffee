@@ -1,5 +1,3 @@
-
-
 app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails']
 
 app.config [
@@ -9,6 +7,7 @@ app.config [
   "$sceDelegateProvider"
   ($routeProvider, $locationProvider, $mdThemingProvider, $sceDelegateProvider)->
     $locationProvider.html5Mode true
+
     # $mdThemingProvider.setDefaultTheme('none');
 
     $routeProvider
@@ -18,28 +17,14 @@ app.config [
     .when "/teams",
       template: JST["hr/team/team.html"]()
       controller:"TeamCtrl"
+
     .when "/employee",
       template: JST['hr/employee/employee.html']()
       controller: 'EmployeeCtrl'
     .when "/form",
       template: JST['hr/form/form.html']()
       controller: 'FormCtrl'
-    # .otherwise redirectTo: '/'
 ]
-
-
-
-#Load the visualization API from google charts
-# google.load 'visualization', '1', {packages:['corechart']}
-
-#Initialize the angular app manully here in the controller
-#[Make sure to remove ng-app directive from the View]
-# google.setOnLoadCallback ()->
-#   angular.bootstrap document.body, ['StarterApp']
-
-
-
-
 
 app.controller 'HrCtrl', [
   '$scope'
@@ -50,70 +35,192 @@ app.controller 'HrCtrl', [
   '$mdSidenav'
   '$mdDialog'
   '$location'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location) ->
-    #parse user session data from server
+  '$mdUtil'
+  '$mdMedia'
+  '$cacheFactory'
+  '$q'
+  '$timeout'
+  '$mdToast'
+
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast) ->
     $scope.userSession = JSON.parse window.userSession
-    console.log $scope.userSession
+    console.log $scope.accountId = $scope.userSession.id
+    $scope.allTeams = $http.get 'team/list'
+    .success (result) ->
+      return $scope.allTeams = result
+
+    buildToggler = (navID) ->
+      debounceFn = $mdUtil.debounce((->
+        $mdSidenav(navID).toggle().then ->
+          return
+        return
+      ), 200)
+      debounceFn
+    $scope.toggleRight = buildToggler('notif')
+
+    $scope.newEmployeeNotif = $http.get 'notification/newEmployee/' + $scope.accountId
+    .success (result) ->
+      return $scope.newEmployeeNotif = result
+
+    $scope.newRequestNotif = $http.get 'notification/newEvalRequest/'+ $scope.accountId
+    .success (result) ->
+      console.log result
+      return $scope.newRequestNotif = result
 
 
-    $scope.cover = false;
 
+    $scope.deleteOnArray = (array,deleteId) ->
+      return $q (resolve,reject) ->
 
+        $timeout () ->
+          i = 0
+          while i < array.length
+            if array[i].id is deleteId
+              array.splice i,1
+              break
+            i++
+          # console.log array
+          if array
+            console.log array
 
-    #Function that should be called when opening the main menu (the arrow-down button on the top right)
-    # $scope.openMainMenu = ()->
-    #   return null
+            resolve array
 
+        , 1000
 
-    # #Toggl Sidenav
     $scope.toggleSidenav = (menuId) ->
       $mdSidenav(menuId).toggle()
       return
+    $scope.showNotifs = (selected) ->
+      # switch (selected)
+      # console.log selected
+      $scope.notifSelected = selected
+      $scope.toggleRight()
+    $scope.cover = false;
 
     $scope.logout = ->
       console.log "send request to logout"
       document.location = "/auth/logout/"
       return
 
-    # # $scope.test = ()->
-    # #   console.log "Testing here: "
-    # #   console.log JST["admin/home/home.html"]()
-
-    # $scope.showDialog = (env)->
-    #   $mdDialog.show(
-    #     $mdDialog.alert()
-    #       .clickOutsideToClose(true)
-    #       .title('This is an alert title')
-    #       .content('You can specify some description text in here.')
-    #       .ariaLabel('Alert Dialog Demo')
-    #       .ok('Got it!')
-    #       .targetEvent(env)
-    #   )
-
-
-    # #transfer to specific controller
-    # $scope.confirmDialog = (env)->
-    #   confirm = $mdDialog.confirm()
-    #     .title('Would you like to delete your debt?')
-    #     .content("All of the banks have agreed to <span >forgive</span> you your debts.")
-    #     .ariaLabel('Lucky day')
-    #     .targetEvent(env)
-    #     .ok('Please do it!')
-    #     .cancel('Sounds like a scam');
-
-    #   $mdDialog.show(confirm)
-    #   .then(
-    #     () ->
-    #       $scope.status = 'You decided to get rid of your debt.';
-    #     ,
-    #     ()->
-    #       $scope.status = 'You decided to keep your debt.';
-    #   )
     $scope.redirect = (path) ->
       $location.url(path)
 
     $scope.routes = ''
 
+    $scope.alert = (msg) ->
+      $mdToast.show(
+        $mdToast.simple(msg)
+          # .textContent('Simple Toast!')
+          .position('top right')
+          .hideDelay(5000)
+      );
 
-    # return
+    # $scope.toConfirmRequest = (evalId,status) ->
+    #   console.log 'to confirm'
+    #   console.log evalId,status
+
+    # $scope.employeeInfo = (ev) ->
+
+    #   # console.log 'employeeInfo', ev
+    #   useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+    #   $mdDialog.show(
+    #     controller: EmployeeInfoController
+    #     template: JST['common/employeeInfo.html']()
+    #     parent: angular.element(document.body)
+    #     locals: { scopes: ev }
+    #     targetEvent: ev
+    #     clickOutsideToClose: true
+    #     fullscreen: useFullScreen).then ((answer) ->
+    #     $scope.status = 'You said the information was "' + answer + '".'
+    #     return
+    #   ), ->
+    #     $scope.status = 'You cancelled the dialog.'
+    #     return
+    #   $scope.$watch (->
+    #     $mdMedia('xs') or $mdMedia('sm')
+    #   ), (wantsFullScreen) ->
+    #     $scope.customFullscreen = wantsFullScreen == true
+    #     return
+    #   return
+    $scope.toAddTeam = (account,notifId) ->
+      # console.log notifId
+      useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+      $mdDialog.show(
+        controller: EmployeeAddTeamController
+        template: JST['hr/EmployeeAddTeam.html']()
+        parent: angular.element(document.body)
+        locals: { account: account, scopes:$scope, notifId:notifId }
+        targetEvent: account
+        clickOutsideToClose: true
+        fullscreen: useFullScreen).then ((answer) ->
+        $scope.status = 'You said the information was "' + answer + '".'
+        return
+      ), ->
+        $scope.status = 'You cancelled the dialog.'
+        return
+      $scope.$watch (->
+        $mdMedia('xs') or $mdMedia('sm')
+      ), (wantsFullScreen) ->
+        $scope.customFullscreen = wantsFullScreen == true
+        return
+      return
 ]
+
+
+EmployeeAddTeamController = ($scope, $mdDialog, $http,account,scopes,notifId) ->
+  # console.log notifId
+  $scope.notifId = notifId
+  $scope.allTeams = scopes.allTeams
+  $scope.account = account
+  $scope.teamId = ''
+  $scope.newSched = {}
+  $scope.newSched.selected = [];
+
+  # $scope.teamSelected =
+  $scope.toggle = (item, list) ->
+    idx = list.indexOf(item)
+    if idx > -1
+      list.splice idx, 1
+    else
+      list.push item
+    return
+
+  $scope.teamSelected = (teamId) ->
+    # console.log teamId
+    $scope.teamId = teamId
+    # if $scope.teamSelected
+    #   console.log 'already selected'
+    #   $scope.teamSelected = ''
+    # return $scope.teamSelected = teamId
+  # $scope.teamSelected =
+  $scope.addTeam = (account,teamName,notifId) ->
+
+    # console.log $scope.teamId
+    data =
+      accountId: account.id
+      teamId: $scope.teamId
+    # console.log data
+    $http.put 'teammember/create',data
+    $http.put 'notification/update/' +  notifId
+    .success (res) ->
+      if res
+        scopes.deleteOnArray(scopes.newEmployeeNotif,notifId)
+        .then (ok) ->
+          scopes.newEmployeeNotif = ok
+        $scope.hide()
+        scopes.alert account.lastname + " assigned to team " + teamName
+
+  $scope.exists = (item, list) ->
+    list.indexOf(item) > -1
+
+  $scope.hide = ->
+    $mdDialog.hide()
+    return
+
+  $scope.cancel = ->
+    $mdDialog.cancel()
+    return
+
+  $scope.answer = (answer) ->
+    $mdDialog.hide answer
+    return

@@ -1,1 +1,113 @@
-h1 EMPLOYEEEEEEEEEEEE VIEWWWWWWWWWWWW
+html(ng-app='EMPLOYEE')
+  head
+    title EMPLOYEE
+    // $location service used by AngularJS
+    base(href="http://#{base}/")
+    // Viewport mobile tag for sensible mobile support
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+
+    // STYLES
+    link(rel="stylesheet", href="/styles/angular-material.css")
+    link(rel="stylesheet", href="/styles/bootstrap.css")
+    link(rel="stylesheet", href="/styles/layout.css")
+    link(rel="stylesheet", href="/styles/materialdesignicons.css")
+    link(rel="stylesheet", href="/styles/styles.css")
+    link(rel="stylesheet", href="/styles/employee/home/home.css")
+    link(rel="stylesheet", href="/styles/common/showAlert/showAlert.css")
+    // STYLES END
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
+
+    //- script to get user session data passed by server from 'api/services/View.js'
+    script.
+      var data = !{JSON.stringify(user)}
+      window.userSession = data
+      //- console.log(data)
+
+    //- include the google charts API
+    script(type='text/javascript', src='https://www.google.com/jsapi')
+
+
+  body(layout='column', ng-controller='HrCtrl' style='overflow:hidden;')
+    div(ng-show="cover", style="position:fixed;width:100%;height:100%;background-color:white;")
+      md-progress-circular(md-mode="indeterminate")
+    md-toolbar(layout='row')
+      .md-toolbar-tools
+        div(flex='80')
+          h1 Performance Management System
+        div(flex='20' layout='row')
+          md-menu(md-position-mode="target-right target")
+            md-button.md-icon-button
+              md-icon.mdi.mdi-message
+          md-menu(md-position-mode="target-right target")
+            md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
+              i.mdi.mdi-account(style="font-size:30px;", md-menu-origin)
+            md-menu-content(width='2')
+              md-menu-item
+                md-button(ng-click='logout()')
+                  i.mdi.mdi-logout(style="font-size:24px;vertical-align:middle;")
+                  | Logout
+
+          md-icon.mdi.mdi-apps
+
+
+
+
+
+        //- md-button.md-raised.md-primary.md-hue-3(hide-sm, hide,ng-click="logout()") Logout
+        span(hide-sm, flex="5")
+
+    div(layout='row')
+      md-sidenav.md-whiteframe-12dp( md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", md-theme="default" style='width:100px')
+        md-content(style='height:94%', layout="column")
+          md-content.sidenav-header(layout-padding style='padding-left:20px' )
+            div(style="height:100px;")
+              img.img-circle(src='{{userSession.photo}}')
+            .md-title {{userSession.firstname + " " + userSession.lastname}}
+            .md-subhead {{userSession.email}}
+
+          md-list(style='color:black' flex='60')
+            md-subheader.md-no-sticket Menu
+            md-divider
+            md-list-item(flex ng-click="redirect('/')")
+              //- i.mdi.mdi-24px.mdi-forum(style="padding-right:10px;")
+              md-icon(class='mdi mdi-calendar')
+              p Home
+
+              md-divider
+            //- md-list-item
+          md-list
+            md-list-item
+              switch(position="bottom-left")
+
+      md-content#appContent.md-padding.md-hue-2(layout='column' flex)
+        //- p {{userSession |json}} //- uncomment to see user sessoin data
+
+        //- //This should be ng-view
+        ng-view(flex)
+
+
+    // TEMPLATES
+    script(type="text/javascript", src="/templates/jst_employee.js")
+    // TEMPLATES END
+
+
+    // SCRIPTS
+    script(src="/js/dependencies/sails.io.js")
+    script(src="/js/dependencies/angular.min.js")
+    script(src="/js/dependencies/angular-animate.min.js")
+    script(src="/js/dependencies/angular-aria.min.js")
+    script(src="/js/dependencies/angular-cache.js")
+    script(src="/js/dependencies/angular-material.js")
+    script(src="/js/dependencies/angular-resource.js")
+    script(src="/js/dependencies/angular-route.js")
+    script(src="/js/dependencies/angular-sails.min.js")
+    script(src="/js/dependencies/angular-ui-router.js")
+    script(src="/js/dependencies/lodash.js")
+    script(src="/js/employee/app.js")
+    script(src="/js/global.js")
+    script(src="/js/employee/home/homeCtrl.js")
+    script(src="/js/common/TeamService.js")
+    script(src="/js/common/cache.js")
+    script(src="/js/common/showAlert/showAlertDirv.js")
+    script(src="/js/common/switchView/SwitchViewDir.js")
+    // SCRIPTS END

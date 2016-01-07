@@ -72,6 +72,30 @@ var users = {
       'hr/**/*.html',
       'common/**/*.html'
     ]
+  },
+  employee:{
+    css:[
+      'dependencies/**/*.css',
+      '*.css',
+      'employee/**/*.css',
+      'common/**/*.css'
+
+    ],
+    js:[
+      'dependencies/sails.io.js',
+      'dependencies/angular.min.js',
+      'dependencies/**/*.js',
+      'employee/app.js',
+      'global.js',
+      'employee/**/*.js',
+      'common/**/*.js'
+
+
+    ],
+    templates:[
+      'employee/**/*.html',
+      'common/**/*.html'
+    ]
   }
 }
 

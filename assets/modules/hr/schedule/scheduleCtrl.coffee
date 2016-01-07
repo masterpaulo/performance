@@ -46,12 +46,12 @@ app.controller "ScheduleCtrl", [
 
       newSched =
         date: newdate
-        team: sched.team.id
+        teamId: sched.team.id
         type: 'supervisor'
         notes: sched.notes
         evaluationLimit: 1
 
-      $http.put 'evaluationschedule/create', newSched
+      $http.post 'evaluationschedule/create', newSched
       .success (data) ->
         if data
           tempId = data.teamId

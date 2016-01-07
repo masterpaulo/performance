@@ -1,0 +1,5 @@
+#alert-holder
+  ul(ng-class="position")
+    li.scale-fade(ng-repeat="alert in alerts",ng-class="alert.type",ng-click="alerts.splice($index,1)",ng-mouseenter="alert.hover = true",ng-mouseleave="alert.hover = false")
+      header {{alert.header | uppercase}}
+      p {{alert.message}}
