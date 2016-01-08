@@ -3,7 +3,11 @@ module.exports =
   attributes:
     type:
       type: 'string'
-      enum: ['New Employee','Member Evaluation Request']
+      enum: ['New Employee'
+      'Member Evaluation Request'
+      'Member Evaluation'
+      'Team Leader Evaluation'
+      "Schedule For Your Evaluation"]
       defaultsTo: 'New Employee'
     comment:
       type: 'string'
@@ -11,7 +15,7 @@ module.exports =
       model: 'account'
     receiver:
       model: 'account'
-    evalschedId:
+    scheduleId:
       model: 'evaluationschedule'
     done:
       type: 'boolean'

@@ -1,70 +1,79 @@
-div(layout='row')
-  div(flex='40' layout-padding)
-    md-card(flex)
-      md-card-content
-        md-input-container.md-block(md-no-float='', style="padding-bottom:0")
-          md-icon
-            i.mdi.mdi-36px.mdi-magnify
-          input( type='text', placeholder='Search Team')
-    md-card(flex style="min-height:600px")
-      md-card-content
-        h5.md-title Teams
-        //- md-button(ng-click='showAlert()' ) showAlert
-        //- h1 {{"000" +teammembers.length}}
-      md-divider
+md-content(layout="column", flex)
 
-      md-list
-        div(ng-show='myteams.length')
-          md-list-item.md-1-line(ng-repeat='team in myteams' ng-click='selectedTeam(team)')
-            //- h5 {{team.accountId}} {{team.teamId.supervisor}}
-            h5(flex='95') {{team.teamId.name}}
+  md-content.md-hue-2(layout-gt-lg="row")
+    md-content.md-hue-2(flex-gt-lg="40")
+      md-card(flex)
+        md-card-content
+          md-input-container.md-block(md-no-float='', style="padding-bottom:0")
+            md-icon
+              i.mdi.mdi-36px.mdi-magnify
+            input( type='text', placeholder='Search Team',ng-model="teamSearch")
+
+      md-card(flex)
+        md-card-content(style="position:relative")
+
+
+          h2.md-title
+            md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
+            | Teams
+
+
+        md-divider
+
+
+        md-list(style="max-height: 70%;overflow: auto;")
+          md-list-item(ng-repeat="team in myteams" ng-click='selectedTeam(team)')
+            p {{team.teamId.name}}
             md-icon.md-primary(flex ng-show='{{team.teamId.supervisor===team.accountId}}')
               i.mdi.mdi-account-star-variant
 
             md-divider
-        div(ng-show='!myteams.length')
-          h1 You're not a member of any team
-          md-button.md-primary.md-raised(ng-click='showConfirm($event)') Choose a team
-  //- md-card(flex ng-show='teamName')
-  md-card(flex ng-show='teamName')
-    md-toolbar(layout='row')
-        .md-toolbar-tools
-          md-button.md-icon-button( aria-label="Open Sidenav")
-            md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
-          h1 {{teamName}}
-          span(flex)
-          md-button.md-icon-button( aria-label="Close Team Window", ng-click="closeTeam()")
-            md-icon(md-svg-icon="close", style="'font-size':36px;")
-    div(ng-cloak='')
-      md-content
-        md-tabs(md-dynamic-height='', md-border-bottom='')
+
+
+    md-content.md-hue-2(flex, )
+      md-card.team-window(ng-show='teamName' , id="member-tab")
+        md-toolbar(layout='row')
+          .md-toolbar-tools
+            md-button.md-icon-button( aria-label="Open Sidenav")
+              md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
+            h1 {{teamName}}
+            span(flex)
+            md-button.md-icon-button( aria-label="Close Team Window", ng-click="closeTeam()")
+              md-icon(md-svg-icon="close", style="'font-size':36px;")
+        md-tabs.md-primary( md-dynamic-height='', md-no-ink='',  md-stretch-tabs='', md-border-bottom='', )
+          md-tab.summary(label='summary')
+            md-content.md-padding(layout="row" layout-wrap layout-align="center center")
+              md-content(flex="30" )
+                .md-display-3 {{selectedTeam.members.length}}
+                h4 Members
+              md-content(flex="30")
+                .md-display-3 {{selectedTeam.latestScore | number : 2}}
+                h4 Team Score
+              md-content(flex="30")
+                .md-display-3 {{selectedTeam.average | number : 2}}
+                h4 Average
           md-tab(label='members')
             md-content.md-padding
-              div(layout='row')
-                div(flex='15')
-                  h2.md-title
-                div(flex='30')
-                  h2.md-title Email
-                div(flex='25')
-                  h2.md-title Last Name
-                div(flex='25')
-                  h2.md-title First Name
-
-              md-divider
-                //- ng-disabled(!teammembers.length)
-                //-   span {{showAlert()}}
-              md-list
-                md-list-item.md-1-line(ng-repeat='team in teammembers' layout='row')
+              md-list()
+                //- h5 {{}}
+                md-list-item(ng-repeat="member in teammembers")
                   div(flex='15')
-                    img.img-circle(ng-src='{{team.accountId.photo}}' style='height:50px;width:50px')
-                  div(flex='30')
-                    h5.md-1-line {{team.accountId.email}}
-                  div(flex='25')
-                    h5.md-1-line {{team.accountId.lastname}}
-                  div(flex='25')
-                    h5.md-1-line {{team.accountId.firstname}}
+                    img.img-circle(ng-src='{{member.accountId.photo}}' style='height:50px;width:50px')
+                  div(flex)
+                    p {{member.accountId.firstname}}  {{member.accountId.lastname}}
+                  //- span(flex)
+                  //- md-chips(style="box-shadow:0;")
+                  //-   md-chip {{member.fistname.length/3 + 5 | number : 2}}
                   md-divider
-          md-tab(label='schedule' )
+                md-list-item(ng-hide="teammembers.length")
+                  p No members yet.
+
+            //- span(flex)
+            //- md-content(layout="row" layout-padding)
+            //-   span(flex)
+            //-   md-button.md-raised.md-warn(ng-click="test()", aria-label="Add memeber", md-ripple-size="full") Remove Members
+            //-   md-button.md-raised.md-primary(ng-click="showMemberBottomSheet()", aria-label="Add memeber", md-ripple-size="full") Add Member
+          md-tab(label='schedules')
             md-content.md-padding
               div(layout='row')
                 div(flex='15')
@@ -93,11 +102,35 @@ div(layout='row')
                   div(flex='10')
                     h5.md-1-line {{sched.status}}
 
-
-
-              //- md-button(ng-click='showSimpleToast()') toast
-
-          md-tab(label='summary')
+          md-tab(label='structure')
             md-content.md-padding
-              h1.md-display-2  Summary
-              p 12323333333333333333333333h
+              h1.md-display-2 Structure
+              p
+                | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+          md-tab(label='settings')
+            md-content.md-padding()
+              h3.md-display-1 Team Info
+              form(name="updateTeamForm")
+                md-input-container
+                  label Team Name
+                  input(ng-model="updatedTeam.name", required, md-maxlength="35", ng-change="showUpdateButton=true")
+                md-input-container(ng-init="")
+                  label Parent
+                  md-select(ng-model="updatedTeam.parent", , ng-change="showUpdateButton=true")
+                    md-option(ng-repeat="team in teams track by $index" value="{{team.id}}") {{team.name}}
+                md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save
+              h3.md-display-1 Delete Team
+              .md-caption Deleting this team will remove all evaluation records of the members. Forever... Are you sure you want to continue?
+              md-button.md-raised.md-warn(ng-click="button1=true" ng-disabled="button1") {{(button1)? "are you sure?":"Yes"}}
+              md-button.md-raised.md-warn(ng-show="button1" ng-click="button2=true"   ng-disabled="button2") {{(button2)? "Really?":"I'm Sure"}}
+              md-button.md-raised.md-warn(ng-show="button2" ng-click="button1 = button2 = false ;test()") DELETE TEAM
+
+
+
+         //- 2385820
+
+
+//- md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")
+//-   i.mdi.mdi-24px.mdi-plus
+
+

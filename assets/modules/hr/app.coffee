@@ -1,5 +1,13 @@
 app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails']
 
+app.run ($rootScope,teamService) ->
+  # $rootScope.teams = []
+  teamService.listTeams()
+  .success (result) ->
+    console.log result
+    return $rootScope.teams = result
+
+
 app.config [
   "$routeProvider"
   "$locationProvider"
@@ -41,13 +49,16 @@ app.controller 'HrCtrl', [
   '$q'
   '$timeout'
   '$mdToast'
+  '$rootScope'
+  'teamService'
 
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast) ->
+
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService) ->
     $scope.userSession = JSON.parse window.userSession
     console.log $scope.accountId = $scope.userSession.id
-    $scope.allTeams = $http.get 'team/list'
-    .success (result) ->
-      return $scope.allTeams = result
+    # $rootScope.allTeams = $http.get 'team/list'
+    # .success (result) ->
+    #   return $scope.allTeams = result
 
     buildToggler = (navID) ->
       debounceFn = $mdUtil.debounce((->
@@ -64,7 +75,7 @@ app.controller 'HrCtrl', [
 
     $scope.newRequestNotif = $http.get 'notification/newEvalRequest/'+ $scope.accountId
     .success (result) ->
-      console.log result
+      # console.log result
       return $scope.newRequestNotif = result
 
 
@@ -107,7 +118,8 @@ app.controller 'HrCtrl', [
 
     $scope.routes = ''
 
-    $scope.alert = (msg) ->
+    $rootScope.alert = (msg) ->
+      console.log 'alerting'
       $mdToast.show(
         $mdToast.simple(msg)
           # .textContent('Simple Toast!')
@@ -115,33 +127,33 @@ app.controller 'HrCtrl', [
           .hideDelay(5000)
       );
 
-    # $scope.toConfirmRequest = (evalId,status) ->
-    #   console.log 'to confirm'
-    #   console.log evalId,status
+    $scope.toConfirmRequest = (notif,status) ->
+      console.log 'to confirm'
 
-    # $scope.employeeInfo = (ev) ->
+      console.log notif,status
+      d =
+        notifId: notif.id
+        evalStatus: status
+      #  evaluationsched:status, notification:done:true
 
-    #   # console.log 'employeeInfo', ev
-    #   useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
-    #   $mdDialog.show(
-    #     controller: EmployeeInfoController
-    #     template: JST['common/employeeInfo.html']()
-    #     parent: angular.element(document.body)
-    #     locals: { scopes: ev }
-    #     targetEvent: ev
-    #     clickOutsideToClose: true
-    #     fullscreen: useFullScreen).then ((answer) ->
-    #     $scope.status = 'You said the information was "' + answer + '".'
-    #     return
-    #   ), ->
-    #     $scope.status = 'You cancelled the dialog.'
-    #     return
-    #   $scope.$watch (->
-    #     $mdMedia('xs') or $mdMedia('sm')
-    #   ), (wantsFullScreen) ->
-    #     $scope.customFullscreen = wantsFullScreen == true
-    #     return
-    #   return
+      $http.put 'notification/update',d
+      .success (res) ->
+        if res
+          $scope.alert 'Evaluation Request Granted'
+          $scope.deleteOnArray($scope.newRequestNotif,d.notifId)
+          .then (ok) ->
+            $scope.newRequestNotif = ok
+            # console.log 'notif', notif
+            # console.log $rootScope.activeSchedules
+            # console.log notif.scheduleId.teamId
+            # teamName = $scope.searchInArray($rootScope.teams,notif.scheduleId.teamId).name
+            notif.scheduleId.teamId = {}
+            console.log notif.scheduleId.teamId.name = notif.teamName
+            # $http.get 'team/get/'+ notif.scheduleId.teamId
+            # .success
+            console.log notif.scheduleId
+            $rootScope.activeSchedules.push notif.scheduleId
+
     $scope.toAddTeam = (account,notifId) ->
       # console.log notifId
       useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen

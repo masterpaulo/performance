@@ -1,6 +1,12 @@
-
-
 app = angular.module "EMPLOYEE",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails']
+
+
+# app.run ($rootScope,teamService) ->
+  # $rootScope.teams = []
+  # teamService.listTeams()
+  # .success (result) ->
+  #   console.log result
+  #   return $rootScope.teams = result
 
 app.config [
   "$routeProvider"
@@ -16,7 +22,7 @@ app.config [
     .when "/",
       template: JST["employee/home/home.html"]()
       controller:"HomeCtrl"
-    # .otherwise redirectTo: '/'
+    .otherwise redirectTo: '/'
 ]
 
 
@@ -45,10 +51,17 @@ app.controller 'HrCtrl', [
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location) ->
     #parse user session data from server
     $scope.userSession = JSON.parse window.userSession
+
     console.log $scope.userSession
-    $scope.z = 'aaaaaaaaaa'
+    # $scope.z = 'aaaaaaaaaa'
 
     $scope.cover = false;
+
+    $scope.notifications = $http.get 'notification/message/' + $scope.userSession.id
+    .success (result) ->
+      if result
+        console.log result
+        $scope.notifications = result
 
 
 
@@ -67,53 +80,14 @@ app.controller 'HrCtrl', [
       document.location = "/auth/logout/"
       return
 
-    # # $scope.test = ()->
-    # #   console.log "Testing here: "
-    # #   console.log JST["admin/home/home.html"]()
-
-    # $scope.showDialog = (env)->
-    #   $mdDialog.show(
-    #     $mdDialog.alert()
-    #       .clickOutsideToClose(true)
-    #       .title('This is an alert title')
-    #       .content('You can specify some description text in here.')
-    #       .ariaLabel('Alert Dialog Demo')
-    #       .ok('Got it!')
-    #       .targetEvent(env)
-    #   )
-
-
-    # #transfer to specific controller
-    # $scope.confirmDialog = (env)->
-    #   confirm = $mdDialog.confirm()
-    #     .title('Would you like to delete your debt?')
-    #     .content("All of the banks have agreed to <span >forgive</span> you your debts.")
-    #     .ariaLabel('Lucky day')
-    #     .targetEvent(env)
-    #     .ok('Please do it!')
-    #     .cancel('Sounds like a scam');
-
-    #   $mdDialog.show(confirm)
-    #   .then(
-    #     () ->
-    #       $scope.status = 'You decided to get rid of your debt.';
-    #     ,
-    #     ()->
-    #       $scope.status = 'You decided to keep your debt.';
-    #   )
     $scope.redirect = (path) ->
       $location.url(path)
 
     $scope.routes = ''
 
-    $scope.viewSwitcher = (roleId) ->
-      console.log 'switchinggggggggggggggg'
-      $http.put 'view/switch/' + roleId
-      .success (data) ->
-        if data
+    # $scope.viewSwitcher = (roleId) ->
+    #   console.log 'switchinggggggggggggggg'
+    #   appService.viewSwitcher 'roleId'
 
-          console.log data
-          window.location.reload()
-          # $location.path('/');
 
 ]

@@ -20,7 +20,7 @@ div
 
 
         tbody
-          tr(ng-repeat='sched in evaluationschedules | filter:search' ng-click='sample()')
+          tr(ng-repeat='sched in activeSchedules | filter:search' ng-click='sample()')
             td {{sched.date}}
             td {{sched.teamId.name}}
             td {{sched.type}}
@@ -45,6 +45,6 @@ div
           input(type='text' ng-model='newSched.notes')
         md-select(ng-model='newSched.team' placeholder='Select Team')
           md-option(ng-value='{id: team.id, name:team.name}' ng-repeat='team in teams') {{team.name}}
-
+        //- {{teams}}
         md-button.md-primary(ng-click='submitSchedule(newSched)' ) Submit
 

@@ -138,9 +138,9 @@ html(ng-app='HR')
                   md-list
                     md-list-item(ng-repeat='new in newRequestNotif' layout='row' )
 
-                      h5 {{new.teamId.name}}
-                      md-button(ng-click="toConfirmRequest(new.id,'active')") ok
-                      md-button(ng-click="toConfirmRequest(new.id,'cancelled')")
+                      h5 {{new.teamName}}
+                      md-button(ng-click="toConfirmRequest(new,'active')") ok
+                      md-button(ng-click="toConfirmRequest(new,'cancelled')") cancel
 
               md-tab
                 md-tab-label
@@ -171,11 +171,15 @@ html(ng-app='HR')
     script(src="/js/dependencies/lodash.js")
     script(src="/js/hr/app.js")
     script(src="/js/global.js")
+    script(src="/js/hr/ScheduleService.js")
+    script(src="/js/hr/TeamService.js")
     script(src="/js/hr/employee/employeeCtrl.js")
     script(src="/js/hr/form/formCtrl.js")
     script(src="/js/hr/schedule/scheduleCtrl.js")
     script(src="/js/hr/team/teamCtrl.js")
-    script(src="/js/common/TeamService.js")
+    script(src="/js/common/AppService.js")
+    script(src="/js/common/NotificationService.js")
+    script(src="/js/common/ScheduleService.js")
     script(src="/js/common/cache.js")
     script(src="/js/common/showAlert/showAlertDirv.js")
     script(src="/js/common/switchView/SwitchViewDir.js")

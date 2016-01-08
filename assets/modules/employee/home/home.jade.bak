@@ -1,0 +1,103 @@
+div(layout='row')
+  div(flex='40' layout-padding)
+    md-card(flex)
+      md-card-content
+        md-input-container.md-block(md-no-float='', style="padding-bottom:0")
+          md-icon
+            i.mdi.mdi-36px.mdi-magnify
+          input( type='text', placeholder='Search Team')
+    md-card(flex style="min-height:600px")
+      md-card-content
+        h5.md-title Teams
+        //- md-button(ng-click='showAlert()' ) showAlert
+        //- h1 {{"000" +teammembers.length}}
+      md-divider
+
+      md-list
+        div(ng-show='myteams.length')
+          md-list-item.md-1-line(ng-repeat='team in myteams' ng-click='selectedTeam(team)')
+            //- h5 {{team.accountId}} {{team.teamId.supervisor}}
+            h5(flex='95') {{team.teamId.name}}
+            md-icon.md-primary(flex ng-show='{{team.teamId.supervisor===team.accountId}}')
+              i.mdi.mdi-account-star-variant
+
+            md-divider
+        div(ng-show='!myteams.length')
+          h1 You're not a member of any team
+          md-button.md-primary.md-raised(ng-click='showConfirm($event)') Choose a team
+  //- md-card(flex ng-show='teamName')
+  md-card(flex ng-show='teamName')
+    md-toolbar(layout='row')
+        .md-toolbar-tools
+          md-button.md-icon-button( aria-label="Open Sidenav")
+            md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
+          h1 {{teamName}}
+          span(flex)
+          md-button.md-icon-button( aria-label="Close Team Window", ng-click="closeTeam()")
+            md-icon(md-svg-icon="close", style="'font-size':36px;")
+    div(ng-cloak='')
+      md-content
+        md-tabs(md-dynamic-height='', md-border-bottom='')
+          md-tab(label='members')
+            md-content.md-padding
+              div(layout='row')
+                div(flex='15')
+                  h2.md-title
+                div(flex='30')
+                  h2.md-title Email
+                div(flex='25')
+                  h2.md-title Last Name
+                div(flex='25')
+                  h2.md-title First Name
+
+              md-divider
+                //- ng-disabled(!teammembers.length)
+                //-   span {{showAlert()}}
+              md-list
+                md-list-item.md-1-line(ng-repeat='team in teammembers' layout='row')
+                  div(flex='15')
+                    img.img-circle(ng-src='{{team.accountId.photo}}' style='height:50px;width:50px')
+                  div(flex='30')
+                    h5.md-1-line {{team.accountId.email}}
+                  div(flex='25')
+                    h5.md-1-line {{team.accountId.lastname}}
+                  div(flex='25')
+                    h5.md-1-line {{team.accountId.firstname}}
+                  md-divider
+          md-tab(label='schedule' )
+            md-content.md-padding
+              div(layout='row')
+                div(flex='15')
+                  h2.md-title Date
+                div(flex='25')
+                  h2.md-title Notes
+                div(flex='25')
+                  h2.md-title Type
+                div(flex='25')
+                  h2.md-title Rating
+                div(flex='10')
+                  h2.md-title Status
+              md-divider
+              md-button.md-fab.md-primary.md-raised(ng-click='showAdvanced($event)', flex='100', flex-gt-md='auto' style='position:absolute; right:15px;top:35px' ng-show='enableToSchedule')
+                md-icon.mdi.mdi-calendar-plus
+              md-list(layout='column')
+                md-list-container.md-1-line(ng-repeat='sched in teamSchedules' layout='row')
+                  div(flex='15')
+                    h5.md-1-line {{sched.date}}
+                  div(flex='25')
+                    h5.md-1-line {{sched.notes}}
+                  div(flex='25')
+                    h5.md-1-line {{sched.type}}
+                  div(flex='25')
+                    h5.md-1-line {{sched.rating}}
+                  div(flex='10')
+                    h5.md-1-line {{sched.status}}
+
+
+
+              //- md-button(ng-click='showSimpleToast()') toast
+
+          md-tab(label='summary')
+            md-content.md-padding
+              h1.md-display-2  Summary
+              p 12323333333333333333333333h

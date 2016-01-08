@@ -1,7 +1,9 @@
 module.exports =
   connection: 'mongo'
   attributes: {
-    accountId:
+    evaluatee:
+      model: 'account'
+    evaluator:
       model: 'account'
     scheduleId:
       model: 'evaluationschedule'

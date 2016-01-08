@@ -9,8 +9,12 @@ app.controller "ScheduleCtrl", [
   '$mdUtil'
   '$timeout'
   '$rootScope'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$mdUtil, $timeout, $rootScope) ->
-    $scope.teams = []
+  '$q'
+  'scheduleService'
+  'teamService'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$mdUtil, $timeout, $rootScope,$q,scheduleService,teamService) ->
+    # $scope.teams = []
+    $scope.accountId = $scope.$parent.accountId
 
     buildToggler = (navID) ->
       debounceFn = $mdUtil.debounce((->
@@ -21,61 +25,65 @@ app.controller "ScheduleCtrl", [
       debounceFn
     $scope.toggleRight = buildToggler('right')
 
-    $http.get 'team/list'
-    .success (result) ->
-      if result
-        # console.log result
-        $scope.teams = result
 
 
-    $http.get 'evaluationschedule/list'
+    # $scope.close = buildToggler('right').close
+    $scope.close = ->
+      $scope.newSched = {}
+      $mdSidenav('right').close()
+
+    # $http.get 'team/list'
+    # .success (result) ->
+    #   if result
+    #     # console.log result
+    #     $rootScope.teams = result
+    # teamService.listTeams()
+    # .success (result) ->
+    #   $rootScope.teams = result
+
+    scheduleService.activeSchedules()
     .success (result) ->
-      if result
-        console.log result
-        $scope.evaluationschedules = result
+      $rootScope.activeSchedules = result
 
     $scope.toSchedule = () ->
+      $scope.newSched = {}
       $scope.toggleRight()
 
-    formatDate = (date) ->
-      newDate = new Date date
-      return newDate.getMonth() + 1 + "/" + newDate.getDate() + "/" + newDate.getFullYear()
+
+
     $scope.submitSchedule = (sched) ->
       console.log 'submitting'
-      newdate = formatDate(sched.date)
+      newdate = scheduleService.formatDate(sched.date)
 
       newSched =
+        accountId: $scope.accountId
         date: newdate
         teamId: sched.team.id
         type: 'supervisor'
         notes: sched.notes
         evaluationLimit: 1
+        status: 'active'
 
-      $http.post 'evaluationschedule/create', newSched
-      .success (data) ->
-        if data
-          tempId = data.teamId
-          data.teamId = {}
-          data.teamId.id = tempId
-          data.teamId.name = sched.team.name
-          $scope.evaluationschedules.push data
+      scheduleService.checkForExist($scope.activeSchedules,newSched)
+      .then (found) ->
+        if found
+          $rootScope.alert 'You need to finish the previous evaluation'
+          $scope.close()
+        else
+          scheduleService.create(newSched)
+          .success (data) ->
+            if data
+              tempId = data.teamId
+              data.teamId = {}
+              data.teamId.id = tempId
+              data.teamId.name = sched.team.name
+              $scope.activeSchedules.push data
 
-      # $scope.evaluationschedules.forEach (evaluation) ->
-        # ready = false;
-        # console.log evaluation
-        # if evaluation.teamId.id is sched.team.id and !evaluation.done
-        #   console.log 'you need to finish the previous evaluation'
+              $scope.close()
+              $scope.$parent.alert 'Success'
 
-        # else
-        #   console.log 'ready to schedule'
-        #   ready = true
-
-      # if ready
 
     $scope.$parent.routes = 'Evaluation Schedules'
 
-    $scope.sample = () ->
-      console.log 'zzzzzzzzzzzzzzzzzzzzzz'
-      $scope.toggleRight()
 
 ]

@@ -9,7 +9,8 @@ app.controller "TeamCtrl", [
   '$mdBottomSheet'
   '$mdMedia'
   'teamService'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, teamService) ->
+  '$rootScope'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, teamService,$rootScope) ->
 
     $scope.teamSearch = ""
 
@@ -20,7 +21,7 @@ app.controller "TeamCtrl", [
     .then (data) ->
       console.log data
       $scope.teams = data.data
-    
+
 
 
 
@@ -32,7 +33,7 @@ app.controller "TeamCtrl", [
     $scope.selectTeam = (team) ->
       $http.get 'team/get/'+team.id
         .success (data) ->
-          if data 
+          if data
             console.log data
             $scope.selectedTeam = data
             $scope.updatedTeam = angular.copy data
@@ -73,7 +74,7 @@ app.controller "TeamCtrl", [
         fullscreen: $mdMedia('sm') and $scope.customFullscreen).then ((newTeam) ->
           console.log "I got the new Team"
           console.log newTeam
-          
+
           teamService.addTeam newTeam
           .then (data)->
             console.log "in TeamCtrl"

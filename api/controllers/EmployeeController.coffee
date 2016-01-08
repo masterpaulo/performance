@@ -23,6 +23,7 @@ module.exports =
         # console.log data
         res.json data
 
+
   # latestmembers: (req,res) ->
   #   UserRole.find()
   #   .populate 'accountId'

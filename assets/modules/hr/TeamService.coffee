@@ -1,10 +1,5 @@
-
-
 teamService = ($http) ->
 	teams = []
-
-	
-
 
 	service = {
 		listTeams : () ->
@@ -13,7 +8,7 @@ teamService = ($http) ->
 		getTeam : (teamId)->
 			$http.get 'team/get/'+teamId
 	        .success (data) ->
-	          	if data 
+	          	if data
 		            console.log data
 					return data
 
@@ -41,7 +36,7 @@ teamService = ($http) ->
 
 	#############
 
-	
+
 
 
 app.factory "teamService", teamService

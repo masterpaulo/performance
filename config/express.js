@@ -87,9 +87,9 @@ var verifyHandler = function(token, tokenSecret, profile, done) {
           data.lastname = profile.name.familyName;
         }
 
-        if (data.email.indexOf("@meditab.com") < 1 ){
-          err = "Email is @meditab.com";
-        }
+        // if (data.email.indexOf("@meditab.com") < 1 ){
+        //   err = "Email is @meditab.com";
+        // }
 
         if(err){
           return done(err, null);

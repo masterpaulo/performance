@@ -35,6 +35,7 @@ app.controller "HomeCtrl", [
       $http.get 'evaluationschedule/list/' + $scope.teamId, cache:true
       .success (data) ->
         if data
+          # console.log data
           $scope.teamSchedules = data
 
     # $scope.showAlert = ->
@@ -137,7 +138,7 @@ DialogController = ($scope, $mdDialog, $http,scopes) ->
       teamId: $scope.teamId
       type: 'member'
       notes: newSched.notes
-      # status: 'waiting for confirmation'
+      status: 'pending'
       evaluationLimit: newSched.selected.length
       selectedMember: newSched.selected
     $http.post 'evaluationschedule/create', newSchedule
