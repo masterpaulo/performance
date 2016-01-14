@@ -3,32 +3,18 @@ md-content(layout="column", flex)
   md-content.md-hue-2(layout-gt-lg="row")
     md-content.md-hue-2(flex-gt-lg="40")
       md-card(flex)
-        md-card-content
-          md-input-container.md-block(md-no-float='', style="padding-bottom:0")
-            md-icon
-              i.mdi.mdi-36px.mdi-magnify
-            input( type='text', placeholder='Search Team',ng-model="teamSearch")
-
-      md-card(flex)
-        md-card-content(style="position:relative")
-
-
-          h2.md-title
-            md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
-            | Teams
-
-
+        md-toolbar
+          md-toolbar-tools.md-padding
+            h2.md-title
+              md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
+              | Teams
         md-divider
-
-
         md-list(style="max-height: 70%;overflow: auto;")
           md-list-item(ng-repeat="team in myteams" ng-click='selectedTeam(team)')
             p {{team.teamId.name}}
-            md-icon.md-primary(flex ng-show='{{team.teamId.supervisor===team.accountId}}')
+            md-icon.md-primary(ng-show='{{team.teamId.supervisor===team.accountId}}')
               i.mdi.mdi-account-star-variant
-
             md-divider
-
 
     md-content.md-hue-2(flex, )
       md-card.team-window(ng-show='teamName' , id="member-tab")
@@ -53,54 +39,62 @@ md-content(layout="column", flex)
                 .md-display-3 {{selectedTeam.average | number : 2}}
                 h4 Average
           md-tab(label='members')
-            md-content.md-padding
-              md-list()
-                //- h5 {{}}
-                md-list-item(ng-repeat="member in teammembers")
-                  div(flex='15')
-                    img.img-circle(ng-src='{{member.accountId.photo}}' style='height:50px;width:50px')
-                  div(flex)
-                    p {{member.accountId.firstname}}  {{member.accountId.lastname}}
-                  //- span(flex)
-                  //- md-chips(style="box-shadow:0;")
-                  //-   md-chip {{member.fistname.length/3 + 5 | number : 2}}
-                  md-divider
-                md-list-item(ng-hide="teammembers.length")
-                  p No members yet.
+            md-table-container
+              table(md-table='' md-progress='promise')
+                thead(md-head='' md-order="sort")
+                  tr(md-row='')
+                    th(md-column='')
+                      span Photo
+                    th(md-column='', md-order-by='accountId.lastname')
+                      span Last Name
+                    th(md-column='', md-order-by='accountId.firstname')
+                      span First Name
+                    th(md-column='', md-order-by='accountId.createdAt')
+                      span Membership Date
 
-            //- span(flex)
-            //- md-content(layout="row" layout-padding)
-            //-   span(flex)
-            //-   md-button.md-raised.md-warn(ng-click="test()", aria-label="Add memeber", md-ripple-size="full") Remove Members
-            //-   md-button.md-raised.md-primary(ng-click="showMemberBottomSheet()", aria-label="Add memeber", md-ripple-size="full") Add Member
+                tbody(md-body='')
+                  tr(md-row='',ng-repeat='member in selectedTeam.teammembers | orderBy: sort')
+
+                    td(md-cell='')
+                      img.img-circle(ng-src='{{member.accountId.photo}}' style='height:50px;width:50px')
+                    td(md-cell='')
+                      span {{member.accountId.lastname}}
+                    td(md-cell='')
+                      span {{member.accountId.firstname}}
+                    td(md-cell='')
+                      span {{member.createdAt | date}}
           md-tab(label='schedules')
-            md-content.md-padding
-              div(layout='row')
-                div(flex='15')
-                  h2.md-title Date
-                div(flex='25')
-                  h2.md-title Notes
-                div(flex='25')
-                  h2.md-title Type
-                div(flex='25')
-                  h2.md-title Rating
-                div(flex='10')
-                  h2.md-title Status
-              md-divider
-              md-button.md-fab.md-primary.md-raised(ng-click='showAdvanced($event)', flex='100', flex-gt-md='auto' style='position:absolute; right:15px;top:35px' ng-show='enableToSchedule')
+            md-table-container
+              table(md-table='' md-progress='promise')
+                thead(md-head='' md-order="sortScheds")
+                  tr(md-row='')
+                    th(md-column='', md-order-by='sched.date')
+                      span Date
+                    th(md-column='', md-order-by='sched.notes')
+                      span Notes
+                    th(md-column='', md-order-by='sched.type')
+                      span Type
+                    th(md-column='', md-order-by='sched.rating')
+                      span Rating
+                    th(md-column='', md-order-by='sched.status')
+                      span Status
+                    th(md-column='')
+                      span Action
+                tbody(md-body='')
+                  tr(md-row='',ng-repeat='sched in selectedTeam.teamSchedules | orderBy: sortScheds')
+
+                    td(md-cell='') {{sched.date | date}}
+                    td(md-cell='') {{sched.notes}}
+                    td(md-cell='') {{sched.type}}
+                    td(md-cell='') {{sched.rating}}
+                    td(md-cell='') {{sched.status}}
+                    td(md-cell='')
+                      md-button(ng-click='deleteSched($index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
+                        md-icon.mdi.mdi-delete
+                  tr(md-row ng-show='!selectedTeam.teamSchedules.length')
+                    td(md-cell) No Evaluation Found
+              md-button.md-fab.md-primary.md-raised(ng-click='memberEvaluationRequest($event)', flex='100', flex-gt-md='auto' style='position:absolute; right:15px;top:20px' ng-show='enableToSchedule')
                 md-icon.mdi.mdi-calendar-plus
-              md-list(layout='column')
-                md-list-container.md-1-line(ng-repeat='sched in teamSchedules' layout='row')
-                  div(flex='15')
-                    h5.md-1-line {{sched.date}}
-                  div(flex='25')
-                    h5.md-1-line {{sched.notes}}
-                  div(flex='25')
-                    h5.md-1-line {{sched.type}}
-                  div(flex='25')
-                    h5.md-1-line {{sched.rating}}
-                  div(flex='10')
-                    h5.md-1-line {{sched.status}}
 
           md-tab(label='structure')
             md-content.md-padding
@@ -119,18 +113,16 @@ md-content(layout="column", flex)
                   md-select(ng-model="updatedTeam.parent", , ng-change="showUpdateButton=true")
                     md-option(ng-repeat="team in teams track by $index" value="{{team.id}}") {{team.name}}
                 md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save
+
+
+
               h3.md-display-1 Delete Team
               .md-caption Deleting this team will remove all evaluation records of the members. Forever... Are you sure you want to continue?
               md-button.md-raised.md-warn(ng-click="button1=true" ng-disabled="button1") {{(button1)? "are you sure?":"Yes"}}
               md-button.md-raised.md-warn(ng-show="button1" ng-click="button2=true"   ng-disabled="button2") {{(button2)? "Really?":"I'm Sure"}}
               md-button.md-raised.md-warn(ng-show="button2" ng-click="button1 = button2 = false ;test()") DELETE TEAM
 
-
-
-         //- 2385820
-
-
-//- md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")
-//-   i.mdi.mdi-24px.mdi-plus
-
+          md-tab(label='form')
+            md-content(style='padding-top:10px')
+              md-button.md-primary.md-raised(ng-click='addForm()') Add Form
 

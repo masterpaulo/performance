@@ -5,7 +5,7 @@ module.exports =
       if err
         console.log err
       if data
-        console.log data
+        # console.log data
 
         res.json data
 
@@ -41,7 +41,7 @@ module.exports =
       if err
         console.log err
       else if data
-        console.log data
+        # console.log data
         res.json data
 
     return
@@ -56,20 +56,20 @@ module.exports =
       if err
         console.log err
       else if data
-        console.log data
+        # console.log data
         res.json data
 
 
   addMember: (req, res) ->
     console.log "showing new membership"
-    console.log req.body
+    # console.log req.body
 
     Teammember.create req.body
     .exec (err,data) ->
       if err
         console.log err
       else if data
-        console.log data
+        # console.log data
         res.json data
 
     return

@@ -51,11 +51,12 @@ app.controller 'HrCtrl', [
   '$mdToast'
   '$rootScope'
   'teamService'
+  'appService'
 
 
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService) ->
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService) ->
     $scope.userSession = JSON.parse window.userSession
-    console.log $scope.accountId = $scope.userSession.id
+    $scope.accountId = $scope.userSession.id
     # $rootScope.allTeams = $http.get 'team/list'
     # .success (result) ->
     #   return $scope.allTeams = result
@@ -71,12 +72,13 @@ app.controller 'HrCtrl', [
 
     $scope.newEmployeeNotif = $http.get 'notification/newEmployee/' + $scope.accountId
     .success (result) ->
-      return $scope.newEmployeeNotif = result
-
-    $scope.newRequestNotif = $http.get 'notification/newEvalRequest/'+ $scope.accountId
+      return result
+    # console.log $scope.newRequestNotif
+    $http.get 'notification/newEvalRequest/'+ $scope.accountId
     .success (result) ->
-      # console.log result
-      return $scope.newRequestNotif = result
+      if result
+        console.log result
+        return $scope.newRequestNotif = result
 
 
 
@@ -118,19 +120,10 @@ app.controller 'HrCtrl', [
 
     $scope.routes = ''
 
-    $rootScope.alert = (msg) ->
-      console.log 'alerting'
-      $mdToast.show(
-        $mdToast.simple(msg)
-          # .textContent('Simple Toast!')
-          .position('top right')
-          .hideDelay(5000)
-      );
-
-    $scope.toConfirmRequest = (notif,status) ->
+    $scope.toConfirmRequest = (key,notif,status) ->
       console.log 'to confirm'
-
-      console.log notif,status
+      # console.log key,notif,status
+      # console.log notif,status
       d =
         notifId: notif.id
         evalStatus: status
@@ -139,20 +132,28 @@ app.controller 'HrCtrl', [
       $http.put 'notification/update',d
       .success (res) ->
         if res
-          $scope.alert 'Evaluation Request Granted'
-          $scope.deleteOnArray($scope.newRequestNotif,d.notifId)
-          .then (ok) ->
-            $scope.newRequestNotif = ok
-            # console.log 'notif', notif
-            # console.log $rootScope.activeSchedules
-            # console.log notif.scheduleId.teamId
-            # teamName = $scope.searchInArray($rootScope.teams,notif.scheduleId.teamId).name
+          if res.status is 'active'
+            appService.alert 'Evaluation Request Granted'
             notif.scheduleId.teamId = {}
-            console.log notif.scheduleId.teamId.name = notif.teamName
-            # $http.get 'team/get/'+ notif.scheduleId.teamId
-            # .success
-            console.log notif.scheduleId
+            notif.scheduleId.teamId.name = notif.teamName
             $rootScope.activeSchedules.push notif.scheduleId
+          else
+            appService.alert 'Evaluation Request Cancelled'
+
+          $scope.newRequestNotif.splice key,1
+
+          # $scope.deleteOnArray($scope.newRequestNotif,d.notifId)
+          # .then (ok) ->
+          #   if result.status is 'active'
+          #     $scope.newRequestNotif = ok
+          #     notif.scheduleId.teamId = {}
+          #     notif.scheduleId.teamId.name = notif.teamName
+          #     $rootScope.activeSchedules.push notif.scheduleId
+          #     appService.alert 'Evaluation Request Granted'
+
+          #   else
+          #     appService.alert 'Evaluation Request Cancelled'
+
 
     $scope.toAddTeam = (account,notifId) ->
       # console.log notifId
@@ -177,7 +178,6 @@ app.controller 'HrCtrl', [
         return
       return
 ]
-
 
 EmployeeAddTeamController = ($scope, $mdDialog, $http,account,scopes,notifId) ->
   # console.log notifId

@@ -29,3 +29,14 @@ md-menu-content > md-menu-item > button > i{
     line-height: 36px !important;
     margin-right: 15px !important;
 }
+
+
+md-toast.md-success-toast-theme {
+  background-color: #009688;
+  color: white;
+}
+
+md-toast.md-error-toast-theme {
+  background-color: #F44336;
+  color: white;
+}

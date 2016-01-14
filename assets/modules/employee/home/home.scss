@@ -14,3 +14,12 @@ md-tabs-canvas {
 md-content {
 	min-height: 150px
 }
+
+md-tab-item.md-tab.md-active md-ink-bar, md-ink-bar.md-left, md-ink-bar.md-right{
+  background-color: #0D47A1;
+}
+
+td.md-cell {
+  height: 60px;
+}
+

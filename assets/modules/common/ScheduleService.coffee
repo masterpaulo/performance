@@ -11,9 +11,11 @@ scheduleService = ($http,$q,$timeout) ->
       $http.post 'evaluationschedule/create', newSched
       .success (data) ->
         return data
-    formatDate: (date) ->
-      newDate = new Date date
-      return newDate.getMonth() + 1 + "/" + newDate.getDate() + "/" + newDate.getFullYear()
+
+    delete: (schedId) ->
+      $http.delete 'evaluationschedule/delete/' + schedId
+      .success (data) ->
+        return data
 
     checkForExist: (arr,newArr) ->
       return $q (resolve,reject) ->
@@ -26,12 +28,16 @@ scheduleService = ($http,$q,$timeout) ->
             # console.log arr[i]
             # console.log newSched
             if arr[i].teamId.id is newArr.teamId and arr[i].type is newArr.type and arr[i].done is false
-              resolve found = true
-              # console.log 'same'
-              $scope.$parent.alert 'You need to finish the previous evaluation!'
+              found = true
+
+
               break
             i++
-          resolve found = false
+          if found
+            resolve(found)
+          else
+            reject(found)
+          # resolve found = false
         , 1000
 
   }

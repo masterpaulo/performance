@@ -1,12 +1,4 @@
-app = angular.module "EMPLOYEE",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails']
-
-
-# app.run ($rootScope,teamService) ->
-  # $rootScope.teams = []
-  # teamService.listTeams()
-  # .success (result) ->
-  #   console.log result
-  #   return $rootScope.teams = result
+app = angular.module "EMPLOYEE",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails','xeditable','md.data.table']
 
 app.config [
   "$routeProvider"
@@ -36,10 +28,7 @@ app.config [
 #   angular.bootstrap document.body, ['StarterApp']
 
 
-
-
-
-app.controller 'HrCtrl', [
+app.controller 'EmployeeCtrl', [
   '$scope'
   '$sails'
   '$http'
@@ -48,13 +37,10 @@ app.controller 'HrCtrl', [
   '$mdSidenav'
   '$mdDialog'
   '$location'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location) ->
+  '$rootScope'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$rootScope) ->
     #parse user session data from server
     $scope.userSession = JSON.parse window.userSession
-
-    console.log $scope.userSession
-    # $scope.z = 'aaaaaaaaaa'
-
     $scope.cover = false;
 
     $scope.notifications = $http.get 'notification/message/' + $scope.userSession.id
@@ -63,31 +49,21 @@ app.controller 'HrCtrl', [
         console.log result
         $scope.notifications = result
 
-
-
-    #Function that should be called when opening the main menu (the arrow-down button on the top right)
-    # $scope.openMainMenu = ()->
-    #   return null
-
-
-    # #Toggl Sidenav
-    # $scope.toggleSidenav = (menuId) ->
-    #   $mdSidenav(menuId).toggle()
-    #   return
-
     $scope.logout = ->
       console.log "send request to logout"
       document.location = "/auth/logout/"
       return
+
 
     $scope.redirect = (path) ->
       $location.url(path)
 
     $scope.routes = ''
 
-    # $scope.viewSwitcher = (roleId) ->
-    #   console.log 'switchinggggggggggggggg'
-    #   appService.viewSwitcher 'roleId'
+    $rootScope.kra = [
+      # kpi: ''
+      # description: ''
+    ]
 
 
 ]

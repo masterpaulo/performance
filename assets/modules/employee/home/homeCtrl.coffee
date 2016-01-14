@@ -9,10 +9,12 @@ app.controller "HomeCtrl", [
   '$routeParams'
   '$mdMedia'
   '$mdToast'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $rp,$mdMedia,$mdToast) ->
+  'scheduleService'
+  'appService'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $rp,$mdMedia,$mdToast,scheduleService,appService) ->
     $scope.accountId = $scope.userSession.id
 
-    console.log $scope.userSession.id
+    # console.log $scope.userSession.id
     $http.get 'employee/myteam/'+ $scope.accountId,cache:true
     .success (data) ->
       if data
@@ -22,51 +24,38 @@ app.controller "HomeCtrl", [
         console.log 'error man'
 
     $scope.selectedTeam = (team) ->
-      console.log team
+      # console.log team
       $scope.enableToSchedule = false
       $scope.teamName = team.teamId.name
       $scope.teamId =  team.teamId.id
       $scope.enableToSchedule = true if team.accountId is team.teamId.supervisor
-      $http.get 'employee/members/' + $scope.teamId, cache: true
+      $http.get 'employee/members/' + $scope.teamId
       .success (data) ->
         if data
-          # console.log data
-          $scope.teammembers = data
-      $http.get 'evaluationschedule/list/' + $scope.teamId, cache:true
+          $scope.selectedTeam.teammembers = data
+      $http.get 'evaluationschedule/list/' + $scope.teamId
       .success (data) ->
         if data
-          # console.log data
-          $scope.teamSchedules = data
+          console.log $scope.selectedTeam.teamSchedules = data
 
-    # $scope.showAlert = ->
-    #   alert = $mdDialog.alert()
-    #     .title('Attention, ' + $scope.userName)
-    #     .content('This is an example of how easy dialogs can be!')
-    #     .ok('Close');
-
-    #   $mdDialog
-    #     .show( alert )
-    #     .finally( ->
-    #       alert = undefined;
-    #     )
     $scope.showConfirm = (ev) ->
       console.log 'confirming'
 
-      # confirm = $mdDialog.confirm().title('Would you like to delete your debt?').textContent('All of the banks have agreed to forgive you your debts.').ariaLabel('Lucky day').targetEvent(ev).ok('Please do it!').cancel('Sounds like a scam')
-      # $mdDialog.show(confirm).then (->
-      #   $scope.status = 'You decided to get rid of your debt.'
-      #   return
-      # ), ->
-      #   $scope.status = 'You decided to keep your debt.'
-      #   return
-      # return
+    $scope.addForm = () ->
+      return
 
+    $scope.deleteSched = (index,schedId) ->
+      # console.log index,schedId
+      scheduleService.delete schedId
+      .success (result) ->
+        $scope.selectedTeam.teamSchedules.splice index,1
+        appService.alert.success 'Success Deleting Evaluation Schedule'
 
-    $scope.showAdvanced = (ev) ->
+    $scope.memberEvaluationRequest = (ev) ->
       useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
       $mdDialog.show(
-        controller: DialogController
-        template: JST['employee/home/dialog.html']()
+        controller: EvalRequestController
+        template: JST['employee/home/memberEvalRequest.html']()
         parent: angular.element(document.body)
         locals: { scopes: $scope }
         targetEvent: ev
@@ -83,6 +72,18 @@ app.controller "HomeCtrl", [
         $scope.customFullscreen = wantsFullScreen == true
         return
       return
+    $scope.addForm = (ev) ->
+      # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+      $mdDialog.show(
+        controller: "FormController"
+        template: JST['employee/home/addForm.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope }
+        targetEvent: ev
+        clickOutsideToClose: true
+
+      )
+
 
     $scope.alert = (msg) ->
       $mdToast.show(
@@ -92,21 +93,16 @@ app.controller "HomeCtrl", [
           .hideDelay(5000)
       );
 ]
-DialogController = ($scope, $mdDialog, $http,scopes) ->
+EvalRequestController = ($scope, $mdDialog, $http,scopes,scheduleService,appService) ->
   # console.log $scope.accountId
   $scope.teamName = scopes.teamName
-  $scope.teammembers = scopes.teammembers
+  $scope.teammembers = scopes.selectedTeam.teammembers
   $scope.teamId = scopes.teamId
   $scope.accountId = scopes.accountId
   # $scope.items = [1,2,3,4,5];
   $scope.newSched = {}
   $scope.newSched.selected = [];
 
-  # $scope.addMembers = (accountId,value) ->
-  #   console.log value
-  #   M.push accountId
-  #   console.log M
-  #   M
   $scope.toggle = (item, list) ->
     idx = list.indexOf(item)
     if idx > -1
@@ -114,7 +110,6 @@ DialogController = ($scope, $mdDialog, $http,scopes) ->
     else
       list.push item
     return
-
 
   $scope.exists = (item, list) ->
     list.indexOf(item) > -1
@@ -131,30 +126,54 @@ DialogController = ($scope, $mdDialog, $http,scopes) ->
     $mdDialog.hide answer
     return
   $scope.submit = (newSched) ->
-    newDate = formatDate(newSched.date)
     newSchedule =
       accountId: $scope.accountId
-      date: newDate
+      date: newSched.date
       teamId: $scope.teamId
       type: 'member'
       notes: newSched.notes
       status: 'pending'
       evaluationLimit: newSched.selected.length
       selectedMember: newSched.selected
-    $http.post 'evaluationschedule/create', newSchedule
-    .success (d) ->
-      # console.log 'success'
-      # console.log d
-      if d
-        # console.log 'error man'
-        scopes.alert('Success! Wait for confirmation from HR')
-        scopes.teamSchedules.push d
-        $mdDialog.hide();
-      else if d is null
-        scopes.alert('Finish the previous evaluation first!')
+
+    scheduleService.checkForExist(scopes.selectedTeam.teamSchedules,newSchedule)
+    .then (result) ->
+      $mdDialog.hide()
+      # console.log 'exist nmn'
+      appService.alert.error 'Need to finish the previous evaluation!'
+    , (error) ->
+      scheduleService.create newSchedule
+      .success (result) ->
+        tempId = result.teamId
+        result.teamId = {}
+        result.teamId.id = tempId
+        scopes.selectedTeam.teamSchedules.push result
+
+        $mdDialog.hide()
+        appService.alert.success 'Success! Wait for confirmation from HR'
 
 
-  formatDate = (date) ->
-    newDate = new Date date
-    return newDate.getMonth() + 1 + "/" + newDate.getDate() + "/" + newDate.getFullYear()
 
+    # $http.post 'evaluationschedule/create', newSchedule
+    # .success (d) ->
+
+    #   if d
+    #     scopes.alert('Success! Wait for confirmation from HR')
+    #     scopes.teamSchedules.push d
+    #     $mdDialog.hide();
+    #   else if d is null
+    #     scopes.alert('Finish the previous evaluation first!')
+
+# app.controller 'FormController', ($scope, $http, $rootScope) ->
+#     # console.log $rootScope.kpa
+
+#     $scope.kra = $rootScope.kra
+#     $scope.addUser = ->
+#       $scope.inserted =
+#         id: $scope.kra.length+1
+#         kpi: ''
+#         description:''
+#         goal: 0
+#         weight: 0
+
+#       $scope.kra.push($scope.inserted);

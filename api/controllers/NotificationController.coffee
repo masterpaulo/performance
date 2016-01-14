@@ -13,34 +13,9 @@ module.exports =
 
   newEvalRequest: (req,res) ->
 
-#     async.waterfall([
-#     function(callback) {
-#         callback(null, 'one', 'two');
-#     },
-#     function(arg1, arg2, callback) {
-#       // arg1 now equals 'one' and arg2 now equals 'two'
-#         callback(null, 'three');
-#     },
-#     function(arg1, callback) {
-#         // arg1 now equals 'three'
-#         callback(null, 'done');
-#     }
-# ], function (err, result) {
-#     // result now equals 'done'
-# });
-
-
     console.log 'newEvalRequest'
     accountId = req.param 'id'
-    # Notification.find {type: 'Member Evaluation Request', done:false,receiver:accountId}
-    # .populate 'scheduleId'
-    # .exec (err,data) ->
-    #   if data
-    #     data.forEach (d,key) ->
-    #       Team.find d.scheduleId.teamId
-    #       .exec (err,result) ->
-    #         if result
-    #           data[key].teamId = result
+
     async.waterfall [
       (callback) ->
         Notification.find {type: 'Member Evaluation Request', done: false, receiver: accountId}
@@ -49,43 +24,42 @@ module.exports =
           if data
             callback(null,data)
       (data, callback) ->
-        data.forEach (d,key) ->
-          Team.findOne d.scheduleId.teamId
-          .exec (err,result) ->
-            if result
-              console.log 'ressssssssssssss',result
-              data[key].teamName = result.name
-        console.log 'should be after resssss'
-        callback(null,data)
+        # sample = [{age:23},{age:23},{age:23},{age:23},]
+        i = 0
+        async.eachSeries data, (item,callback) ->
+            console.log 'start'
+            if item
+              async.setImmediate ->
+                Team.findOne item.scheduleId.teamId
+                .exec (err,result) ->
+                  if result
+                    data[i].teamName = result.name
+                    console.log 'inside findone',data
+                    i++
+            console.log 'end',item
+              # console.log 'item',item
+            callback(data)
+          , (err,result) ->
+            console.log 'finalllll',err,result
+            console.log 'success'
+            return
+
+        # data.forEach (d,key) ->
+        #   Team.findOne d.scheduleId.teamId
+        #   .exec (err,result) ->
+        #     if result
+        #       console.log 'ressssssssssssss',result
+        #       data[key].teamName = result.name
+        # setTimeout () ->
+        #   console.log 'should be after resssss'
+        #   callback(null,data)
+        # ,1000
+
     ], (err,result) ->
-      res.json result
+      if result
+        console.log 'result newEvalRequest', result
+        res.json result
 
-    # accountId = req.param 'id'
-    # Notification.find({type:'Member Evaluation Request',done:false, receiver: accountId})
-    # .exec (err,data) ->
-    #   if data
-    #     console.log data
-
-  # evalRequest: (req,res) ->
-    # console.log 'eval request'
-    # accountId = req.param 'id'
-    # # EvaluationSchedule.find({status: 'waiting for confirmation',done: false})
-    # # .populate 'sender'
-    # # .exec (err,data) ->
-    # #   if data
-    # #     console.log 'eval data',data
-    # #     res.json data
-    # Notification.find({type:'Member Evaluation Request', receiver: accountId, done:false})
-    # .exec (err,data) ->
-    #   if data
-    #     console.log 'mem eval',data
-    #     data.forEach (res) ->
-    #       console.log 'res',res
-    #       EvaluationSchedule.find({type:'member',status:'pending', teamId:res.sender})
-    #       .exec (err,data) ->
-    #         if data
-    #           console.log 'finallll data', data
-    #     # res.json data
 
 
   update: (req,res) ->
@@ -94,16 +68,16 @@ module.exports =
     Notification.update notifId, {done: true}
     .exec (err,data) ->
       if data
-        console.log 'notif success to true', data
+        # console.log 'notif success to true', data
         EvaluationSchedule.update data.scheduleId, {status:evalStatus}
         .exec (err,d) ->
           if d
-            console.log 'eval uodate',d
+            # console.log 'eval update',d
             Team.findOne d[0].teamId
             .exec (err,data) ->
-              console.log 'team found', data
+              # console.log 'team found', data
               d[0].teamName =  data.name
-              console.log 'updatinggggggggg',d[0]
+              # console.log 'updatinggggggggg',d[0]
               res.json d[0]
 
 
@@ -114,7 +88,7 @@ module.exports =
     .populate 'scheduleId'
     .exec (err,data) ->
       if data
-        console.log 'message',data
+        # console.log 'message',data
         res.json data
 
 

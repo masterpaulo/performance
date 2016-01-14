@@ -1,10 +1,19 @@
-module.exports = {
+module.exports =
   connection: 'mongo'
-
-  attributes: {
+  attributes:
     teamId:
-      model: "team"
-    kra: 'array'
-    type: 'STRING'
-  }
-}
+      type: 'string'
+      model: 'Team'
+
+    default:
+      type: 'boolean'
+      defaultsTo: false
+    kra:
+      type: 'array'
+
+    type:
+      type: 'string'
+      enum: ['member','supervisor']
+      defaultsTo: 'member'
+
+

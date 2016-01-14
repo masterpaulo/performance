@@ -11,10 +11,11 @@ html(ng-app='HR')
     link(rel="stylesheet", href="/styles/bootstrap.css")
     link(rel="stylesheet", href="/styles/layout.css")
     link(rel="stylesheet", href="/styles/materialdesignicons.css")
+    link(rel="stylesheet", href="/styles/md-data-table.css")
     link(rel="stylesheet", href="/styles/styles.css")
+    link(rel="stylesheet", href="/styles/xeditable.css")
     link(rel="stylesheet", href="/styles/hr/schedule/schedule.css")
     link(rel="stylesheet", href="/styles/hr/team/team.css")
-    link(rel="stylesheet", href="/styles/common/showAlert/showAlert.css")
     // STYLES END
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
 
@@ -136,11 +137,11 @@ html(ng-app='HR')
                   h5.md-title New Member Evaluation Request
                   md-divider
                   md-list
-                    md-list-item(ng-repeat='new in newRequestNotif' layout='row' )
+                    md-list-item(ng-repeat='(key,new) in newRequestNotif' layout='row' )
 
                       h5 {{new.teamName}}
-                      md-button(ng-click="toConfirmRequest(new,'active')") ok
-                      md-button(ng-click="toConfirmRequest(new,'cancelled')") cancel
+                      md-button(ng-click="toConfirmRequest(key,new,'active')") ok
+                      md-button(ng-click="toConfirmRequest(key,new,'cancelled')") cancel
 
               md-tab
                 md-tab-label
@@ -169,18 +170,16 @@ html(ng-app='HR')
     script(src="/js/dependencies/angular-sails.min.js")
     script(src="/js/dependencies/angular-ui-router.js")
     script(src="/js/dependencies/lodash.js")
+    script(src="/js/dependencies/md-data-table.js")
+    script(src="/js/dependencies/xeditable.js")
     script(src="/js/hr/app.js")
     script(src="/js/global.js")
-    script(src="/js/hr/ScheduleService.js")
     script(src="/js/hr/TeamService.js")
     script(src="/js/hr/employee/employeeCtrl.js")
     script(src="/js/hr/form/formCtrl.js")
     script(src="/js/hr/schedule/scheduleCtrl.js")
     script(src="/js/hr/team/teamCtrl.js")
     script(src="/js/common/AppService.js")
-    script(src="/js/common/NotificationService.js")
     script(src="/js/common/ScheduleService.js")
-    script(src="/js/common/cache.js")
-    script(src="/js/common/showAlert/showAlertDirv.js")
     script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END
