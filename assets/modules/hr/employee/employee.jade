@@ -1,11 +1,17 @@
 div
   div(layout='row' flex)
     div(flex='75')
-      md-card(style="height:800px;")
+      md-card()
+
+        //- md-toolbar.md-table-toolbar.alternate()
+        //-   .md-toolbar-tools
+        //-     span {{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected
+
+
         md-table-container
           table(md-table='' md-progress='promise')
-            thead(md-head='' md-order="sortEmployees")
-              tr(md-row='')
+            thead(md-head='' md-order="sortEmployees" )
+              tr(md-row='' )
                 th(md-column='')
                   span Photo
                 th(md-column='', md-order-by='lastname')
@@ -16,7 +22,7 @@ div
                   span Email Address
 
             tbody(md-body='')
-              tr(md-row='',ng-repeat='e in employees | orderBy: sortEmployees')
+              tr(md-row='' md-select='e' ng-repeat='e in employees | orderBy: sortEmployees | limitTo: query.limit : (query.page -1) * query.limit' )
 
                 td(md-cell='')
                   img(src='{{e.photo}}' style='height:50px;width:50px;padding:1px;border-radius: 48px;')
@@ -26,6 +32,9 @@ div
 
               tr(md-row ng-show='!employees.length')
                 td(md-cell) No Evaluation Found
+
+        md-table-pagination(md-limit='query.limit', md-page='query.page', md-total='{{employees.count}}' md-on-paginate='logPagination')
+
 
 
 

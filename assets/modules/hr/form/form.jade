@@ -29,46 +29,112 @@ md-content(layout="column", flex)
     //-         p {{team.name}}
 
     //-         md-divider
-      
 
-  md-content.md-hue-2(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in kra.kras")
-    md-card.team-window( flex, , id="member-tab")
+form(name="kraForm")
+  md-content.form-window.md-hue-2.kra-form(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in form.kras")
+    
+
+    //- VIEW CARD
+    md-card.team-window(ng-hide="editForm", flex, , class="kra-card")
+      
       md-toolbar.md-tall.md-hue-2(layout='row')
-        .md-toolbar-tools(flex="70", layout="column", layout-align="start start", style="height: 100%;flex-direction: column; text-align: left; align-items: flex-start;align-content: flex-start; padding-top: 25px;")
-          h1(style="font-weight:bold") Standards of Performance, Behavior, and Role Modeling
-          .md-caption Level of standards demonstrated in his field of expertise. Establishes and communicates measurable performance standards/expectations. (I know what's expected of me
+        .md-toolbar-tools( flex="70", layout="column", layout-align="start start")
+          h1() {{kra.name}}
+          .md-caption {{kra.description}}
 
         span(flex)
 
-        .md-toolbar-tools.md-toolbar-tools-bottom(flex="25", style="height: 100%;flex-direction: column; text-align: left; align-items: center; padding-top: 25px;")
-          h1(style="font-size:60px") 90
+        .md-toolbar-tools.md-toolbar-tools-bottom(flex="25")
+          h1() {{kra.weight}}
           .md-caption KRA Score
       md-toolbar.md-hue-2(layout='row')
         .md-toolbar-tools
-          .md-caption( flex="20", style="text-align:center") KPI
-          .md-caption( flex="40", style="text-align:center") Description
-          .md-caption( flex="10", style="text-align:center") Reverse
-          .md-caption( flex="10", style="text-align:center") Goal
-          .md-caption( flex="10", style="text-align:center") Weight
-          .md-caption( flex="10", style="text-align:center") Score
+          .md-caption( flex="20", ) KPI
+          .md-caption( flex="40", ) Description
+          .md-caption( flex="10", ) Reverse
+          .md-caption( flex="10", ) Goal
+          .md-caption( flex="10", ) Weight
+          .md-caption( flex="10", ) Score
         
-      md-card-content(style="padding:0;")
+      md-card-content
         md-list
-          md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start", style="padding:5px")
-            .md-caption(flex="20") {{kpi.name}}
+          md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start")
+            .md-caption(flex="20") {{kpi.name}} 
             .md-caption(flex="40") {{kpi.description}}
-            .md-caption(flex="10", style="text-align:center") No
-            .md-caption(flex="10", style="text-align:center") 10
-            .md-caption(flex="10", style="text-align:center") 10
-            .md-caption(flex="10", style="text-align:center") 10
+            .md-caption(flex="10", style="text-align:center") {{kpi.reverse? "Yes":"No"}}
+            .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
+            .md-caption(flex="10", style="text-align:center") {{kpi.weight}}
+            .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
             md-divider
 
-          
+    //- EDIT CARD
+    md-card.team-window(ng-show="editForm", flex, , class="kra-card")
+      
+      md-toolbar.md-tall.md-hue-2(flex-order="1", layout='row')
+        .md-toolbar-tools( flex="70", layout="column", layout-align="start start")
+          md-input-container(md-no-float)
+            input(required ng-model="kra.name", placeholder="Title")
+          md-input-container(md-no-float, )
+            textarea(required, ng-model="kra.description", md-detect-hidden, placeholder="Description")
+
+        span(flex)
+
+        .md-toolbar-tools.md-toolbar-tools-bottom(flex="25")
+          md-input-container()
+            input(type="number" step="any" name="rate" ng-model="kra.weight" min="0"
+                 max="100")
+          .md-caption KRA Score
+      md-toolbar.md-hue-2(flex-order="2", layout='row')
+        .md-toolbar-tools
+          .md-caption( flex="20", ) KPI
+          .md-caption( flex="40", ) Description
+          .md-caption( flex="10", ) Reverse
+          .md-caption( flex="10", ) Goal
+          .md-caption( flex="10", ) Weight
+          .md-caption( flex="10", ) 
+      
+      md-toolbar.md-hue-3(flex-order="0", style="min-height:0", layout="row")
+        p(style="font-size: 12px;margin: 0;padding: 0px 20px;margin:auto;opacity: 0.7;font-style: italic") Form is now Editable
+        span(flex)
+        md-button.md-icon-button(ng-click="deleteKRA($index)") 
+          i.mdi.mdi-12px.mdi-close()
+
+      md-button.md-fab.md-hue-2( aria-label='Done' ng-click="addKPI(kra)", nd-disabled, style="position: absolute;right: 20px;top: 200px;")
+        i.mdi.mdi-24px.mdi-plus()
+
+      md-card-content(flex-order="3")
+       
+        md-list.editable(ng-show="editForm")
+          div(ng-repeat="kpi in kra.kpis", layout-align="start start")
+            md-input-container.md-block(md-no-float, flex="20")
+              input(required, ng-model="kpi.name",  md-detect-hidden, placeholder="Title") 
+            md-input-container.md-block(md-no-float, flex="40")
+              textarea(required, ng-model="kpi.description",  md-detect-hidden, placeholder="Description")
+            md-input-container(flex="10",) 
+              md-checkbox( ng-model="kpi.reverse" aria-label="reverse") 
+            md-input-container(flex="10", style="text-align:center")
+              input(type="number" step="any" name="rate" ng-model="kpi.goal" min="0" max="100")
+            md-input-container(flex="10", style="text-align:center")
+              input(type="number" step="any" name="rate" ng-model="kpi.weight" min="0" max="100") 
+            .md-caption(flex="10", style="text-align:center")
+              md-button.md-exclude.md-icon-button(ng-click="deleteKPI($event, kra, $index)")
+                i.mdi.mdi-delete
+                //- i.mdi.mdi-dots-horizontal
+        
          
 
-        
-md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;", ng-hide="editForm", ng-click="editForm=1")
-  i.mdi.mdi-24px.mdi-plus
+
+div(ng-show="editForm", style="right: 50px;position: fixed;bottom: 380px;")
+  
+  md-button.md-fab.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled)
+    i.mdi.mdi-24px.mdi-refresh()
+  md-button.md-fab.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled)
+    i.mdi.mdi-24px.mdi-plus()
+  md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid")
+    i.mdi.mdi-24px.mdi-check()
+
+md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="right: 50px;position: fixed;bottom: 380px;", ng-click="editForm=!editForm")
+  i.mdi.mdi-24px.mdi-pencil()
 
 //- md-fab-toolbar( count='', md-direction='right')
 //-   md-fab-trigger.align-with-text
@@ -84,14 +150,16 @@ md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fi
 //-         md-icon(md-svg-src='close')
 
 
-md-fab-speed-dial( md-direction='up', ng-class='md-fling', )
-  md-fab-trigger()
-    md-button.md-fab.md-warn(aria-label='menu')
-      md-icon(md-svg-src='menu')
-  md-fab-actions
-    md-button.md-fab.md-raised.md-mini(aria-label='Twitter')
-      md-icon(md-svg-src='twitter', aria-label='Twitter')
-    md-button.md-fab.md-raised.md-mini(aria-label='Facebook')
-      md-icon(md-svg-src='facebook', aria-label='Facebook')
-    md-button.md-fab.md-raised.md-mini(aria-label='Google Hangout')
-      md-icon(md-svg-src='hangouts', aria-label='Google Hangout')
+//- md-fab-speed-dial( md-direction='up', ng-class='md-fling', )
+//-   md-fab-trigger()
+//-     md-button.md-fab.md-warn(aria-label='menu')
+//-       md-icon(md-svg-src='menu')
+//-   md-fab-actions
+//-     md-button.md-fab.md-raised.md-mini(aria-label='Twitter')
+//-       md-icon(md-svg-src='twitter', aria-label='Twitter')
+//-     md-button.md-fab.md-raised.md-mini(aria-label='Facebook')
+//-       md-icon(md-svg-src='facebook', aria-label='Facebook')
+//-     md-button.md-fab.md-raised.md-mini(aria-label='Google Hangout')
+//-       md-icon(md-svg-src='hangouts', aria-label='Google Hangout')
+
+

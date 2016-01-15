@@ -141,6 +141,15 @@ app.controller 'HrCtrl', [
 
       )
 
+    $scope.query = {
+      order: 'name',
+      limit: 10,
+      page: 1
+    };
+
+    $scope.logPagination = (page, limit) ->
+      console
+      log('limit: ', limit);
 
 
     $scope.toAddTeam = (account,notifId) ->
