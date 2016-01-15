@@ -20,8 +20,37 @@ app.controller "FormCtrl", [
     formService.getForm()
     .then (data) ->
       console.log "in FormCtrl"
-      console.log data
-      $scope.form = data.data[0]
+
+
+      form = data.data[0]
+      if(form)
+        $scope.form = form
+      
+      else
+        form = {
+          "kras" : [ 
+            {
+              "kpis" : [ 
+                {
+                    "name" : ""
+                    "description" : ""
+                    "goal" : 0
+                    "weight" : 0
+                }
+              ]
+              "weight" : 0
+              "tmp" : {}
+              "name" : ""
+              "description" : ""
+            }, 
+            
+          ],
+          "type" : "supervisor"
+          "status" : true
+          "version" : 0
+        }
+        $scope.form = form
+      
 
 
     $scope.addKRA = () ->
@@ -94,6 +123,8 @@ app.controller "FormCtrl", [
 
     return
 ]
+
+
 
 
 

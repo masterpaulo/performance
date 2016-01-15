@@ -130,7 +130,7 @@ div(ng-show="editForm", style="right: 50px;position: fixed;bottom: 380px;")
     i.mdi.mdi-24px.mdi-refresh()
   md-button.md-fab.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled)
     i.mdi.mdi-24px.mdi-plus()
-  md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid")
+  md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1")
     i.mdi.mdi-24px.mdi-check()
 
 md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="right: 50px;position: fixed;bottom: 380px;", ng-click="editForm=!editForm")
