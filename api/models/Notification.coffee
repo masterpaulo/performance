@@ -5,9 +5,11 @@ module.exports =
       type: 'string'
       enum: ['New Employee'
       'Member Evaluation Request'
-      'Member Evaluation'
+      'Member Evaluation Request Granted'
+      'Member Evaluation Request Declined'
+      # 'Member Evaluation'
       'Team Leader Evaluation'
-      "Schedule For Your Evaluation"]
+      ]
       defaultsTo: 'New Employee'
     comment:
       type: 'string'

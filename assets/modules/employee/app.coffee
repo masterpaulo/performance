@@ -43,7 +43,7 @@ app.controller 'EmployeeCtrl', [
     $scope.userSession = JSON.parse window.userSession
     $scope.cover = false;
 
-    $scope.notifications = $http.get 'notification/message/' + $scope.userSession.id
+    $scope.notifications = $http.get 'notification/employeeNotif/' + $scope.userSession.id
     .success (result) ->
       if result
         console.log result

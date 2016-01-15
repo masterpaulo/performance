@@ -137,11 +137,11 @@ html(ng-app='HR')
                   h5.md-title New Member Evaluation Request
                   md-divider
                   md-list
-                    md-list-item(ng-repeat='(key,new) in newRequestNotif' layout='row' )
+                    md-list-item(ng-repeat='new in newRequestNotif' layout='row' ng-click='memberEvaluationRequest($event,$index,new)')
 
                       h5 {{new.teamName}}
-                      md-button(ng-click="toConfirmRequest(key,new,'active')") ok
-                      md-button(ng-click="toConfirmRequest(key,new,'cancelled')") cancel
+                      //- md-button(ng-click="toConfirmRequest($index,new,'active')") ok
+                      //- md-button(ng-click="toConfirmRequest($index,new,'cancelled')") cancel
 
               md-tab
                 md-tab-label
@@ -180,6 +180,8 @@ html(ng-app='HR')
     script(src="/js/hr/schedule/scheduleCtrl.js")
     script(src="/js/hr/team/teamCtrl.js")
     script(src="/js/common/AppService.js")
+    script(src="/js/common/NotificationService.js")
     script(src="/js/common/ScheduleService.js")
+    script(src="/js/common/evaluationRequest/memberEvalRequest.js")
     script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END

@@ -1,10 +1,10 @@
-app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails']
+app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails','md.data.table']
 
 app.run ($rootScope,teamService) ->
   # $rootScope.teams = []
   teamService.listTeams()
   .success (result) ->
-    console.log result
+    # console.log result
     return $rootScope.teams = result
 
 
@@ -70,9 +70,10 @@ app.controller 'HrCtrl', [
       debounceFn
     $scope.toggleRight = buildToggler('notif')
 
-    $scope.newEmployeeNotif = $http.get 'notification/newEmployee/' + $scope.accountId
+    $http.get 'notification/newEmployee/' + $scope.accountId
     .success (result) ->
-      return result
+      console.log result
+      return $scope.newEmployeeNotif = result
     # console.log $scope.newRequestNotif
     $http.get 'notification/newEvalRequest/'+ $scope.accountId
     .success (result) ->
@@ -120,39 +121,26 @@ app.controller 'HrCtrl', [
 
     $scope.routes = ''
 
-    $scope.toConfirmRequest = (key,notif,status) ->
-      console.log 'to confirm'
-      # console.log key,notif,status
-      # console.log notif,status
-      d =
-        notifId: notif.id
-        evalStatus: status
-      #  evaluationsched:status, notification:done:true
+    $scope.memberEvaluationRequest = (ev,indexNotif,reqNotif) ->
+      $scope.notifId = reqNotif.id
+      $scope.teamName = reqNotif.teamName
+      $scope.indexNotif = indexNotif
+      # $scope.selectedScheduleId = reqNotif.scheduleId.id
+      # $scope.teamId = reqNotif.scheduleId.teamId
+      # $scope.schedDate = reqNotif.scheduleId.date
+      # $scope
+      $scope.newSched = reqNotif.scheduleId
 
-      $http.put 'notification/update',d
-      .success (res) ->
-        if res
-          if res.status is 'active'
-            appService.alert 'Evaluation Request Granted'
-            notif.scheduleId.teamId = {}
-            notif.scheduleId.teamId.name = notif.teamName
-            $rootScope.activeSchedules.push notif.scheduleId
-          else
-            appService.alert 'Evaluation Request Cancelled'
+      $mdDialog.show(
+        controller: 'memberEvalRequestController'
+        template: JST['common/evaluationRequest/memberEvalRequest.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope, accountType:'hr'}
+        targetEvent: ev
+        clickOutsideToClose: true
 
-          $scope.newRequestNotif.splice key,1
+      )
 
-          # $scope.deleteOnArray($scope.newRequestNotif,d.notifId)
-          # .then (ok) ->
-          #   if result.status is 'active'
-          #     $scope.newRequestNotif = ok
-          #     notif.scheduleId.teamId = {}
-          #     notif.scheduleId.teamId.name = notif.teamName
-          #     $rootScope.activeSchedules.push notif.scheduleId
-          #     appService.alert 'Evaluation Request Granted'
-
-          #   else
-          #     appService.alert 'Evaluation Request Cancelled'
 
 
     $scope.toAddTeam = (account,notifId) ->
@@ -220,7 +208,7 @@ EmployeeAddTeamController = ($scope, $mdDialog, $http,account,scopes,notifId) ->
         .then (ok) ->
           scopes.newEmployeeNotif = ok
         $scope.hide()
-        scopes.alert account.lastname + " assigned to team " + teamName
+        appService.alert.success account.lastname + " assigned to team " + teamName
 
   $scope.exists = (item, list) ->
     list.indexOf(item) > -1

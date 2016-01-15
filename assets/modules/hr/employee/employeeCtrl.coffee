@@ -19,8 +19,7 @@ app.controller "EmployeeCtrl", [
   '$mdSidenav'
   '$mdDialog'
   '$location'
-  "CacheManager"
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location, CacheManager) ->
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location) ->
 
     # $scope.cache = CacheManager.init "EmployeeCtrl"
     # $scope.cache
@@ -33,17 +32,18 @@ app.controller "EmployeeCtrl", [
     $scope.viewEmployee = () ->
       console.log 'this is it'
 
-    $scope.toggleSearch = () ->
-      if $scope.searchOn
-        $scope.searchOn = false
-      else
-        $scope.searchOn = true
+    # $scope.toggleSearch = () ->
+    #   if $scope.searchOn
+    #     $scope.searchOn = false
+    #   else
+    #     $scope.searchOn = true
     $scope.$parent.routes = 'Employees'
 
     $http.get 'account/list'
-    .then (result) ->
+    .success (result) ->
       if result
-        $scope.employees = result.data
+        console.log 'employeees', result
+        $scope.employees = result
 
 
 

@@ -74,6 +74,14 @@ module.exports =
 
     return
 
+  membersForEvaluation: (req,res) ->
+    scheduleId = req.param 'id'
+    Evaluation.find({scheduleId:scheduleId})
+    .exec (err,data) ->
+      if data
+        res.json data
+
+
 
 
 

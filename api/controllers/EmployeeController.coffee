@@ -16,6 +16,7 @@ module.exports =
     teamId = req.param 'id'
     Teammember.find({teamId:teamId})
     .populate 'accountId'
+    .populate 'teamId'
     .exec (err,data) ->
       if err
         console.log err

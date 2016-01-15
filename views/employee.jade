@@ -37,13 +37,13 @@ html(ng-app='EMPLOYEE')
         div(flex='80')
           h1 Performance Management System
         div(flex='20' layout='row')
-          md-menu(md-offset="0 35")
+          md-menu(md-offset="0 35" ng-show='notifications.length')
             md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
               i.mdi.mdi-message(style="font-size:24px;", md-menu-origin)
-            md-menu-content(min-width='4')
-              md-menu-item(ng-repeat='notif in notifications')
-                h4 {{notif.type}}
-              md-divider
+            md-menu-content
+              md-menu-item(ng-repeat='notif in notifications' layout='column')
+                span {{notif.type}}
+                md-divider
 
           md-menu(md-offset="0 35")
             md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
@@ -116,6 +116,8 @@ html(ng-app='EMPLOYEE')
     script(src="/js/global.js")
     script(src="/js/employee/home/homeCtrl.js")
     script(src="/js/common/AppService.js")
+    script(src="/js/common/NotificationService.js")
     script(src="/js/common/ScheduleService.js")
+    script(src="/js/common/evaluationRequest/memberEvalRequest.js")
     script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END

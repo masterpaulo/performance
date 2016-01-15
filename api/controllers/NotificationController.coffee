@@ -25,31 +25,36 @@ module.exports =
             callback(null,data)
       (data, callback) ->
         # sample = [{age:23},{age:23},{age:23},{age:23},]
-        i = 0
-        async.eachSeries data, (item,callback) ->
-            console.log 'start'
-            if item
-              async.setImmediate ->
-                Team.findOne item.scheduleId.teamId
-                .exec (err,result) ->
-                  if result
-                    data[i].teamName = result.name
-                    console.log 'inside findone',data
-                    i++
-            console.log 'end',item
-              # console.log 'item',item
-            callback(data)
-          , (err,result) ->
-            console.log 'finalllll',err,result
-            console.log 'success'
-            return
+        # i = 0
+        # async.eachSeries data, (item,callback) ->
+        #     console.log 'start'
+        #     if item
+        #       async.setImmediate ->
+        #         Team.findOne item.scheduleId.teamId
+        #         .exec (err,result) ->
+        #           if result
+        #             data[i].teamName = result.name
+        #             console.log 'inside findone',data
+        #             i++
+        #             if data.length is i
+        #               callback data
+        #     # console.log 'end',item
+        #     # callback(data)
+        #   , (err,result) ->
+        #     console.log 'finalllll',err,result
+        #     callback null,result
 
-        # data.forEach (d,key) ->
-        #   Team.findOne d.scheduleId.teamId
-        #   .exec (err,result) ->
-        #     if result
-        #       console.log 'ressssssssssssss',result
-        #       data[key].teamName = result.name
+
+        data.forEach (d,key) ->
+          Team.findOne d.scheduleId.teamId
+          .exec (err,result) ->
+            if result
+              # console.log 'inside findone',result
+              data[key].teamName = result.name
+              if (key+1) is data.length
+                # console.log 'key+1',key
+
+                callback null,data
         # setTimeout () ->
         #   console.log 'should be after resssss'
         #   callback(null,data)
@@ -57,7 +62,7 @@ module.exports =
 
     ], (err,result) ->
       if result
-        console.log 'result newEvalRequest', result
+        # console.log 'result newEvalRequest', result
         res.json result
 
 
@@ -67,29 +72,52 @@ module.exports =
     evalStatus = req.param 'evalStatus'
     Notification.update notifId, {done: true}
     .exec (err,data) ->
-      if data
-        # console.log 'notif success to true', data
-        EvaluationSchedule.update data.scheduleId, {status:evalStatus}
-        .exec (err,d) ->
-          if d
-            # console.log 'eval update',d
-            Team.findOne d[0].teamId
-            .exec (err,data) ->
-              # console.log 'team found', data
-              d[0].teamName =  data.name
-              # console.log 'updatinggggggggg',d[0]
-              res.json d[0]
+      async.parallel [
+        (callback) ->
+          EvaluationSchedule.update data.scheduleId, {status:evalStatus}
+          .exec (err,d) ->
+            if d
+              Team.findOne d[0].teamId
+              .exec (err,data) ->
+                d[0].teamName =  data.name
+                callback null, d[0]
+        (callback) ->
+          newNotif =
+            sender: data[0].receiver
+            receiver: data[0].sender
+            scheduleId: data[0].scheduleId
+
+          newNotif.type = if evalStatus is 'active' then 'Member Evaluation Request Granted' else 'Member Evaluation Request Declined'
+          console.log '2nd callback notif', newNotif
+          Notification.create newNotif
+          .exec (err,result) ->
+            console.log err,result
+            callback null,result
+
+      ],
+      (err,results) ->
+        console.log 'notifi 101', results
+        res.json results
 
 
 
-  message: (req,res) ->
+  employeeNotif: (req,res) ->
     id = req.param 'id'
     Notification.find {receiver: id}
+    .where {or:[
+      {type:'Member Evaluation Request Granted'}
+      {type:'Member Evaluation Request Declined'}
+      {type:'Team Leader Evaluation'}
+      ]}
     .populate 'scheduleId'
     .exec (err,data) ->
       if data
-        # console.log 'message',data
+        console.log 'message',data
         res.json data
+
+  # memberEvalReqConfirmation: (req,res) ->
+  #   return
+
 
 
 
