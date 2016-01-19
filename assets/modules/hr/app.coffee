@@ -147,6 +147,7 @@ app.controller 'HrCtrl', [
       page: 1
     };
 
+
     $scope.logPagination = (page, limit) ->
       console
       log('limit: ', limit);

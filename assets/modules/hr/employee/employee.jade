@@ -3,10 +3,20 @@ div
     div(flex='75')
       md-card()
 
-        //- md-toolbar.md-table-toolbar.alternate()
-        //-   .md-toolbar-tools
-        //-     span {{selected.length}} {{selected.length > 1 ? 'items' : 'item'}} selected
 
+        md-toolbar.md-hue-2
+          .md-toolbar-tools(layout='row' flex)
+            div(ng-show='search' flex='95' layout-align='center center')
+              md-input-container.md-block(md-no-float='')
+                md-icon.mdi.mdi-account-search
+                input(ng-model='searchEmployee', type='text', placeholder='Search Employee')
+
+
+            div(layout='row' layout-align='end center' ng-click='toggleSearch()' flex)
+              md-button.md-icon-button(ng-if='!search')
+                md-icon.mdi.mdi-filter-variant
+              md-button.md-icon-button(ng-if='search')
+                md-icon.mdi.mdi-close
 
         md-table-container
           table(md-table='' md-progress='promise')
@@ -22,7 +32,7 @@ div
                   span Email Address
 
             tbody(md-body='')
-              tr(md-row='' md-select='e' ng-repeat='e in employees | orderBy: sortEmployees | limitTo: query.limit : (query.page -1) * query.limit' )
+              tr(md-row='' md-select='e' ng-repeat='e in employees | filter:searchEmployee | orderBy: sortEmployees | limitTo: query.limit : (query.page -1) * query.limit' )
 
                 td(md-cell='')
                   img(src='{{e.photo}}' style='height:50px;width:50px;padding:1px;border-radius: 48px;')
@@ -33,7 +43,7 @@ div
               tr(md-row ng-show='!employees.length')
                 td(md-cell) No Evaluation Found
 
-        md-table-pagination(md-limit='query.limit', md-page='query.page', md-total='{{employees.count}}' md-on-paginate='logPagination')
+        md-table-pagination(md-limit='query.limit', md-page='query.page', md-total='{{employees.length}}' md-on-paginate='logPagination')
 
 
 
