@@ -106,7 +106,7 @@ html(ng-app='HR')
             //- md-list-item
             //-   md-button.md-raised.md-primary(ng-click="logout()", flex="grow") Logout
 
-      md-content#appContent.md-padding.md-hue-2(layout='row' flex style="overflow-y: auto;")
+      md-content#appContent.md-padding.md-hue-2(layout='row' flex style="overflow-y: auto; max-height: calc(100% - 64px);")
         //- p {{userSession |json}} //- uncomment to see user sessoin data
 
         //- //This should be ng-view
