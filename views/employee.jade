@@ -88,7 +88,7 @@ html(ng-app='EMPLOYEE')
             md-list-item
               switch(position="bottom-left")
 
-      md-content#appContent.md-padding.md-hue-2(layout='column' flex)
+      md-content#appContent.md-padding.md-hue-2(layout='column' flex style="overflow-y: auto; max-height: calc(100% - 64px);")
 
         ng-view(flex)
 
