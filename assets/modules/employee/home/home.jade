@@ -3,7 +3,7 @@ md-content(layout="column", flex)
   md-content.md-hue-2(layout-gt-lg="row")
     md-content.md-hue-2(flex-gt-lg="40")
       md-card(flex)
-        md-toolbar
+        md-toolbar.md-hue-2
           md-toolbar-tools.md-padding
             h2.md-title
               md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
@@ -18,7 +18,7 @@ md-content(layout="column", flex)
 
     md-content.md-hue-2(flex, )
       md-card.team-window(ng-show='teamName' , id="member-tab")
-        md-toolbar(layout='row')
+        md-toolbar.md-hue-2(layout='row')
           .md-toolbar-tools
             md-button.md-icon-button( aria-label="Open Sidenav")
               md-icon(aria-label='Menu', md-svg-icon='https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg')
@@ -26,7 +26,7 @@ md-content(layout="column", flex)
             span(flex)
             md-button.md-icon-button( aria-label="Close Team Window", ng-click="closeTeam()")
               md-icon(md-svg-icon="close", style="'font-size':36px;")
-        md-tabs.md-primary( md-dynamic-height='', md-no-ink='',  md-stretch-tabs='', md-border-bottom='', )
+        md-tabs.md-primary( md-dynamic-height='', md-no-ink='',  md-stretch-tabs='', md-border-bottom='')
           md-tab.summary(label='summary')
             md-content.md-padding(layout="row" layout-wrap layout-align="center center")
               md-content(flex="30" )
@@ -82,7 +82,7 @@ md-content(layout="column", flex)
                     th(md-column='')
                       span Action
                 tbody(md-body='')
-                  tr(md-row='',ng-repeat='sched in selectedTeam.teamSchedules | orderBy: sortScheds')
+                  tr(md-row='',ng-repeat='sched in selectedTeam.teamSchedules | orderBy: sortScheds | filter:{type:filterByType}' ng-click='toEvaluateSupervisor($event)')
 
                     td(md-cell='') {{sched.date | date}}
                     td(md-cell='') {{sched.notes}}
@@ -90,7 +90,7 @@ md-content(layout="column", flex)
                     td(md-cell='') {{sched.rating}}
                     td(md-cell='') {{sched.status}}
                     td(md-cell='')
-                      md-button(ng-click='deleteSched($index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
+                      md-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
                         md-icon.mdi.mdi-delete
                   tr(md-row ng-show='!selectedTeam.teamSchedules.length')
                     td(md-cell) No Evaluation Found
@@ -102,28 +102,3 @@ md-content(layout="column", flex)
               h1.md-display-2 Structure
               p
                 | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
-          md-tab(label='settings')
-            md-content.md-padding()
-              h3.md-display-1 Team Info
-              form(name="updateTeamForm")
-                md-input-container
-                  label Team Name
-                  input(ng-model="updatedTeam.name", required, md-maxlength="35", ng-change="showUpdateButton=true")
-                md-input-container(ng-init="")
-                  label Parent
-                  md-select(ng-model="updatedTeam.parent", , ng-change="showUpdateButton=true")
-                    md-option(ng-repeat="team in teams track by $index" value="{{team.id}}") {{team.name}}
-                md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save
-
-
-
-              h3.md-display-1 Delete Team
-              .md-caption Deleting this team will remove all evaluation records of the members. Forever... Are you sure you want to continue?
-              md-button.md-raised.md-warn(ng-click="button1=true" ng-disabled="button1") {{(button1)? "are you sure?":"Yes"}}
-              md-button.md-raised.md-warn(ng-show="button1" ng-click="button2=true"   ng-disabled="button2") {{(button2)? "Really?":"I'm Sure"}}
-              md-button.md-raised.md-warn(ng-show="button2" ng-click="button1 = button2 = false ;test()") DELETE TEAM
-
-          md-tab(label='form')
-            md-content(style='padding-top:10px')
-              md-button.md-primary.md-raised(ng-click='addForm()') Add Form
-

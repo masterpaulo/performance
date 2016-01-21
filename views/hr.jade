@@ -18,6 +18,7 @@ html(ng-app='HR')
     link(rel="stylesheet", href="/styles/hr/form/form.css")
     link(rel="stylesheet", href="/styles/hr/schedule/schedule.css")
     link(rel="stylesheet", href="/styles/hr/team/team.css")
+    link(rel="stylesheet", href="/styles/common/evaluation/evaluation.css")
     // STYLES END
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
 
@@ -142,6 +143,7 @@ html(ng-app='HR')
                     md-list-item(ng-repeat='new in newRequestNotif' layout='row' ng-click='memberEvaluationRequest($event,$index,new)')
 
                       h5 {{new.teamName}}
+                      md-divider
                       //- md-button(ng-click="toConfirmRequest($index,new,'active')") ok
                       //- md-button(ng-click="toConfirmRequest($index,new,'cancelled')") cancel
 
@@ -185,6 +187,7 @@ html(ng-app='HR')
     script(src="/js/common/FormService.js")
     script(src="/js/common/NotificationService.js")
     script(src="/js/common/ScheduleService.js")
+    script(src="/js/common/evaluation/evaluationCtrl.js")
     script(src="/js/common/evaluationRequest/memberEvalRequest.js")
     script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END

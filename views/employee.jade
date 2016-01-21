@@ -14,7 +14,9 @@ html(ng-app='EMPLOYEE')
     link(rel="stylesheet", href="/styles/md-data-table.css")
     link(rel="stylesheet", href="/styles/styles.css")
     link(rel="stylesheet", href="/styles/xeditable.css")
+    link(rel="stylesheet", href="/styles/employee/form/form.css")
     link(rel="stylesheet", href="/styles/employee/home/home.css")
+    link(rel="stylesheet", href="/styles/common/evaluation/evaluation.css")
     // STYLES END
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
 
@@ -81,7 +83,11 @@ html(ng-app='EMPLOYEE')
               //- i.mdi.mdi-24px.mdi-forum(style="padding-right:10px;")
               md-icon(class='mdi mdi-calendar')
               p Home
-
+              md-divider
+            md-list-item(flex ng-click="redirect('/form')")
+              //- i.mdi.mdi-24px.mdi-forum(style="padding-right:10px;")
+              md-icon.mdi.mdi-file-document
+              p Form
               md-divider
             //- md-list-item
           md-list
@@ -114,11 +120,14 @@ html(ng-app='EMPLOYEE')
     script(src="/js/dependencies/xeditable.js")
     script(src="/js/employee/app.js")
     script(src="/js/global.js")
+    script(src="/js/employee/EmployeeService.js")
+    script(src="/js/employee/form/formCtrl.js")
     script(src="/js/employee/home/homeCtrl.js")
     script(src="/js/common/AppService.js")
     script(src="/js/common/FormService.js")
     script(src="/js/common/NotificationService.js")
     script(src="/js/common/ScheduleService.js")
+    script(src="/js/common/evaluation/evaluationCtrl.js")
     script(src="/js/common/evaluationRequest/memberEvalRequest.js")
     script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END

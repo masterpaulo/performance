@@ -14,7 +14,11 @@ app.config [
     .when "/",
       template: JST["employee/home/home.html"]()
       controller:"HomeCtrl"
+    .when "/evaluation/supervisor/:id",
+      template: JST["employee/form/form.html"]()
+      controller: "FormCtrl"
     .otherwise redirectTo: '/'
+
 ]
 
 
@@ -59,11 +63,5 @@ app.controller 'EmployeeCtrl', [
       $location.url(path)
 
     $scope.routes = ''
-
-    $rootScope.kra = [
-      # kpi: ''
-      # description: ''
-    ]
-
 
 ]

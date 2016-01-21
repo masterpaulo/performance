@@ -17,6 +17,11 @@ scheduleService = ($http,$q,$timeout) ->
       .success (data) ->
         return data
 
+    findByTeam: (teamId) ->
+      $http.get 'evaluationschedule/list/' + teamId
+      .success (data) ->
+        return data
+
     checkForExist: (arr,newArr) ->
       return $q (resolve,reject) ->
         $timeout () ->
@@ -33,9 +38,12 @@ scheduleService = ($http,$q,$timeout) ->
 
               break
             i++
+
           if found
+            console.log 'exist'
             resolve(found)
           else
+            console.log 'wala man'
             reject(found)
           # resolve found = false
         , 1000

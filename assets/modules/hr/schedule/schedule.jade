@@ -39,12 +39,12 @@ div
       md-content(layout-padding)
         h1.md-display-1 Supervisor Evaluation
 
-        md-datepicker(ng-model='newSched.date', md-placeholder='Enter Date' type='string')
+        md-datepicker(ng-model='newSched.date', md-placeholder='Enter Date' type='string') {{newSched.date}}
         md-input-container
           label Notes
           input(type='text' ng-model='newSched.notes')
         md-select(ng-model='newSched.team' placeholder='Select Team')
           md-option(ng-value='{id: team.id, name:team.name}' ng-repeat='team in teams') {{team.name}}
         //- {{teams}}
-        md-button.md-primary(ng-click='submitSchedule(newSched)' ) Submit
+        md-button.md-primary.md-raised(ng-click='submitSchedule(newSched)' ) Submit
 

@@ -77,6 +77,15 @@ var routes = {
     controller: 'session',
     action: 'change'
   }
+  // 'GET evaluation/supervisor': {
+  //   controller: 'form',
+  //   action: 'evaluatesupervisor'
+  // }
+  // 'evaluation/supervisor' :{
+  //   controller: ''
+  //   // view:
+  // }
+
   // "GET team/:id/myteam": {
   //   controller: 'team'
   //   action: 'myteam'

@@ -1,6 +1,7 @@
 module.exports =
   list: (req,res) ->
     Team.find()
+    .sort 'name ASC'
     .exec (err,data) ->
       if err
         console.log err

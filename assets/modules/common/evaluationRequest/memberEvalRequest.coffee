@@ -59,7 +59,6 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
     $mdDialog.hide answer
     return
   $scope.submit = (newSched) ->
-    $mdDialog.hide()
 
     newSchedule =
       accountId: $scope.accountId
@@ -77,6 +76,8 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
       # console.log 'exist nmn'
       appService.alert.error 'Need to finish the previous evaluation!'
     , (error) ->
+      $mdDialog.hide()
+
       scheduleService.create newSchedule
       .success (result) ->
         tempId = result.teamId

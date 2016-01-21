@@ -1,4 +1,3 @@
-async = require 'async'
 module.exports =
   myteam: (req,res) ->
     accountId = req.param 'id'
@@ -23,15 +22,6 @@ module.exports =
       if data
         # console.log data
         res.json data
-
-
-  # latestmembers: (req,res) ->
-  #   UserRole.find()
-  #   .populate 'accountId'
-  #   .sort('createdAt desc')
-  #   .exec (err,data) ->
-  #     if data
-  #       res.json data
 
   info: (req,res) ->
     id = req.param 'id'

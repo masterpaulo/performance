@@ -1,5 +1,5 @@
 md-content(layout="column", flex)
-  
+
   md-content.md-hue-2(layout-gt-lg="row")
     md-content.md-hue-2(flex-gt-lg="40")
       md-card(flex)
@@ -11,7 +11,7 @@ md-content(layout="column", flex)
 
       md-card(flex)
         md-card-content(style="position:relative")
-          
+
 
           h2.md-title
             md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
@@ -23,13 +23,13 @@ md-content(layout="column", flex)
 
         md-divider
 
-        
+
         md-list(style="max-height: 70%;overflow: auto;")
-          md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch) track by $index", ng-click="selectTeam(team)") 
+          md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch) track by $index", ng-click="selectTeam(team)")
             p {{team.name}}
 
             md-divider
-      
+
 
     md-content.md-hue-2(flex, style="overflow:hidden;" )
       md-card.team-window(ng-show="selectedTeam", flex, , id="member-tab")
@@ -55,9 +55,9 @@ md-content(layout="column", flex)
                 h4 Average
           md-tab(label='members')
             md-content.md-padding
-              
+
               md-list()
-                md-list-item(ng-repeat="member in memberlist = (selectedTeam.members)") 
+                md-list-item(ng-repeat="member in memberlist = (selectedTeam.members)")
                   p {{member.firstname}}  {{member.lastname}}
                   span(flex)
                   md-chips(style="box-shadow:0;")
@@ -91,7 +91,7 @@ md-content(layout="column", flex)
                   label Parent
                   md-select(ng-model="updatedTeam.parent", , ng-change="showUpdateButton=true")
                     md-option(ng-repeat="team in teams track by $index" value="{{team.id}}") {{team.name}}
-                md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save 
+                md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save
               h3.md-display-1 Delete Team
               .md-caption Deleting this team will remove all evaluation records of the members. Forever... Are you sure you want to continue?
               md-button.md-raised.md-warn(ng-click="button1=true" ng-disabled="button1") {{(button1)? "are you sure?":"Yes"}}
@@ -99,10 +99,10 @@ md-content(layout="column", flex)
               md-button.md-raised.md-warn(ng-show="button2" ng-click="button1 = button2 = false ;test()") DELETE TEAM
 
 
-          
+
          //- 2385820
 
-        
+
 //- md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")
 //-   i.mdi.mdi-24px.mdi-plus
 

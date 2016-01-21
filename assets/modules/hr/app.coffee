@@ -32,6 +32,8 @@ app.config [
     .when "/form",
       template: JST['hr/form/form.html']()
       controller: 'FormCtrl'
+    .otherwise redirectTo: '/'
+
 ]
 
 app.controller 'HrCtrl', [
@@ -57,9 +59,9 @@ app.controller 'HrCtrl', [
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService) ->
     $scope.userSession = JSON.parse window.userSession
     $scope.accountId = $scope.userSession.id
-    # $rootScope.allTeams = $http.get 'team/list'
-    # .success (result) ->
-    #   return $scope.allTeams = result
+    $http.get 'team/list'
+    .success (result) ->
+      return $scope.allTeams = result
 
     buildToggler = (navID) ->
       debounceFn = $mdUtil.debounce((->

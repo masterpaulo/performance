@@ -3,12 +3,12 @@
 formService = ($http) ->
 	form = {}
 
-	
+
 
 
 	service = {
-		getForm : () ->
-			return $http.get 'form/get'
+		getForm : (formId) ->
+			return $http.get 'form/get/' + formId
 
 		saveForm : (form) ->
 			$http.post 'form/save', form
@@ -23,7 +23,7 @@ formService = ($http) ->
 
 	#############
 
-	
+
 
 
 app.factory "formService", formService

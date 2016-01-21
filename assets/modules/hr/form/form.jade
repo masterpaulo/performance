@@ -1,5 +1,5 @@
 md-content(layout="column", flex)
-  
+
 
     //- md-content.md-hue-2(flex-gt-lg="40")
     //-   md-card(flex)
@@ -11,7 +11,7 @@ md-content(layout="column", flex)
 
     //-   md-card(flex)
     //-     md-card-content(style="position:relative")
-          
+
 
     //-       h2.md-title
     //-         md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
@@ -23,20 +23,20 @@ md-content(layout="column", flex)
 
     //-     md-divider
 
-        
+
     //-     md-list(style="max-height: 70%;overflow: auto;")
-    //-       md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch)", ng-click="selectTeam(team)") 
+    //-       md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch)", ng-click="selectTeam(team)")
     //-         p {{team.name}}
 
     //-         md-divider
 
 form(name="kraForm")
   md-content.form-window.md-hue-2.kra-form(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in form.kras")
-    
+
 
     //- VIEW CARD
     md-card.team-window(ng-hide="editForm", flex, , class="kra-card")
-      
+
       md-toolbar.md-tall.md-hue-2(layout='row')
         .md-toolbar-tools( flex="70", layout="column", layout-align="start start")
           h1() {{kra.name}}
@@ -55,11 +55,11 @@ form(name="kraForm")
           .md-caption( flex="10", ) Goal
           .md-caption( flex="10", ) Weight
           .md-caption( flex="10", ) Score
-        
+
       md-card-content
         md-list
           md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start")
-            .md-caption(flex="20") {{kpi.name}} 
+            .md-caption(flex="20") {{kpi.name}}
             .md-caption(flex="40") {{kpi.description}}
             .md-caption(flex="10", style="text-align:center") {{kpi.reverse? "Yes":"No"}}
             .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
@@ -69,7 +69,7 @@ form(name="kraForm")
 
     //- EDIT CARD
     md-card.team-window(ng-show="editForm", flex, , class="kra-card")
-      
+
       md-toolbar.md-tall.md-hue-2(flex-order="1", layout='row')
         .md-toolbar-tools( flex="70", layout="column", layout-align="start start")
           md-input-container(md-no-float)
@@ -91,41 +91,41 @@ form(name="kraForm")
           .md-caption( flex="10", ) Reverse
           .md-caption( flex="10", ) Goal
           .md-caption( flex="10", ) Weight
-          .md-caption( flex="10", ) 
-      
+          .md-caption( flex="10", )
+
       md-toolbar.md-hue-3(flex-order="0", style="min-height:0", layout="row")
         p(style="font-size: 12px;margin: 0;padding: 0px 20px;margin:auto;opacity: 0.7;font-style: italic") Form is now Editable
         span(flex)
-        md-button.md-icon-button(ng-click="deleteKRA($index)") 
+        md-button.md-icon-button(ng-click="deleteKRA($index)")
           i.mdi.mdi-12px.mdi-close()
 
       md-button.md-fab.md-hue-2( aria-label='Done' ng-click="addKPI(kra)", nd-disabled, style="position: absolute;right: 20px;top: 200px;")
         i.mdi.mdi-24px.mdi-plus()
 
       md-card-content(flex-order="3")
-       
+
         md-list.editable(ng-show="editForm")
           div(ng-repeat="kpi in kra.kpis", layout-align="start start")
             md-input-container.md-block(md-no-float, flex="20")
-              input(required, ng-model="kpi.name",  md-detect-hidden, placeholder="Title") 
+              input(required, ng-model="kpi.name",  md-detect-hidden, placeholder="Title")
             md-input-container.md-block(md-no-float, flex="40")
               textarea(required, ng-model="kpi.description",  md-detect-hidden, placeholder="Description")
-            md-input-container(flex="10",) 
-              md-checkbox( ng-model="kpi.reverse" aria-label="reverse") 
+            md-input-container(flex="10",)
+              md-checkbox( ng-model="kpi.reverse" aria-label="reverse")
             md-input-container(flex="10", style="text-align:center")
               input(type="number" step="any" name="rate" ng-model="kpi.goal" min="0" max="100")
             md-input-container(flex="10", style="text-align:center")
-              input(type="number" step="any" name="rate" ng-model="kpi.weight" min="0" max="100") 
+              input(type="number" step="any" name="rate" ng-model="kpi.weight" min="0" max="100")
             .md-caption(flex="10", style="text-align:center")
               md-button.md-exclude.md-icon-button(ng-click="deleteKPI($event, kra, $index)")
                 i.mdi.mdi-delete
                 //- i.mdi.mdi-dots-horizontal
-        
-         
+
+
 
 
 div(ng-show="editForm", style="right: 50px;position: fixed;bottom: 380px;")
-  
+
   md-button.md-fab.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled)
     i.mdi.mdi-24px.mdi-refresh()
   md-button.md-fab.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled)
@@ -161,5 +161,4 @@ md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="ri
 //-       md-icon(md-svg-src='facebook', aria-label='Facebook')
 //-     md-button.md-fab.md-raised.md-mini(aria-label='Google Hangout')
 //-       md-icon(md-svg-src='hangouts', aria-label='Google Hangout')
-
 
