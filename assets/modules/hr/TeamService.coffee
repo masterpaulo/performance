@@ -30,6 +30,15 @@ teamService = ($http) ->
 				if newMembership
 					return newMembership.data
 
+		setSupervisor : (team, member) ->
+			supervisor = 
+				team : team.id
+				member : member.id
+			$http.put 'team/setSupervisor', supervisor
+			.then (newTeam) ->
+				if newTeam
+					return newTeam.data
+
 	}
 
 	return service

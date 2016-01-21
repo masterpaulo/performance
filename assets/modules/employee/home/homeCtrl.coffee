@@ -72,6 +72,72 @@ app.controller "HomeCtrl", [
         $scope.customFullscreen = wantsFullScreen == true
         return
       return
+
+    form = {
+      "kras" : [ 
+        {
+          "kpis" : [ 
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        }, 
+        {
+          "kpis" : [ 
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        }, 
+        {
+          "kpis" : [ 
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        }, 
+        {
+          "kpis" : [ 
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        }, 
+        
+      ],
+      "type" : "supervisor"
+      "status" : true
+      "version" : 0
+    }
+    $scope.form = form
     # $scope.addForm = (ev) ->
     #   # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
     #   $mdDialog.show(

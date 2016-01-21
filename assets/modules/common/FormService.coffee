@@ -7,8 +7,12 @@ formService = ($http) ->
 
 
 	service = {
-		getForm : () ->
-			return $http.get 'form/get'
+		getForm : (teamId) ->
+			query =
+				params :
+					'teamId' : teamId
+
+			return $http.get 'form/get', query
 
 		saveForm : (form) ->
 			$http.post 'form/save', form

@@ -54,6 +54,11 @@ app.controller "TeamCtrl", [
       $scope.selectedTeam = ''
       return
 
+    $scope.promote = (member) ->
+      teamService.setSupervisor($scope.selectedTeam,member)
+      .then (data) ->
+        $scope.selectedTeam.supervisor = member.id
+
     $scope.toggleSidenav = (menuId) ->
       $mdSidenav(menuId).toggle()
       return
