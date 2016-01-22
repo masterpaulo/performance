@@ -81,6 +81,17 @@ module.exports =
       if data
         res.json data
 
+  setSupervisor: (req, res) ->
+    
+    console.log req.body
+    supervisor = req.body
+    Team.update(supervisor.team,{supervisor:supervisor.member})
+    .exec (err, data) ->
+      if err
+        console.log err
+      else if data
+        res.json data
+
 
 
 

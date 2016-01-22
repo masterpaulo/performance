@@ -16,41 +16,64 @@ app.controller "FormCtrl", [
 
     $scope.selectedTeam = '';
     $scope.teams = []
-
-    formService.getForm()
-    .then (data) ->
-      console.log "in FormCtrl"
-
-
-      form = data.data[0]
-      if(form)
-        $scope.form = form
-      
-      else
-        form = {
-          "kras" : [ 
+    formZero = {
+      "kras" : [ 
+        {
+          "kpis" : [ 
             {
-              "kpis" : [ 
-                {
-                    "name" : ""
-                    "description" : ""
-                    "goal" : 0
-                    "weight" : 0
-                }
-              ]
-              "weight" : 0
-              "tmp" : {}
-              "name" : ""
-              "description" : ""
-            }, 
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        }, 
+        
+      ],
+      "status" : true
+      "version" : 0
+    }
+
+    if $scope.$parent.userSession.currentRole == "1"
+      formService.getForm("supervisor")
+      .then (data) ->
+        console.log "in FormCtrl"
+
+
+        form = data.data[0]
+        if(form)
+          $scope.form = form
+        
+        else
+          formZero.type = "supervisor"
+          $scope.form = formZero
+        
+    else
+      $scope.accountId = $scope.userSession.id
+
+      $http.get 'employee/myteam/'+ $scope.accountId,cache:true
+      .success (data) ->
+        if data
+          console.log data
+          $scope.myteams = data
+          $scope.selectedTeam = data[0].teamId
+          formService.getForm($scope.selectedTeam.id)
+          .then (res) ->
+            form = res.data[0]
+            console.log form
+            if(form)
+              $scope.form = form
             
-          ],
-          "type" : "supervisor"
-          "status" : true
-          "version" : 0
-        }
-        $scope.form = form
-      
+            else
+              formZero.type = "employee"
+              formZero.teamId = $scope.selectedTeam.id
+              $scope.form = formZero
+        else
+          console.log 'error man'
 
 
     $scope.addKRA = () ->

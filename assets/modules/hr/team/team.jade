@@ -57,12 +57,13 @@ md-content(layout="column", flex)
             md-content.md-padding
               
               md-list()
-                md-list-item(ng-repeat="member in memberlist = (selectedTeam.members)") 
-                  p {{member.firstname}}  {{member.lastname}}
+                div(ng-repeat="member in memberlist = (selectedTeam.members)") 
+                  p(style="margin:auto") {{member.firstname}}  {{member.lastname}}
                   span(flex)
-                  md-chips(style="box-shadow:0;")
-                    md-chip {{member.fistname.length/3 + 5 | number : 2}}
-                  md-divider
+                  //- md-chips(style="box-shadow:0;")
+                  //-   md-chip {{member.fistname.length/3 + 5 | number : 2}}
+                  md-button.md-icon-button(aria-label="Promote this ****" ng-click="promote(member)" md-tooltip="set as supervisor")
+                    i.mdi(class="{{(member.id == selectedTeam.supervisor)? 'mdi-star':'mdi-star-outline'}}", style="color:#FBB546")
                 md-list-item(ng-hide="memberlist.length")
                   p No members yet.
             span(flex)

@@ -30,7 +30,7 @@ app.config [
       template: JST['hr/employee/employee.html']()
       controller: 'EmployeeCtrl'
     .when "/form",
-      template: JST['hr/form/form.html']()
+      template: JST['common/form/form.html']()
       controller: 'FormCtrl'
 ]
 
