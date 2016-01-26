@@ -48,7 +48,10 @@ module.exports =
 
   save : (req, res) ->
     form = req.body
-    form.version++
+    if !form.version
+      form.version = 1
+    
+    form.version = form.version+1
 
     Form.create form
     .exec (err, data) ->
