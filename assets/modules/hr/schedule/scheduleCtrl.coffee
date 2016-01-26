@@ -44,9 +44,9 @@ app.controller "ScheduleCtrl", [
     # .success (result) ->
     #   $rootScope.teams = result
 
-    scheduleService.activeSchedules()
-    .success (result) ->
-      $rootScope.activeSchedules = result
+    # scheduleService.activeSchedules()
+    # .success (result) ->
+    #   $rootScope.activeSchedules = result
 
     $scope.toSchedule = () ->
       $scope.newSched = {}
@@ -85,6 +85,18 @@ app.controller "ScheduleCtrl", [
 
             $scope.close()
             appService.alert.success 'Success'
+
+    $scope.supervisorEvaluationRequest = (ev) ->
+      # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+      console.log 'scheduling'
+      $mdDialog.show(
+        controller: 'supervisorEvalRequestController'
+        template: JST['common/supervisorEvalRequest/supervisorEvalRequest.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope, accountType:'hr' }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
 
 
     $scope.$parent.routes = 'Evaluation Schedules'

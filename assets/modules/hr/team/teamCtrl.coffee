@@ -18,9 +18,9 @@ app.controller "TeamCtrl", [
     $scope.teams = []
 
     teamService.listTeams()
-    .then (data) ->
+    .success (data) ->
       console.log data
-      $scope.teams = data.data
+      $scope.teams = data
 
 
 
@@ -53,6 +53,11 @@ app.controller "TeamCtrl", [
     $scope.closeTeam = () ->
       $scope.selectedTeam = ''
       return
+
+    $scope.promote = (member) ->
+      teamService.setSupervisor($scope.selectedTeam,member)
+      .then (data) ->
+        $scope.selectedTeam.supervisor = member.id
 
     $scope.toggleSidenav = (menuId) ->
       $mdSidenav(menuId).toggle()

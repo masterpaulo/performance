@@ -59,7 +59,7 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
     $mdDialog.hide answer
     return
   $scope.submit = (newSched) ->
-
+    $scope.hide()
     newSchedule =
       accountId: $scope.accountId
       date: newSched.date
@@ -80,12 +80,19 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
 
       scheduleService.create newSchedule
       .success (result) ->
-        tempId = result.teamId
-        result.teamId = {}
-        result.teamId.id = tempId
-        scopes.selectedTeam.teamSchedules.push result
+        # console.log result
+        if result
+          tempId = result.teamId
+          result.teamId = {}
+          result.teamId.id = tempId
+          scopes.selectedTeam.teamSchedules.push result
 
-        appService.alert.success 'Success! Wait for confirmation from HR'
+          appService.alert.success 'Success! Wait for confirmation from HR'
+        else
+          console.log 'error',result
+      # .error (err) ->
+      #   console.log err
+      #   console.log 'not successful'
 
   $scope.toConfirmRequest = (status) ->
     console.log 'to confirm'

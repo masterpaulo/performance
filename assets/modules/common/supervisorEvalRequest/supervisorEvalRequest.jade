@@ -1,0 +1,33 @@
+md-dialog(ng-cloak='' )
+  form
+    md-toolbar
+      .md-toolbar-tools
+        h2 Supervisor Evaluation Scheduler
+        span(flex='')
+        md-button.md-icon-button(ng-click='cancel()')
+          md-icon.mdi.mdi-calendar-plus
+    md-dialog-content
+      .md-dialog-content
+        md-datepicker(ng-model='newSched.date' placeholder='Enter Date') {{newSched.date}}
+        md-select(ng-model='newSched.team' placeholder='Select Team')
+          md-option(ng-repeat='team in teams' ng-click='teamSelected(team)' ng-value='{id: team.id,name:team.name}') {{team.name}}
+        div(ng-show='supervisor')
+          .md-headline Evaluation for: {{supervisor.firstname +" "+ supervisor.lastname}}
+          md-divider
+          .md-title Choose an Evaluator
+          md-divider
+          md-list(ng-repeat='member in teammembers')
+            md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-click='toggle(member.accountId.id, newSched.selected)' ng-hide='member.accountId.id==supervisor.id') {{member.accountId.lastname + ' ' + member.accountId.firstname}}
+
+          md-input-container
+            label Notes
+            input(type='text', ng-model='newSched.notes')
+
+
+        md-button.md-raised.md-primary(ng-click='submit(newSched)' ng-disabled='!(newSched.selected.length && newSched.notes && newSched.date)') Submit
+        md-button.md-raised.md-accent() Cancel
+
+
+
+
+

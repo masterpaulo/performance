@@ -7,8 +7,16 @@ formService = ($http) ->
 
 
 	service = {
-		getForm : (formId) ->
-			return $http.get 'form/get/' + formId
+# <<<<<<< HEAD
+# 		getForm : (formId) ->
+# 			return $http.get 'form/get/' + formId
+# =======
+		getForm : (teamId) ->
+			query =
+				params :
+					'teamId' : teamId
+
+			return $http.get 'form/get', query
 
 		saveForm : (form) ->
 			$http.post 'form/save', form
@@ -22,9 +30,6 @@ formService = ($http) ->
 	return service
 
 	#############
-
-
-
 
 app.factory "formService", formService
 

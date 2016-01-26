@@ -1,6 +1,8 @@
 module.exports =
   list: (req,res) ->
     Team.find()
+    .populate 'supervisor'
+    .populate 'members'
     .sort 'name ASC'
     .exec (err,data) ->
       if err
@@ -30,6 +32,12 @@ module.exports =
             #
             data.average = 100
             res.json data
+
+  evaluator: (req,res) ->
+    teamId = req.param 'id'
+    # Team.findOne teamId
+    # .populate 'm,'
+    return
 
 
 
@@ -82,6 +90,37 @@ module.exports =
       if data
         res.json data
 
+  setSupervisor: (req, res) ->
+
+    console.log req.body
+    supervisor = req.body
+    Team.update(supervisor.team,{supervisor:supervisor.member})
+    .exec (err, data) ->
+      if err
+        console.log err
+      else if data
+        res.json data
+
+  membersInfo: (req,res) ->
+    console.log data = req.params.all()
+    team = JSON.parse data.team
+    allMembers = []
+    c = 0
+    team.members.forEach (member,key) ->
+      Account.findOne member.accountId
+      .exec (err,data) ->
+        if data
+          # console.log 'membersinfo ',data
+          team.members[key].accountId = data
+          c++
+          if c is team.members.length
+            res.json team
+
+
+
+    # teamId = req.param 'id'
+    # # console.log 'info now'
+    # Team.find
 
 
 

@@ -11,6 +11,10 @@ scheduleService = ($http,$q,$timeout) ->
       $http.post 'evaluationschedule/create', newSched
       .success (data) ->
         return data
+      # .error (err) ->
+      #   console.log err
+      #   console.log 'not successful'
+      #   return err
 
     delete: (schedId) ->
       $http.delete 'evaluationschedule/delete/' + schedId

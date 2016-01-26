@@ -35,10 +35,11 @@ form(name="kraForm")
             .md-caption(flex="10", style="text-align:center") {{kpi.weight}}
             //- .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
             md-input-container
-              input(type="number" step="any" name="rate" ng-model="kpi.score" min="0" max="kpi.goal")
+              input(type="number" step="any" name="rate" ng-model="kpi.score" min="0" max="10")
             md-divider
     md-button.md-fab.md-raised.md-primary(ng-click='submitEvaluation(form.kras,evaluationId)')
-          md-icon.mdi.mdi-content-save-all
+      md-icon.mdi.mdi-content-save-all
+
 
 
     //- EDIT CARD

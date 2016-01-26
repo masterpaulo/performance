@@ -3,6 +3,7 @@ async = require 'async'
 module.exports =
   create: (req,res) ->
     accountId = req.body.accountId
+    teamName = req.body.teamName
     teamId = req.body.teamId
     type = req.body.type
     date = req.body.date
@@ -10,6 +11,7 @@ module.exports =
     status = req.body.status
     evaluationLimit = req.body.evaluationLimit
     selectedMember = req.body.selectedMember
+
 
     evaluationSched =
       date: date
@@ -19,23 +21,54 @@ module.exports =
       evaluationLimit: evaluationLimit
       status: status
     # console.log 'creating enw sched'
-    async.parallel([
+    async.waterfall([
       (callback) ->
-        Form.findOne where : { type : 'supervisor' }
-        .exec (err,data) ->
-          if data
-            console.log 'findONE form for supervisor'
-            callback null,data
-      (callback) ->
-        EvaluationSchedule.create evaluationSched
-        .exec (err,data) ->
-          if data
-            console.log 'creating sched success'
-            callback null,data
+        if type = 'supervisor'
+          Form.findOne where : { type : evaluationSched.type }
+          .sort 'version DESC'
+          .exec (err,data) ->
+            if data
+              console.log 'findONE form for supervisor',data
+              callback null,data
+            else
+              # console.log 'missing form'
+              # console.log err
+              res.json err
+        else
+          Form.findOne where : { type : evaluationSched.type, teamId: evaluationSched.teamId }
+          .sort 'version DESC'
+          .exec (err,data) ->
+            if data
+              console.log 'findONE form for supervisor',data
+              callback null,data
+            else
+              # console.log err
+              # console.log 'missing form'
+              res.json err
+      (arg1, callback) ->
+        if arg1
+          EvaluationSchedule.create evaluationSched
+          .exec (err,data) ->
+            if data
+              console.log 'creating sched success'
+              data.formId = arg1.id
+              callback null,data
+
+            else
+              console.log 'missing form'
           # scheduleId = newEval.id
 
-      ], (err,results) ->
-        newEval = results[1]
+    ], (err,results) ->
+      # console.log results
+      if err
+        res.json err
+      # if err
+      #   console.log 'error man'
+      if results
+        console.log 'success'
+        newEval = results
+        # console.log 'newEval',newEval = results[1]
+
         scheduleId = newEval.id
         if newEval.type is 'supervisor'
           Team.findOne newEval.teamId
@@ -58,7 +91,8 @@ module.exports =
                   evaluatee: data.supervisor
                   evaluator: member.accountId
                   scheduleId: scheduleId
-                  formId: results[0].id
+                  formId: results.formId
+                  # status: false
                 # if data.supervisor is not member.id
                 # console.log data.supervisor, member.accountId,data.members.length
                 if data.supervisor isnt member.accountId
@@ -90,12 +124,11 @@ module.exports =
 
         else
 
-          # console.log 'request evaluation for members'
+          console.log 'request evaluation for members'
           # EvaluationSchedule.create evaluationSched
           # .exec (err,data) ->
           #   if data
-          #     res.json data
-          # scheduleId = data.id
+          #     scheduleId = data.id
           async.parallel([
             (callback) ->
               UserRole.find {roleId:'1'}
@@ -124,6 +157,7 @@ module.exports =
                   evaluatee: d
                   evaluator: accountId
                   scheduleId: scheduleId
+                  formId: results.formId
                 # console.log 'creating new eval', evaluation
                 Evaluation.create evaluation
                 .exec (err,data) ->
@@ -135,95 +169,17 @@ module.exports =
                     # console.log 'success creating evaluation'
           ], (err,results) ->
             if results
-              console.log 'successssss'
+              console.log 'successssss',results
               # console.log 'final results', results
               res.json newEval
             if err
               console.log 'error final results'
+              res.json err
           )
-      )
-    # EvaluationSchedule.create evaluationSched
-    # .exec (err,newEval) ->
-    #   scheduleId = newEval.id
 
-      # console.log 'success adding evalSched',data
+    )
 
 
-
-
-
-
-
-    # if req.body.type is 'supervisor'
-    #   # console.log 'evaluation for team leader'
-    #   # console.log evaluationSched
-    #   EvaluationSchedule.create evaluationSched
-    #   .exec (err,data) ->
-    #     if data
-    #       # console.log 'success creating evaluation for team leader',data
-
-    #       res.json data
-    #       scheduleId = data.id
-    #       Team.findOne teamId
-    #       .populate 'members'
-    #       .exec (err,data) ->
-    #         if data
-    #           data.members.forEach (member) ->
-    #             # console.log 'memmmmmmmmmmber', member
-    #             notif =
-    #               sender: accountId
-    #               receiver: member.accountId
-    #               scheduleId: scheduleId
-    #             if data.supervisor is member.id
-    #               notif.type = "Schedule For Your Evaluation"
-    #             else
-    #               notif.type = "Team Leader Evaluation"
-    #               evaluation =
-    #                 evaluatee: data.supervisor
-    #                 evaluator: member.id
-    #                 scheduleId: scheduleId
-    #               Evaluation.create evaluation
-    #               .exec (err,data) ->
-    #                 if data
-    #                   console.log 'success creating evaluation for tl'
-    #             Notification.create notif
-    #             .exec (err,data) ->
-    #               if data
-    #                 console.log 'sucess notifications'
-
-
-    # else
-
-    #   console.log 'request evaluation for members'
-    #   EvaluationSchedule.create evaluationSched
-    #   .exec (err,data) ->
-    #     if data
-    #       res.json data
-    #       scheduleId = data.id
-    #       UserRole.find {roleId:'1'}
-    #       .exec (err,data) ->
-    #         if data
-    #           data.forEach (d) ->
-    #             notif =
-    #               type: 'Member Evaluation Request'
-    #               sender: accountId
-    #               receiver: d.accountId
-    #               scheduleId: scheduleId
-    #             Notification.create notif
-    #             .exec (err,data) ->
-    #               if data
-    #                 console.log 'success adding notifs for hr'
-
-    #       selectedMember.forEach (d) ->
-    #         evaluation =
-    #           evaluatee: d
-    #           evaluator: accountId
-    #           scheduleId: scheduleId
-
-    #         Evaluation.create evaluation
-    #         .exec (err,data) ->
-    #           if data
-    #             console.log 'success creating evaluation'
 
   delete: (req,res) ->
     id = req.param 'id'

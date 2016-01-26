@@ -1,0 +1,83 @@
+md-dialog(ng-cloak='' style='min-width:1000px')
+
+  md-toolbar(flex-order='1')
+    .md-toolbar-tools
+      h2 {{form.type === 'supervisor' ? "Supervisor":"Member"}} Evaluation
+      span(flex='')
+      md-button.md-icon-button(ng-click='cancel()')
+        md-icon.mdi.mdi-window-close
+  md-dialog-content(flex-order='2')
+    div(ng-if='data.evaluatee=="supervisor"')
+      md-content(ng-repeat='kra in evaluation.formId.kras')
+        md-card.md-whiteframe-12dp(flex)
+          md-toolbar.md-tall.md-hue-2(layout='row')
+            .md-toolbar-tools
+              div(layout='column' flex)
+                .md-title(flex='1') {{kra.name}}
+                .md-caption(flex='2') {{kra.description}}
+            .md-toolbar-tools
+              .md-display-1(layout='row' flex layout-align='end center') {{kra.weight}}
+          md-toolbar.md-hue-2(layout='row')
+            .md-toolbar-tools()
+              .md-subhead( flex='20') KPI
+              .md-subhead( flex='40') Description
+              .md-subhead( flex) Goal
+              .md-subhead( flex) Weight
+              .md-subhead( flex) Score
+
+          md-card-content
+            md-list
+              md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start")
+                .md-caption(flex='20') {{kpi.name}}
+                .md-caption(flex='40') {{kpi.description}}
+                .md-caption(flex) {{kpi.goal}}
+                .md-caption(flex) {{kpi.weight}}
+                .md-caption(flex ng-if='forView') {{kpi.score}}
+
+                md-input-container(flex ng-if='!forView')
+                  input(type="number" step="any" name="rate" ng-model="kpi.score" min="0" max="kpi.goal")
+
+                md-divider
+    div(ng-if='data.evaluatee=="member"')
+      md-tabs.md-primary(md-dynamic-height)
+        div(ng-repeat='eval in memberEvaluations')
+          md-tab(label='{{eval.evaluatee.lastname + " "+eval.evaluatee.firstname}}' md-dynamic-height )
+            md-content(ng-repeat='kra in eval.formId.kras')
+              md-card.md-whiteframe-12dp(flex)
+                md-toolbar.md-tall.md-hue-2(layout='row')
+                  .md-toolbar-tools
+                    div(layout='column' flex)
+                      .md-title(flex='1') {{kra.name}}
+                      .md-caption(flex='2') {{kra.description}}
+                  .md-toolbar-tools
+                    .md-display-1(layout='row' flex layout-align='end center') {{kra.weight}}
+                md-toolbar.md-hue-2(layout='row')
+                  .md-toolbar-tools()
+                    .md-subhead( flex='20') KPI
+                    .md-subhead( flex='40') Description
+                    .md-subhead( flex) Goal
+                    .md-subhead( flex) Weight
+                    .md-subhead( flex) Score
+
+                md-card-content
+                  md-list
+                    md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start")
+                      .md-caption(flex='20') {{kpi.name}}
+                      .md-caption(flex='40') {{kpi.description}}
+                      .md-caption(flex) {{kpi.goal}}
+                      .md-caption(flex) {{kpi.weight}}
+                      .md-caption(flex ng-if='forView') {{kpi.score}}
+
+                      md-input-container(flex ng-if='!forView')
+                        input(type="number" step="any" name="rate" ng-model="kpi.score" min="0" max="kpi.goal")
+
+                      md-divider
+                md-button.md-icon-button.md-raised.md-accent(ng-click='submitEvaluation(eval.id,eval.formId.kras)' style='position:fixed; bottom:7%; right:5%;')
+                  md-icon.mdi.mdi-content-save
+  md-toolbar.md-hue-3(flex-order='3')
+    .md-toolbar-tools
+      .md-title Total: {{evaluation.formId.kras}}
+  div.md-raised(style='position:fixed; bottom:7%; right:5%; z-index: 2' ng-show='!forView' ng-if='data.evaluatee=="supervisor"')
+    md-button.md-fab.md-raised.md-accent(ng-click='submitEvaluation(evaluation.id,evaluation.formId.kras)')
+      md-icon.mdi.mdi-content-save-all
+

@@ -30,7 +30,7 @@ app.config [
       template: JST['hr/employee/employee.html']()
       controller: 'EmployeeCtrl'
     .when "/form",
-      template: JST['hr/form/form.html']()
+      template: JST['common/form/form.html']()
       controller: 'FormCtrl'
     .otherwise redirectTo: '/'
 
@@ -54,14 +54,15 @@ app.controller 'HrCtrl', [
   '$rootScope'
   'teamService'
   'appService'
+  'scheduleService'
 
 
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService) ->
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService,scheduleService) ->
     $scope.userSession = JSON.parse window.userSession
-    $scope.accountId = $scope.userSession.id
-    $http.get 'team/list'
-    .success (result) ->
-      return $scope.allTeams = result
+    console.log $scope.accountId = $scope.userSession.id
+    # $http.get 'team/list'
+    # .success (result) ->
+    #   return $scope.allTeams = result
 
     buildToggler = (navID) ->
       debounceFn = $mdUtil.debounce((->
@@ -76,13 +77,16 @@ app.controller 'HrCtrl', [
     .success (result) ->
       console.log result
       return $scope.newEmployeeNotif = result
-    # console.log $scope.newRequestNotif
+
     $http.get 'notification/newEvalRequest/'+ $scope.accountId
     .success (result) ->
       if result
         console.log result
         return $scope.newRequestNotif = result
 
+    scheduleService.activeSchedules()
+    .success (result) ->
+      $rootScope.activeSchedules = result
 
 
     $scope.deleteOnArray = (array,deleteId) ->

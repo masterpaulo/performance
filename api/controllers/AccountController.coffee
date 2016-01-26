@@ -14,6 +14,15 @@ module.exports =
       if data
         # console.log data
         res.json data
+  findById: (req,res) ->
+    accountId = req.param 'id'
+    Account.findOne accountId
+    .exec (err,data) ->
+      if err
+        console.log 'error',err
+      else
+        res.json data
+
 
   #   # HR
   # hr: (req,res) ->

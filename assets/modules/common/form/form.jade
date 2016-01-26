@@ -1,36 +1,5 @@
-md-content(layout="column", flex)
 
-
-    //- md-content.md-hue-2(flex-gt-lg="40")
-    //-   md-card(flex)
-    //-     md-card-content
-    //-       md-input-container.md-block(md-no-float='', style="padding-bottom:0")
-    //-         md-icon
-    //-           i.mdi.mdi-36px.mdi-magnify
-    //-         input( type='text', placeholder='Search Team',ng-model="teamSearch")
-
-    //-   md-card(flex)
-    //-     md-card-content(style="position:relative")
-
-
-    //-       h2.md-title
-    //-         md-icon(md-svg-icon="account-multiple", style="margin-right:10px")
-    //-         | Teams
-
-    //-       md-button.md-fab.md-primary(aria-label='Add team',style="position: absolute;right: 33px;top: 53px;", ng-click="addTeam()")
-    //-         md-icon(md-svg-icon="plus")
-
-
-    //-     md-divider
-
-
-    //-     md-list(style="max-height: 70%;overflow: auto;")
-    //-       md-list-item(ng-repeat="team in teamlist = (teams | filter:teamSearch)", ng-click="selectTeam(team)")
-    //-         p {{team.name}}
-
-    //-         md-divider
-
-form(name="kraForm")
+form(name="kraForm" )
   md-content.form-window.md-hue-2.kra-form(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in form.kras")
 
 
@@ -81,7 +50,7 @@ form(name="kraForm")
 
         .md-toolbar-tools.md-toolbar-tools-bottom(flex="25")
           md-input-container()
-            input(type="number" step="any" name="rate" ng-model="kra.weight" min="0"
+            input(aria-label="kra scores" type="number" step="any" name="rate" ng-model="kra.weight" min="0"
                  max="100")
           .md-caption KRA Score
       md-toolbar.md-hue-2(flex-order="2", layout='row')
@@ -96,7 +65,7 @@ form(name="kraForm")
       md-toolbar.md-hue-3(flex-order="0", style="min-height:0", layout="row")
         p(style="font-size: 12px;margin: 0;padding: 0px 20px;margin:auto;opacity: 0.7;font-style: italic") Form is now Editable
         span(flex)
-        md-button.md-icon-button(ng-click="deleteKRA($index)")
+        md-button.md-icon-button(aria-label="delete kra" ng-click="deleteKRA($index)")
           i.mdi.mdi-12px.mdi-close()
 
       md-button.md-fab.md-hue-2( aria-label='Done' ng-click="addKPI(kra)", nd-disabled, style="position: absolute;right: 20px;top: 200px;")
@@ -106,18 +75,18 @@ form(name="kraForm")
 
         md-list.editable(ng-show="editForm")
           div(ng-repeat="kpi in kra.kpis", layout-align="start start")
-            md-input-container.md-block(md-no-float, flex="20")
-              input(required, ng-model="kpi.name",  md-detect-hidden, placeholder="Title")
+            md-input-container.md-block(aria-label="kra form input feild" md-no-float, flex="20")
+              input(aria-label="kra form input feild" required, ng-model="kpi.name",  md-detect-hidden, placeholder="Title")
             md-input-container.md-block(md-no-float, flex="40")
-              textarea(required, ng-model="kpi.description",  md-detect-hidden, placeholder="Description")
+              textarea(aria-label="kra form input feild" required, ng-model="kpi.description",  md-detect-hidden, placeholder="Description")
             md-input-container(flex="10",)
-              md-checkbox( ng-model="kpi.reverse" aria-label="reverse")
+              md-checkbox(ng-model="kpi.reverse" aria-label="reverse")
             md-input-container(flex="10", style="text-align:center")
-              input(type="number" step="any" name="rate" ng-model="kpi.goal" min="0" max="100")
+              input(aria-label="kragoal" type="number" step="any" name="rate" ng-model="kpi.goal" min="0" max="100")
             md-input-container(flex="10", style="text-align:center")
-              input(type="number" step="any" name="rate" ng-model="kpi.weight" min="0" max="100")
+              input(aria-label="kraweight" type="number" step="any" name="rate" ng-model="kpi.weight" min="0" max="100")
             .md-caption(flex="10", style="text-align:center")
-              md-button.md-exclude.md-icon-button(ng-click="deleteKPI($event, kra, $index)")
+              md-button.md-exclude.md-icon-button(aria-label="delete kpi" ng-click="deleteKPI($event, kra, $index)")
                 i.mdi.mdi-delete
                 //- i.mdi.mdi-dots-horizontal
 
@@ -132,6 +101,30 @@ div(ng-show="editForm", style="right: 50px;position: fixed;bottom: 380px;")
     i.mdi.mdi-24px.mdi-plus()
   md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1")
     i.mdi.mdi-24px.mdi-check()
+
+
+md-card.team-window( style="right: 25px;position: fixed;top: 100px; width:200px;")
+  md-toolbar.md-hue-2()
+        .md-toolbar-tools( flex, layout="column", layout-align="start start")
+          h1() Actions
+
+
+  md-card-content
+    md-list(layout="column")
+      md-list-item
+        p(flex="50") Team Name
+        p(flex="50") Hello
+      md-list-item
+        p(flex="50") Team Name
+        p(flex="50") Hello
+      md-list-item
+        p(flex="50") Team Name
+        p(flex="50") Hello
+
+    div(layout="column", ng-show="editForm")
+      md-button.md-raised.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled) RESET
+      md-button.md-raised.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled) ADD KRA
+      md-button.md-raised.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1") SAVE
 
 md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="right: 50px;position: fixed;bottom: 380px;", ng-click="editForm=!editForm")
   i.mdi.mdi-24px.mdi-pencil()

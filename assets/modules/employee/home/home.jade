@@ -81,8 +81,9 @@ md-content(layout="column", flex)
                       span Status
                     th(md-column='')
                       span Action
-                tbody(md-body='')
-                  tr(md-row='',ng-repeat='sched in selectedTeam.teamSchedules | orderBy: sortScheds | filter:{type:filterByType}' ng-click='toEvaluateSupervisor($event)')
+                tbody(md-body='' style='min-height:300px')
+                  //- h4 {{selectedTeam.teamSchedules.length}}
+                  tr(md-row='',ng-repeat='sched in selectedTeam.teamSchedules | orderBy: sortScheds ')
 
                     td(md-cell='') {{sched.date | date}}
                     td(md-cell='') {{sched.notes}}
@@ -90,8 +91,12 @@ md-content(layout="column", flex)
                     td(md-cell='') {{sched.rating}}
                     td(md-cell='') {{sched.status}}
                     td(md-cell='')
-                      md-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
+                      md-button.md-accent.md-icon-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
                         md-icon.mdi.mdi-delete
+                      md-button.md-primary.md-icon-button(ng-click='toEvaluateSupervisor($event,sched.id)' ng-if='!enableToSchedule && sched.type=="supervisor"')
+                        md-icon.mdi.mdi-pen
+                      md-button.md-primary.md-icon-button(ng-click='toEvaluateMember($event,sched.id)' ng-if='enableToSchedule && sched.type=="member"')
+                        md-icon.mdi.mdi-pen
                   tr(md-row ng-show='!selectedTeam.teamSchedules.length')
                     td(md-cell) No Evaluation Found
               md-button.md-fab.md-primary.md-raised(ng-click='memberEvaluationRequest($event)', flex='100', flex-gt-md='auto' style='position:absolute; right:15px;top:20px' ng-show='enableToSchedule')
@@ -102,3 +107,120 @@ md-content(layout="column", flex)
               h1.md-display-2 Structure
               p
                 | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+
+          md-tab(label='settings')
+            md-content.md-padding()
+              h3.md-display-1 Team Info
+              form(name="updateTeamForm")
+                md-input-container
+                  label Team Name
+                  input(ng-model="updatedTeam.name", required, md-maxlength="35", ng-change="showUpdateButton=true")
+                md-input-container(ng-init="")
+                  label Parent
+                  md-select(ng-model="updatedTeam.parent", , ng-change="showUpdateButton=true")
+                    md-option(ng-repeat="team in teams track by $index" value="{{team.id}}") {{team.name}}
+                md-button.md-raised.md-primary(ng-click="updateTeam()" ng-disabled="!showUpdateButton") Save
+
+
+
+              h3.md-display-1 Delete Team
+              .md-caption Deleting this team will remove all evaluation records of the members. Forever... Are you sure you want to continue?
+              md-button.md-raised.md-warn(ng-click="button1=true" ng-disabled="button1") {{(button1)? "are you sure?":"Yes"}}
+              md-button.md-raised.md-warn(ng-show="button1" ng-click="button2=true"   ng-disabled="button2") {{(button2)? "Really?":"I'm Sure"}}
+              md-button.md-raised.md-warn(ng-show="button2" ng-click="button1 = button2 = false ;test()") DELETE TEAM
+
+          md-tab(label='form')
+            md-content(style='padding-top:10px')
+              form(name="kraForm" )
+                md-content.form-window.kra-form(flex, style="overflow:hidden;" ng-repeat="kra in form.kras")
+
+
+                  //- VIEW CARD
+                  md-card.team-window(ng-hide="editForm", flex, , class="kra-card")
+
+                    md-toolbar.md-tall.md-hue-2(layout='row')
+                      .md-toolbar-tools( flex="70", layout="column", layout-align="start start")
+                        h1() {{kra.name}}
+                        .md-caption {{kra.description}}
+
+                      span(flex)
+
+                      .md-toolbar-tools.md-toolbar-tools-bottom(flex="25")
+                        h1() {{kra.weight}}
+                        .md-caption KRA Score
+                    md-toolbar.md-hue-2(layout='row')
+                      .md-toolbar-tools
+                        .md-caption( flex="20", ) KPI
+                        .md-caption( flex="40", ) Description
+                        .md-caption( flex="10", ) Reverse
+                        .md-caption( flex="10", ) Goal
+                        .md-caption( flex="10", ) Weight
+                        .md-caption( flex="10", ) Score
+
+                    md-card-content
+                      md-list
+                        md-list-item(ng-repeat="kpi in kra.kpis", layout-align="start start")
+                          .md-caption(flex="20") {{kpi.name}}
+                          .md-caption(flex="40") {{kpi.description}}
+                          .md-caption(flex="10", style="text-align:center") {{kpi.reverse? "Yes":"No"}}
+                          .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
+                          .md-caption(flex="10", style="text-align:center") {{kpi.weight}}
+                          .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
+                          md-divider
+
+                  //- EDIT CARD
+                  md-card.team-window(ng-show="editForm", flex, , class="kra-card")
+
+                    md-toolbar.md-tall.md-hue-2(flex-order="1", layout='row')
+                      .md-toolbar-tools( flex="70", layout="column", layout-align="start start")
+                        md-input-container(md-no-float)
+                          input(required ng-model="kra.name", placeholder="Title")
+                        md-input-container(md-no-float, )
+                          textarea(required, ng-model="kra.description", md-detect-hidden, placeholder="Description")
+
+                      span(flex)
+
+                      .md-toolbar-tools.md-toolbar-tools-bottom(flex="25")
+                        md-input-container()
+                          input(type="number" step="any" name="rate" ng-model="kra.weight" min="0"
+                               max="100")
+                        .md-caption KRA Score
+                    md-toolbar.md-hue-2(flex-order="2", layout='row')
+                      .md-toolbar-tools
+                        .md-caption( flex="20", ) KPI
+                        .md-caption( flex="40", ) Description
+                        .md-caption( flex="10", ) Reverse
+                        .md-caption( flex="10", ) Goal
+                        .md-caption( flex="10", ) Weight
+                        .md-caption( flex="10", )
+
+                    md-toolbar.md-hue-3(flex-order="0", style="min-height:0", layout="row")
+                      p(style="font-size: 12px;margin: 0;padding: 0px 20px;margin:auto;opacity: 0.7;font-style: italic") Form is now Editable
+                      span(flex)
+                      md-button.md-icon-button(ng-click="deleteKRA($index)")
+                        i.mdi.mdi-12px.mdi-close()
+
+                    md-button.md-fab.md-hue-2( aria-label='Done' ng-click="addKPI(kra)", nd-disabled, style="position: absolute;right: 20px;top: 200px;")
+                      i.mdi.mdi-24px.mdi-plus()
+
+                    md-card-content(flex-order="3")
+
+                      md-list.editable(ng-show="editForm")
+                        div(ng-repeat="kpi in kra.kpis", layout-align="start start")
+                          md-input-container.md-block(md-no-float, flex="20")
+                            input(required, ng-model="kpi.name",  md-detect-hidden, placeholder="Title")
+                          md-input-container.md-block(md-no-float, flex="40")
+                            textarea(required, ng-model="kpi.description",  md-detect-hidden, placeholder="Description")
+                          md-input-container(flex="10",)
+                            md-checkbox( ng-model="kpi.reverse" aria-label="reverse")
+                          md-input-container(flex="10", style="text-align:center")
+                            input(type="number" step="any" name="rate" ng-model="kpi.goal" min="0" max="100")
+                          md-input-container(flex="10", style="text-align:center")
+                            input(type="number" step="any" name="rate" ng-model="kpi.weight" min="0" max="100")
+                          .md-caption(flex="10", style="text-align:center")
+                            md-button.md-exclude.md-icon-button(ng-click="deleteKPI($event, kra, $index)")
+                              i.mdi.mdi-delete
+
+            .md-toolbar-tools
+              md-button.md-raised.md-primary( aria-label="Edit form", ng-click="editForm=!editForm") EDIT
+

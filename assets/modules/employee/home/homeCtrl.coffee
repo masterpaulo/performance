@@ -16,7 +16,7 @@ app.controller "HomeCtrl", [
   '$rootScope'
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $rp,$mdMedia,$mdToast,scheduleService,appService, employeeService,$location,$rootScope) ->
     $scope.accountId = $scope.userSession.id
-
+    $scope.enableToSchedule = false
     employeeService.myteam $scope.accountId
     .success (data) ->
       $scope.myteams = data
@@ -25,7 +25,7 @@ app.controller "HomeCtrl", [
       # console.log team
       # $scope.supervisor = true if team.accountId is team.teamId.supervisor
       $scope.supervisor = team.supervisor
-      $scope.enableToSchedule = false
+
       $scope.teamName = team.teamId.name
       $scope.teamId =  team.teamId.id
       $scope.enableToSchedule = true if team.accountId is team.teamId.supervisor
@@ -42,19 +42,53 @@ app.controller "HomeCtrl", [
         console.log data
         $scope.selectedTeam.teamSchedules = data
 
-    $scope.toEvaluateSupervisor = (ev) ->
+    # $scope.toEvaluateSupervisor = (ev,scheduleId) ->
+    #   $rootScope.toEvaluate =
+    #     scheduleId: scheduleId
+    #     evaluator: $scope.accountId
+
+
+    #   $mdDialog.show(
+    #     controller: 'EvaluateCtrl'
+    #     template: JST['common/evaluation/evaluation.html']()
+    #     parent: angular.element(document.body)
+    #     locals: { scopes: $scope }
+    #     targetEvent: ev
+    #     clickOutsideToClose: true
+    #   )
+
+    $scope.toEvaluateSupervisor = (ev,scheduleId) ->
+
+      $rootScope.toEvaluate =
+        scheduleId: scheduleId
+        evaluator: $scope.accountId
+        evaluatee:'supervisor'
+
+
       $mdDialog.show(
         controller: 'EvaluateCtrl'
-        template: JST['common/evaluation/evaluation.html']()
+        template: JST['common/evaluationForm/evaluation.html']()
         parent: angular.element(document.body)
-        locals: { scopes: $scope, accountType:'employee' }
+        locals: { scopes: $scope }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
+    $scope.toEvaluateMember = (ev,scheduleId) ->
+      $rootScope.toEvaluate =
+        scheduleId: scheduleId
+        evaluator: $scope.accountId
+        evaluatee:'member'
+
+      console.log $rootScope.toEvaluate
+      $mdDialog.show(
+        controller: 'EvaluateCtrl'
+        template: JST['common/evaluationForm/evaluation.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope }
         targetEvent: ev
         clickOutsideToClose: true
       )
       # console.log 'to eval supervisor'
-      # $rootScope.toEvaluate =
-      #   scheduleId: scheduleId
-      #   evaluator: $scope.accountId
 
       # $location.url('evaluation/supervisor/' + scheduleId)
     $scope.showConfirm = (ev) ->
@@ -93,5 +127,85 @@ app.controller "HomeCtrl", [
       ), ->
         console.log $scope.status = 'You decided to cancel.'
         return
+
+      return
+
+    form = {
+      "kras" : [
+        {
+          "kpis" : [
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        },
+        {
+          "kpis" : [
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        },
+        {
+          "kpis" : [
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        },
+        {
+          "kpis" : [
+            {
+                "name" : ""
+                "description" : ""
+                "goal" : 0
+                "weight" : 0
+            }
+          ]
+          "weight" : 0
+          "tmp" : {}
+          "name" : ""
+          "description" : ""
+        },
+
+      ],
+      "type" : "supervisor"
+      "status" : true
+      "version" : 0
+    }
+    $scope.form = form
+    # $scope.addForm = (ev) ->
+    #   # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+    #   $mdDialog.show(
+    #     controller: "FormController"
+    #     template: JST['employee/home/addForm.html']()
+    #     parent: angular.element(document.body)
+    #     locals: { scopes: $scope }
+    #     targetEvent: ev
+    #     clickOutsideToClose: true
+
+    #   )
+
 ]
 

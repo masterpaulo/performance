@@ -3,8 +3,9 @@ teamService = ($http) ->
 
 	service = {
 		listTeams : () ->
-			return $http.get 'team/list'
-
+			$http.get 'team/list'
+			.success (data) ->
+				return data
 		getTeam : (teamId)->
 			$http.get 'team/get/'+teamId
 	        .success (data) ->
@@ -29,6 +30,15 @@ teamService = ($http) ->
 			.then (newMembership) ->
 				if newMembership
 					return newMembership.data
+
+		setSupervisor : (team, member) ->
+			supervisor =
+				team : team.id
+				member : member.id
+			$http.put 'team/setSupervisor', supervisor
+			.then (newTeam) ->
+				if newTeam
+					return newTeam.data
 
 	}
 

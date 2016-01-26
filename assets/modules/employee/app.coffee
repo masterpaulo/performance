@@ -14,9 +14,9 @@ app.config [
     .when "/",
       template: JST["employee/home/home.html"]()
       controller:"HomeCtrl"
-    .when "/evaluation/supervisor/:id",
-      template: JST["employee/form/form.html"]()
-      controller: "FormCtrl"
+    .when "/form",
+      template: JST['common/form/form.html']()
+      controller: 'FormCtrl'
     .otherwise redirectTo: '/'
 
 ]

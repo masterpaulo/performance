@@ -9,6 +9,15 @@ module.exports =
       model: 'evaluationschedule'
     formId:
       model: 'form'
+    kras:
+      type:'array'
+    rating:
+      type: 'integer'
+    status:
+      type: 'boolean'
+      defaultsTo: false
+
+
 
 
   }

@@ -1,9 +1,9 @@
 md-tabs-canvas {
-	// background-color: #0288d1;
-	color: white;
+  // background-color: #0288d1;
+  color: white;
 }
 .md-datepicker-calendar-pane {
-  // background-color: #0288d1;
+  background-color: #0288d1;
   color: white;
 
   th,td,span{
@@ -11,6 +11,7 @@ md-tabs-canvas {
   }
 
 }
+
 md-calendar {
   .md-calendar-date-selection-indicator {
     border-radius: 50%;
@@ -34,7 +35,7 @@ md-calendar {
 
 
 md-content {
-	min-height: 150px
+  min-height: 150px
 }
 
 md-tab-item.md-tab.md-active md-ink-bar, md-ink-bar.md-left, md-ink-bar.md-right{

@@ -19,6 +19,12 @@
 								div {
 									md-content {
 										padding-top: 40px;
+										>md-list > div{
+											display: flex;
+											border-bottom: solid 1px;
+											border-color: rgba(0,0,0,0.12);
+											padding: 5px;
+										}
 										md-content{
 											text-align: center;
 										}
@@ -40,4 +46,3 @@
 	}
 
 } 
-

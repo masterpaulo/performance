@@ -1,21 +1,51 @@
 module.exports =
   get : (req, res) ->
-    formId = req.param 'id'
-    # Form.find(
-    #   where : { type : 'supervisor' }
-    #   sort: 'version DESC'
-    #   limit: 1
-    # )
-    # .exec (err, data) ->
-    #   if err
-    #     console.log err
-    #   else if data
-    #     res.json data
-    Form.findOne formId
-    .exec (err,data) ->
-      if data
-        console.log 'form find'
-        res.json data
+# <<<<<<< HEAD
+#     formId = req.param 'id'
+#     # Form.find(
+#     #   where : { type : 'supervisor' }
+#     #   sort: 'version DESC'
+#     #   limit: 1
+#     # )
+#     # .exec (err, data) ->
+#     #   if err
+#     #     console.log err
+#     #   else if data
+#     #     res.json data
+#     Form.findOne formId
+#     .exec (err,data) ->
+#       if data
+#         console.log 'form find'
+#         res.json data
+# =======
+    id = req.param 'teamId'
+    console.log id
+    if id == "supervisor"
+      Form.find(
+        where : { type : 'supervisor' }
+        sort: 'version DESC'
+        limit: 1
+      )
+      .exec (err, data) ->
+        if err
+          console.log err
+        else if data
+          console.log "in supervisor"
+          res.json data
+    else
+      Form.find(
+        where : { teamId : id }
+        sort : 'version DESC'
+        limit : 1
+      )
+      .exec (err, data) ->
+        if err
+          console.log err
+        else if data
+          console.log "in employee"
+
+          res.json data
+
   save : (req, res) ->
     form = req.body
     form.version++
@@ -31,9 +61,8 @@ module.exports =
     return
 
   evaluatesupervisor: (req,res) ->
+    console.log 'evaluatesupervisor'
     console.log evaluate = req.allParams()
-    console.log evaluate.evaluator
-    console.log evaluate.scheduleId
 
     Evaluation.findOne {scheduleId: evaluate.scheduleId, evaluator:evaluate.evaluator}
     .populate 'formId'
@@ -45,13 +74,31 @@ module.exports =
 
     return
 
-  submitEvaluation: (req,res) ->
-    newEval = req.allParams()
-
-    # console.log newEval
-    Evaluation.update newEval.evaluationId, {kras:newEval.kras, status:true}
+  evaluatemember: (req,res) ->
+    console.log 'evaluate member'
+    console.log evaluate = req.allParams()
+    Evaluation.find {scheduleId: evaluate.scheduleId, evaluator:evaluate.evaluator}
+    .populate 'evaluatee'
+    .populate 'formId'
     .exec (err,data) ->
       if data
-        console.log 'SUCCCEESSSS',data
+        console.log 'evaluate', data
+        res.json data
+
+  submitEvaluation: (req,res) ->
+    newEval = req.allParams()
+    # console.log 'newEval',newEval
+    console.log 'neweassdrr',newEval
+    search =
+      id:newEval.evaluationId,
+      evaluator:newEval.evaluator
+      scheduleId: newEval.scheduleId
+
+    Evaluation.update search, {kras:newEval.kras, status:true}
+    .exec (err,data) ->
+      if data
+        res.json data
+        # console.log 'SUCCCEESSSS',data
+
 
 
