@@ -1,0 +1,55 @@
+md-tabs-canvas {
+  // background-color: #0288d1;
+  color: white;
+}
+.md-datepicker-calendar-pane {
+  background-color: #0288d1;
+  color: white;
+
+  th,td,span{
+    color: white;
+  }
+
+}
+
+md-calendar {
+  .md-calendar-date-selection-indicator {
+    border-radius: 50%;
+  }
+
+
+  .md-calendar-selected-date {
+    background: #B71C1C;
+    border-radius: 50%;
+    color: black;
+
+  }
+
+  .md-calendar-date-today {
+    background: #42A5F5;
+    border-radius: 50%;
+  }
+}
+
+
+
+
+md-content {
+  min-height: 150px
+}
+
+md-tab-item.md-tab.md-active md-ink-bar, md-ink-bar.md-left, md-ink-bar.md-right{
+  // background-color: #0D47A1;
+}
+
+td.md-cell {
+  height: 60px;
+}
+// .md-calendar-date-selection-indicator {
+//     background: blue;
+//     color: rgba(255,255,255,0.87);
+//     border-color: transparent;
+// }
+
+
+

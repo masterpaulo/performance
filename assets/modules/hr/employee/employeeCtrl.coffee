@@ -44,8 +44,10 @@ app.controller "EmployeeCtrl", [
       if result
         console.log 'employeees', result
         $scope.employees = result
-
-
+    # $scope.search = false
+    $scope.toggleSearch = () ->
+      console.log $scope.search
+      $scope.search = if $scope.search then false else true
 
 
 

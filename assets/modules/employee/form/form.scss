@@ -6,21 +6,21 @@
 	    md-toolbar{
 	      	.md-toolbar-tools{
 	        	.md-caption{
-
+	        		
 	    		}
 	    	}
 	    }
-
+	      
 	}
 }
 
 
 #appContent {
 	ng-view {
-		md-content.form-window {
-
-			md-card {
-				>md-toolbar:nth-child(1){
+		md-content.form-window { 
+			
+			md-card { 
+				>md-toolbar:nth-child(1){ 
 					>div.md-toolbar-tools:nth-of-type(1){
 						height: 100%;
 					    flex-direction: column;
@@ -81,7 +81,7 @@
 						}
 					}
 				}
-				>md-card-content {
+				>md-card-content { 
 					padding:0;
 					>md-list{
 						padding: 8px 0px;

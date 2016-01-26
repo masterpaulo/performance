@@ -12,9 +12,12 @@ app.controller "ScheduleCtrl", [
   '$q'
   'scheduleService'
   'teamService'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$mdUtil, $timeout, $rootScope,$q,scheduleService,teamService) ->
+  'appService'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$mdUtil, $timeout, $rootScope,$q,scheduleService,teamService,appService) ->
     # $scope.teams = []
     $scope.accountId = $scope.$parent.accountId
+    $scope.newSched = {}
+    $scope.newSched.date = new Date()
 
     buildToggler = (navID) ->
       debounceFn = $mdUtil.debounce((->
@@ -41,9 +44,9 @@ app.controller "ScheduleCtrl", [
     # .success (result) ->
     #   $rootScope.teams = result
 
-    scheduleService.activeSchedules()
-    .success (result) ->
-      $rootScope.activeSchedules = result
+    # scheduleService.activeSchedules()
+    # .success (result) ->
+    #   $rootScope.activeSchedules = result
 
     $scope.toSchedule = () ->
       $scope.newSched = {}
@@ -53,11 +56,11 @@ app.controller "ScheduleCtrl", [
 
     $scope.submitSchedule = (sched) ->
       console.log 'submitting'
-      newdate = scheduleService.formatDate(sched.date)
+      # newdate = scheduleService.formatDate(sched.date)
 
       newSched =
         accountId: $scope.accountId
-        date: newdate
+        date: sched.date
         teamId: sched.team.id
         type: 'supervisor'
         notes: sched.notes
@@ -67,20 +70,33 @@ app.controller "ScheduleCtrl", [
       scheduleService.checkForExist($scope.activeSchedules,newSched)
       .then (found) ->
         if found
-          $rootScope.alert 'You need to finish the previous evaluation'
+          appService.alert.error 'You need to finish the previous evaluation'
           $scope.close()
-        else
-          scheduleService.create(newSched)
-          .success (data) ->
-            if data
-              tempId = data.teamId
-              data.teamId = {}
-              data.teamId.id = tempId
-              data.teamId.name = sched.team.name
-              $scope.activeSchedules.push data
+      , () ->
+        console.log 'ready to create', newSched
+        scheduleService.create(newSched)
+        .success (data) ->
+          if data
+            tempId = data.teamId
+            data.teamId = {}
+            data.teamId.id = tempId
+            data.teamId.name = sched.team.name
+            $scope.activeSchedules.push data
 
-              $scope.close()
-              $scope.$parent.alert 'Success'
+            $scope.close()
+            appService.alert.success 'Success'
+
+    $scope.supervisorEvaluationRequest = (ev) ->
+      # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+      console.log 'scheduling'
+      $mdDialog.show(
+        controller: 'supervisorEvalRequestController'
+        template: JST['common/supervisorEvalRequest/supervisorEvalRequest.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope, accountType:'hr' }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
 
 
     $scope.$parent.routes = 'Evaluation Schedules'

@@ -3,10 +3,14 @@
 formService = ($http) ->
 	form = {}
 
-	
+
 
 
 	service = {
+# <<<<<<< HEAD
+# 		getForm : (formId) ->
+# 			return $http.get 'form/get/' + formId
+# =======
 		getForm : (teamId) ->
 			query =
 				params :
@@ -26,9 +30,6 @@ formService = ($http) ->
 	return service
 
 	#############
-
-	
-
 
 app.factory "formService", formService
 

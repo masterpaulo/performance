@@ -7,6 +7,17 @@ module.exports =
       model: 'account'
     scheduleId:
       model: 'evaluationschedule'
+    formId:
+      model: 'form'
+    kras:
+      type:'array'
+    rating:
+      type: 'integer'
+    status:
+      type: 'boolean'
+      defaultsTo: false
+
+
 
 
   }

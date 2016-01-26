@@ -18,6 +18,7 @@ app.config [
       template: JST['common/form/form.html']()
       controller: 'FormCtrl'
     .otherwise redirectTo: '/'
+
 ]
 
 
@@ -62,11 +63,5 @@ app.controller 'EmployeeCtrl', [
       $location.url(path)
 
     $scope.routes = ''
-
-    $rootScope.kra = [
-      # kpi: ''
-      # description: ''
-    ]
-
 
 ]

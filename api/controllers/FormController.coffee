@@ -1,5 +1,23 @@
-module.exports = 
+module.exports =
   get : (req, res) ->
+# <<<<<<< HEAD
+#     formId = req.param 'id'
+#     # Form.find(
+#     #   where : { type : 'supervisor' }
+#     #   sort: 'version DESC'
+#     #   limit: 1
+#     # )
+#     # .exec (err, data) ->
+#     #   if err
+#     #     console.log err
+#     #   else if data
+#     #     res.json data
+#     Form.findOne formId
+#     .exec (err,data) ->
+#       if data
+#         console.log 'form find'
+#         res.json data
+# =======
     id = req.param 'teamId'
     console.log id
     if id == "supervisor"
@@ -44,3 +62,46 @@ module.exports =
         res.json data
 
     return
+
+  evaluatesupervisor: (req,res) ->
+    console.log 'evaluatesupervisor'
+    console.log evaluate = req.allParams()
+
+    Evaluation.findOne {scheduleId: evaluate.scheduleId, evaluator:evaluate.evaluator}
+    .populate 'formId'
+    .exec (err,data) ->
+      if data
+        console.log 'evaluate', data
+        res.json data
+
+
+    return
+
+  evaluatemember: (req,res) ->
+    console.log 'evaluate member'
+    console.log evaluate = req.allParams()
+    Evaluation.find {scheduleId: evaluate.scheduleId, evaluator:evaluate.evaluator}
+    .populate 'evaluatee'
+    .populate 'formId'
+    .exec (err,data) ->
+      if data
+        console.log 'evaluate', data
+        res.json data
+
+  submitEvaluation: (req,res) ->
+    newEval = req.allParams()
+    # console.log 'newEval',newEval
+    console.log 'neweassdrr',newEval
+    search =
+      id:newEval.evaluationId,
+      evaluator:newEval.evaluator
+      scheduleId: newEval.scheduleId
+
+    Evaluation.update search, {kras:newEval.kras, status:true}
+    .exec (err,data) ->
+      if data
+        res.json data
+        # console.log 'SUCCCEESSSS',data
+
+
+

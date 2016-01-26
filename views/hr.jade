@@ -14,8 +14,11 @@ html(ng-app='HR')
     link(rel="stylesheet", href="/styles/md-data-table.css")
     link(rel="stylesheet", href="/styles/styles.css")
     link(rel="stylesheet", href="/styles/xeditable.css")
+    link(rel="stylesheet", href="/styles/hr/employee/employee.css")
     link(rel="stylesheet", href="/styles/hr/schedule/schedule.css")
     link(rel="stylesheet", href="/styles/hr/team/team.css")
+    link(rel="stylesheet", href="/styles/common/evaluationForm/evaluation.css")
+    link(rel="stylesheet", href="/styles/common/evaluationRequest/memberEvalRequest.css")
     link(rel="stylesheet", href="/styles/common/form/form.css")
     // STYLES END
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic')
@@ -141,6 +144,7 @@ html(ng-app='HR')
                     md-list-item(ng-repeat='new in newRequestNotif' layout='row' ng-click='memberEvaluationRequest($event,$index,new)')
 
                       h5 {{new.teamName}}
+                      md-divider
                       //- md-button(ng-click="toConfirmRequest($index,new,'active')") ok
                       //- md-button(ng-click="toConfirmRequest($index,new,'cancelled')") cancel
 
@@ -175,6 +179,7 @@ html(ng-app='HR')
     script(src="/js/dependencies/xeditable.js")
     script(src="/js/hr/app.js")
     script(src="/js/global.js")
+    script(src="/js/hr/HrService.js")
     script(src="/js/hr/TeamService.js")
     script(src="/js/hr/employee/employeeCtrl.js")
     script(src="/js/hr/schedule/scheduleCtrl.js")
@@ -183,7 +188,9 @@ html(ng-app='HR')
     script(src="/js/common/FormService.js")
     script(src="/js/common/NotificationService.js")
     script(src="/js/common/ScheduleService.js")
+    script(src="/js/common/evaluationForm/evaluationCtrl.js")
     script(src="/js/common/evaluationRequest/memberEvalRequest.js")
     script(src="/js/common/form/formCtrl.js")
+    script(src="/js/common/supervisorEvalRequest/supervisorEvalRequest.js")
     script(src="/js/common/switchView/SwitchViewDir.js")
     // SCRIPTS END

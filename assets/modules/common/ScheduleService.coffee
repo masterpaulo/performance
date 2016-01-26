@@ -11,9 +11,18 @@ scheduleService = ($http,$q,$timeout) ->
       $http.post 'evaluationschedule/create', newSched
       .success (data) ->
         return data
+      # .error (err) ->
+      #   console.log err
+      #   console.log 'not successful'
+      #   return err
 
     delete: (schedId) ->
       $http.delete 'evaluationschedule/delete/' + schedId
+      .success (data) ->
+        return data
+
+    findByTeam: (teamId) ->
+      $http.get 'evaluationschedule/list/' + teamId
       .success (data) ->
         return data
 
@@ -33,9 +42,12 @@ scheduleService = ($http,$q,$timeout) ->
 
               break
             i++
+
           if found
+            console.log 'exist'
             resolve(found)
           else
+            console.log 'wala man'
             reject(found)
           # resolve found = false
         , 1000

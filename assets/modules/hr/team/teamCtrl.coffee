@@ -18,9 +18,9 @@ app.controller "TeamCtrl", [
     $scope.teams = []
 
     teamService.listTeams()
-    .then (data) ->
+    .success (data) ->
       console.log data
-      $scope.teams = data.data
+      $scope.teams = data
 
 
 

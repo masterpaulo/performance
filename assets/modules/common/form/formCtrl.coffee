@@ -16,10 +16,48 @@ app.controller "FormCtrl", [
 
     $scope.selectedTeam = '';
     $scope.teams = []
+# <<<<<<< HEAD:assets/modules/hr/form/formCtrl.coffee
+#     $scope.form = {}
+#     $scope.form.kras = []
+#     formService.getForm()
+#     .then (data) ->
+#       console.log "in FormCtrl"
+
+
+#       form = data.data[0]
+#       if(form)
+#         $scope.form = form
+
+#       else
+#         form = {
+#           "kras" : [
+#             {
+#               "kpis" : [
+#                 {
+#                     "name" : ""
+#                     "description" : ""
+#                     "goal" : 0
+#                     "weight" : 0
+#                 }
+#               ]
+#               "weight" : 0
+#               "tmp" : {}
+#               "name" : ""
+#               "description" : ""
+#             },
+
+#           ],
+#           "type" : "supervisor"
+#           "status" : true
+#           "version" : 0
+#         }
+#         $scope.form = form
+
+# =======
     formZero = {
-      "kras" : [ 
+      "kras" : [
         {
-          "kpis" : [ 
+          "kpis" : [
             {
                 "name" : ""
                 "description" : ""
@@ -31,8 +69,8 @@ app.controller "FormCtrl", [
           "tmp" : {}
           "name" : ""
           "description" : ""
-        }, 
-        
+        },
+
       ],
       "status" : true
       "version" : 0
@@ -47,11 +85,11 @@ app.controller "FormCtrl", [
         form = data.data[0]
         if(form)
           $scope.form = form
-        
+
         else
           formZero.type = "supervisor"
           $scope.form = formZero
-        
+
     else
       $scope.accountId = $scope.userSession.id
 
@@ -67,13 +105,14 @@ app.controller "FormCtrl", [
             console.log form
             if(form)
               $scope.form = form
-            
+
             else
-              formZero.type = "employee"
+              formZero.type = "member"
               formZero.teamId = $scope.selectedTeam.id
               $scope.form = formZero
         else
           console.log 'error man'
+
 
 
     $scope.addKRA = () ->
@@ -122,19 +161,20 @@ app.controller "FormCtrl", [
         .cancel('Not Really')
 
       console.log $mdDialog.confirm
-      $mdDialog.show(confirm).then( 
+      $mdDialog.show(confirm).then(
         ()->
           kra.kpis.splice(kpiI, 1)
 
         ,
         ()->
-          
+
         )
 
     $scope.saveForm = ()->
       console.log "Saving form"
       delete $scope.form.id
       # console.log $scope.form.id
+      console.log $scope.form
       formService.saveForm $scope.form
       .then (data) ->
         console.log "in FormCtrl - saveForm"
@@ -146,7 +186,6 @@ app.controller "FormCtrl", [
 
     return
 ]
-
 
 
 

@@ -5,6 +5,5 @@ module.exports =
       model: "team"
     kra: 'array'
     type: 'STRING'
-    version: 'INTEGER'
     status: 'BOOLEAN'
 

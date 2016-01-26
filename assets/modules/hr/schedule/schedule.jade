@@ -30,21 +30,21 @@ div
             td {{sched.rating}}
 
 
-  md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;" ng-click='toSchedule()')
+  md-button.md-fab.md-hue-3(style="right: 25px;position: fixed;bottom: 30px;" ng-click='supervisorEvaluationRequest()')
     i.mdi.mdi-24px.mdi-plus
 
 
-  md-sidenav.md-sidenav-right(md-component-id='right', style="width:400px; max-width:none; height:100%;")
-    div(layout='column')
-      md-content(layout-padding)
-        h1.md-display-1 Supervisor Evaluation
+  //- md-sidenav.md-sidenav-right(md-component-id='right', style="width:400px; max-width:none; height:100%;")
+  //-   div(layout='column')
+  //-     md-content(layout-padding)
+  //-       h1.md-display-1 Supervisor Evaluation
 
-        md-datepicker(ng-model='newSched.date', md-placeholder='Enter Date' type='string')
-        md-input-container
-          label Notes
-          input(type='text' ng-model='newSched.notes')
-        md-select(ng-model='newSched.team' placeholder='Select Team')
-          md-option(ng-value='{id: team.id, name:team.name}' ng-repeat='team in teams') {{team.name}}
-        //- {{teams}}
-        md-button.md-primary(ng-click='submitSchedule(newSched)' ) Submit
+  //-       md-datepicker(ng-model='newSched.date', md-placeholder='Enter Date' type='string') {{newSched.date}}
+  //-       md-input-container
+  //-         label Notes
+  //-         input(type='text' ng-model='newSched.notes')
+  //-       md-select(ng-model='newSched.team' placeholder='Select Team')
+  //-         md-option(ng-value='{id: team.id, name:team.name}' ng-repeat='team in teams') {{team.name}}
+  //-       //- {{teams}}
+  //-       md-button.md-primary.md-raised(ng-click='submitSchedule(newSched)' ) Submit
 

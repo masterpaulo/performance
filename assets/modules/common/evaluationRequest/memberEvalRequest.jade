@@ -13,18 +13,20 @@ md-dialog(ng-cloak='' )
         md-list
           div(flex='50', ng-repeat='member in teammembers')
             md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-click='toggle(member.accountId.id, newSched.selected)' ng-hide='member.accountId.id==member.teamId.supervisor' ng-if='accountType=="employee"')
-              | {{ member.accountId.firstname +" "+ member.accountId.lastname}}
+              | {{ member.accountId.lastname +" "+ member.accountId.firstname}}
             md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-hide='member.accountId.id==member.teamId.supervisor' ng-if='accountType=="hr"')
-              | {{ member.accountId.firstname +" "+ member.accountId.lastname}}
+              | {{ member.accountId.lastname +" "+ member.accountId.firstname}}
               //- p {{member}}
-              p {{member.accountId.id + " " + newSched.selected}}
-        md-datepicker(ng-model='newSched.date', md-placeholder='Enter Date' type='string' ng-disabled='accountType=="hr"') {{newSched.date}}
+              //- p {{member.accountId.id + " " + newSched.selected}}
+        md-datepicker.md-primary(ng-model='newSched.date', md-placeholder='Enter Date' type='string' ng-disabled='accountType=="hr"') {{newSched.date}}
 
         md-input-container
           label Notes
           input(type='text' ng-model='newSched.notes' ng-disabled='accountType=="hr"')
 
         md-button.md-raised.md-primary(ng-click='submit(newSched)' ng-disabled='!(newSched.selected.length && newSched.notes && newSched.date)' ng-if="accountType=='employee'") Submit
-        md-button.md-raised.md-primary(ng-click='toConfirmRequest("active")' ng-if="accountType=='hr'") Submit
+        md-button.md-raised.md-warn(ng-click='cancel()' ng-if="accountType=='employee'") Cancel
 
-        md-button.md-raised.md-warn(ng-click='cancel()') Cancel
+        md-button.md-raised.md-primary(ng-click='toConfirmRequest("active")' ng-if="accountType=='hr'") Approve
+        md-button.md-raised.md-warn(ng-click='toConfirmRequest("cancelled")' ng-if="accountType=='hr'") Deny
+

@@ -13,7 +13,7 @@ module.exports =
 
   newEvalRequest: (req,res) ->
 
-    console.log 'newEvalRequest'
+    # console.log 'newEvalRequest'
     accountId = req.param 'id'
 
     async.waterfall [
@@ -24,26 +24,6 @@ module.exports =
           if data
             callback(null,data)
       (data, callback) ->
-        # sample = [{age:23},{age:23},{age:23},{age:23},]
-        # i = 0
-        # async.eachSeries data, (item,callback) ->
-        #     console.log 'start'
-        #     if item
-        #       async.setImmediate ->
-        #         Team.findOne item.scheduleId.teamId
-        #         .exec (err,result) ->
-        #           if result
-        #             data[i].teamName = result.name
-        #             console.log 'inside findone',data
-        #             i++
-        #             if data.length is i
-        #               callback data
-        #     # console.log 'end',item
-        #     # callback(data)
-        #   , (err,result) ->
-        #     console.log 'finalllll',err,result
-        #     callback null,result
-
 
         data.forEach (d,key) ->
           Team.findOne d.scheduleId.teamId
@@ -55,10 +35,6 @@ module.exports =
                 # console.log 'key+1',key
 
                 callback null,data
-        # setTimeout () ->
-        #   console.log 'should be after resssss'
-        #   callback(null,data)
-        # ,1000
 
     ], (err,result) ->
       if result
