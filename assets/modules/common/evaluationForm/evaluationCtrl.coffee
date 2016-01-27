@@ -27,7 +27,7 @@ app.controller "EvaluateCtrl", [
       # console.log $scope.data.evaluatee
       $http.get 'form/evaluatesupervisor', {params: $scope.data}
       .success (data) ->
-        console.log data
+        # console.log data
         # $scope.evaluationId = data.id
         # console.log 'data',data
         # console.log data.formId.id
@@ -43,11 +43,19 @@ app.controller "EvaluateCtrl", [
         #   # console.log $scope.form = form
 
         # else
-        $scope.evaluation = data
+        data.kras = data.formId.kras if data.kras is undefined
+        $scope.supervisorEvaluation = data
+
     else
       $http.get 'form/evaluatemember', {params: $scope.data}
       .success (data) ->
-        console.log $scope.memberEvaluations = data
+        # c=0
+        data.forEach (result,key) ->
+          # console.log typeof data[key].kras
+          data[key].kras = result.formId.kras if data[key].kras is undefined
+          if (key+1) is data.length
+            console.log $scope.memberEvaluations = data
+        # $scope.memberEvaluations
         # console.log 'member forms',data
     # formService.getForm($scope.teamId)
     # .success (data) ->
@@ -82,9 +90,10 @@ app.controller "EvaluateCtrl", [
     #       "version" : 0
     #     }
     #     $scope.form = form
+    # memberEvaluated = 0
 
-
-    $scope.submitEvaluation = (evalId,kras) ->
+    $scope.submitEvaluation = (evalId,kras,i) ->
+      # console.log evalId,kras,i
       # console.log data
       console.log updateEval =
         evaluationId: evalId
@@ -96,8 +105,19 @@ app.controller "EvaluateCtrl", [
       .success (data) ->
         if data
           console.log 'submittingggggggg', data
-          $scope.hide()
-          appService.alert.success 'Evaluation Success'
+          if $scope.data.evaluatee is 'supervisor'
+            $scope.hide()
+            $scope.supervisorEvaluation.status = true
+            appService.alert.success 'Supervisor Evaluation Success'
+          else
+            # memberEvaluated++
+            $scope.memberEvaluations[i].status = true
+            appService.alert.success 'Member Evaluation Success'
+            # if $scope.memberEvaluations.length is memberEvaluated
+            #   $scope.hide()
+
+
+
 
     $scope.hide = () ->
       $mdDialog.hide()
