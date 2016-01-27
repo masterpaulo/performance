@@ -1,41 +1,35 @@
 
 
-div(ng-show="editForm", style="right: 50px;float:right;bottom: 380px;")
-  
-  md-button.md-fab.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled)
-    i.mdi.mdi-24px.mdi-refresh()
-  md-button.md-fab.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled)
-    i.mdi.mdi-24px.mdi-plus()
-  md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1")
-    i.mdi.mdi-24px.mdi-check()
+//- div(ng-show="editForm", style="right: 50px;float:right;bottom: 380px;")
 
-
-md-card.team-window( style="right: 25px;float:right;top: 100px; width:200px;")
-  md-toolbar.md-hue-2()
-        .md-toolbar-tools( flex, layout="column", layout-align="start start")
-          h1() Actions
+//- md-card.team-window( style="right: 25px;float:right;top: 100px; width:200px;")
+//-   md-toolbar.md-hue-2()
+//-         .md-toolbar-tools( flex, layout="column", layout-align="start start")
+//-           h1() Actions
           
         
-  md-card-content
-    md-list(layout="column")
-      md-list-item 
-        p(flex="50") Team Name
-        p(flex="50") Hello
-      md-list-item 
-        p(flex="50") Team Name
-        p(flex="50") Hello
-      md-list-item 
-        p(flex="50") Team Name
-        p(flex="50") Hello
+//-   md-card-content
+//-     div(layout="column", ng-hide="editForm")
+//-       md-button.md-raised.md-primary( aria-label='Refrese'  ng-click="editForm=!editForm", nd-disabled) EDIT
 
-    div(layout="column", ng-show="editForm")
-      md-button.md-raised.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled) RESET
-      md-button.md-raised.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled) ADD KRA
-      md-button.md-raised.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1") SAVE
+//-     div(layout="column", ng-show="editForm")
+//-       md-button.md-raised.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled) RESET
+//-       md-button.md-raised.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled) ADD KRA
+//-       md-button.md-raised.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1") SAVE
 
 form(name="kraForm" )
-  md-content.form-window.md-hue-2.kra-form(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in form.kras")
 
+  md-card( style="overflow:hidden;width:784px;", ng-show="selectedTeam")
+    md-card-content()
+      md-input-container(style="padding:0")
+        md-icon
+          i.mdi.mdi-36px.mdi-playstation
+        md-select(ng-model="teamSelectIndex", aria-label="team id main", ng-change="selectTeam(teamSelectIndex)", style="margin-left:45px;", placeholder="Team",  ng-disabled="editForm")
+          md-option(ng-repeat="team in myteams", aria-label="team id", value="{{$index}}") {{team.name}}
+   
+
+  md-content.form-window.md-hue-2.kra-form(flex, style="overflow:hidden;width:800px;" ng-repeat="kra in form.kras")
+    
 
     //- VIEW CARD
     md-card.team-window(ng-hide="editForm", flex, , class="kra-card")
@@ -69,6 +63,12 @@ form(name="kraForm" )
             .md-caption(flex="10", style="text-align:center") {{kpi.weight}}
             .md-caption(flex="10", style="text-align:center") {{kpi.goal}}
             md-divider
+          md-list-item(layout-align="start start")
+            .md-caption(flex="70") Total items : {{kra.kpis.length}}
+            .md-caption(flex="10", style="text-align:right") Total :
+            .md-caption(flex="10", style="text-align:center") {{kra.totalKpi}}
+            .md-caption(flex="10", style="text-align:center") 
+
 
     //- EDIT CARD
     md-card.team-window(ng-show="editForm", flex, , class="kra-card")
@@ -123,68 +123,30 @@ form(name="kraForm" )
               md-button.md-exclude.md-icon-button(aria-label="delete kpi" ng-click="deleteKPI($event, kra, $index)")
                 i.mdi.mdi-delete
                 //- i.mdi.mdi-dots-horizontal
+          div(layout-align="start start")
+            .md-caption(flex="70") Total items : {{kra.kpis.length}}
+            .md-caption(flex="10", style="text-align:right") Total :
+            .md-caption(flex="10", style="text-align:center") {{kra.totalKpi}}
+            .md-caption(flex="10", style="text-align:center") 
 
 
 
-div(ng-show="editForm", style="right: 50px;position: fixed;bottom: 380px;")
+
+
+div( ng-show="editForm", style="right: 50px;position: fixed;bottom: 80px; text-align:right")
+
+  md-card.md-warn.md-hue-2( style="overflow:hidden;width:400px;height:auto;text-align:left;background-color: #c62828;color: white;", ng-show="selectedTeam", ng-repeat="error in errors | filter: {status:true}")
+    md-card-content()
+      p() {{error.msg}}
 
   md-button.md-fab.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled)
     i.mdi.mdi-24px.mdi-refresh()
   md-button.md-fab.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled)
     i.mdi.mdi-24px.mdi-plus()
-  md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1")
+  md-button.md-fab.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1 || form.fail")
     i.mdi.mdi-24px.mdi-check()
 
 
-md-card.team-window( style="right: 25px;position: fixed;top: 100px; width:200px;")
-  md-toolbar.md-hue-2()
-        .md-toolbar-tools( flex, layout="column", layout-align="start start")
-          h1() Actions
-
-
-  md-card-content
-    md-list(layout="column")
-      md-list-item
-        p(flex="50") Team Name
-        p(flex="50") Hello
-      md-list-item
-        p(flex="50") Team Name
-        p(flex="50") Hello
-      md-list-item
-        p(flex="50") Team Name
-        p(flex="50") Hello
-
-    div(layout="column", ng-show="editForm")
-      md-button.md-raised.md-primary( aria-label='Refrese' ng-click="refresh()", nd-disabled) RESET
-      md-button.md-raised.md-primary( aria-label='Add KRA' ng-click="addKRA()", nd-disabled) ADD KRA
-      md-button.md-raised.md-primary( aria-label='Done' ng-click="saveForm()", ng-disabled="kraForm.$invalid || form.kras.length<1") SAVE
-
-md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="right: 50px;position: fixed;bottom: 380px;", ng-click="editForm=!editForm")
+md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="right: 50px;position: fixed;bottom: 80px;", ng-click="editForm=!editForm")
   i.mdi.mdi-24px.mdi-pencil()
-
-//- md-fab-toolbar( count='', md-direction='right')
-//-   md-fab-trigger.align-with-text
-//-     md-button.md-fab.md-primary(aria-label='menu', style="right: 25px;position: fixed;bottom: 30px;")
-//-       md-icon(md-svg-src='menu')
-//-   md-toolbar
-//-     md-fab-actions.md-toolbar-tools
-//-       md-button.md-icon-button(aria-label='comment')
-//-         md-icon(md-svg-src='close')
-//-       md-button.md-icon-button(aria-label='label')
-//-         md-icon(md-svg-src='close')
-//-       md-button.md-icon-button(aria-label='photo')
-//-         md-icon(md-svg-src='close')
-
-
-//- md-fab-speed-dial( md-direction='up', ng-class='md-fling', )
-//-   md-fab-trigger()
-//-     md-button.md-fab.md-warn(aria-label='menu')
-//-       md-icon(md-svg-src='menu')
-//-   md-fab-actions
-//-     md-button.md-fab.md-raised.md-mini(aria-label='Twitter')
-//-       md-icon(md-svg-src='twitter', aria-label='Twitter')
-//-     md-button.md-fab.md-raised.md-mini(aria-label='Facebook')
-//-       md-icon(md-svg-src='facebook', aria-label='Facebook')
-//-     md-button.md-fab.md-raised.md-mini(aria-label='Google Hangout')
-//-       md-icon(md-svg-src='hangouts', aria-label='Google Hangout')
 

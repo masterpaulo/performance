@@ -16,6 +16,36 @@ app.controller "FormCtrl", [
 
     $scope.selectedTeam = '';
     $scope.teams = []
+
+    $scope.errors = [
+      {
+        code:1
+        msg:"Total KRA score is not equal 100"
+        status: false
+        target: null
+      }
+      {
+        code:2
+        msg:"Total KPI score is not equal 100"
+        status: false
+
+        target:null
+      }
+      {
+        code:3
+        msg:"KRAs must have a title"
+        status: false
+
+        target:null
+      }
+      {
+        code:4
+        msg:"KPIs must have a title"
+        status: false
+
+        target:null
+      }
+    ]
 # <<<<<<< HEAD:assets/modules/hr/form/formCtrl.coffee
 #     $scope.form = {}
 #     $scope.form.kras = []
@@ -24,7 +54,7 @@ app.controller "FormCtrl", [
 #       console.log "in FormCtrl"
 
 
-#       form = data.data[0]
+#       form = data.data[0] 
 #       if(form)
 #         $scope.form = form
 
@@ -55,9 +85,10 @@ app.controller "FormCtrl", [
 
 # =======
     formZero = {
-      "kras" : [
+
+      kras : [
         {
-          "kpis" : [
+          kpis : [
             {
                 "name" : ""
                 "description" : ""
@@ -75,21 +106,31 @@ app.controller "FormCtrl", [
       "status" : true
       "version" : 0
     }
+    $scope.loadForm = () ->
+      if $scope.selectedTeam
+        getForm = $scope.selectedTeam.id
+        formType = 'member'
+      else
+        getForm = 'supervisor'
+        formType = 'supervisor'
 
-    if $scope.$parent.userSession.currentRole == "1"
-      formService.getForm("supervisor")
-      .then (data) ->
-        console.log "in FormCtrl"
-
-
-        form = data.data[0]
+      formService.getForm(getForm)
+      .then (res) ->
+        form = res.data[0]
+        console.log form
         if(form)
           $scope.form = form
 
         else
-          formZero.type = "supervisor"
+          formZero.type = formType
+          formZero.teamId = getForm
           $scope.form = formZero
+      return
 
+
+    if $scope.$parent.userSession.currentRole == "1"
+      $scope.selectedTeam = null
+      $scope.loadForm()
     else
       $scope.accountId = $scope.userSession.id
 
@@ -97,19 +138,15 @@ app.controller "FormCtrl", [
       .success (data) ->
         if data
           console.log data
-          $scope.myteams = data
-          $scope.selectedTeam = data[0].teamId
-          formService.getForm($scope.selectedTeam.id)
-          .then (res) ->
-            form = res.data[0]
-            console.log form
-            if(form)
-              $scope.form = form
+          $scope.myteams = []
+          data.forEach (team)->
+            # console.log team.team
+            if team.teamId.supervisor == $scope.accountId
+              $scope.myteams.push team.teamId
 
-            else
-              formZero.type = "member"
-              formZero.teamId = $scope.selectedTeam.id
-              $scope.form = formZero
+          $scope.selectedTeam = $scope.myteams[0]
+          $scope.loadForm()
+          
         else
           console.log 'error man'
 
@@ -182,9 +219,52 @@ app.controller "FormCtrl", [
 
         $scope.editForm = false
 
+    $scope.selectTeam = (i)->
+      console.log i
+
+
+      $scope.selectedTeam = $scope.myteams[i]
+      $scope.loadForm()
+      return
+
+    $scope.$watch( 'form', (form)->
+      # console.log form
+      errors = [
+        false
+        false
+        false
+        false
+      ]
+      fail = false
+
+      totalKras = 0
+      if form
+        form.kras.forEach (kra)->
+          totalKpis = 0
+          kra.kpis.forEach (kpi)->
+            totalKpis += kpi.weight
+          if totalKpis != 100
+            errors[1] = true
+          kra.totalKpi = totalKpis
+          totalKras += kra.weight
+        if totalKras != 100
+          errors[0] = true
+
+      errors.map (error, i)->
+        $scope.errors[i].status = error
+        if error
+          fail = true
+
+      $scope.form.fail = fail
+      
+
+      
+    true
+    )
 
 
     return
+
 ]
 
 
