@@ -91,15 +91,18 @@ md-content(layout="column", flex)
                     td(md-cell='') {{sched.rating}}
                     td(md-cell='') {{sched.status}}
                     td(md-cell='')
-                      md-button.md-accent.md-icon-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
-                        md-icon.mdi.mdi-delete
+                      div(ng-if='enableToSchedule && sched.type=="member"')
+                        md-button.md-accent.md-icon-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
+                          md-icon.mdi.mdi-delete
+                        md-button.md-primary.md-icon-button(ng-click='toEvaluateMember($event,sched.id)' )
+                          md-icon.mdi.mdi-pen
+
                       md-button.md-primary.md-icon-button(ng-click='toEvaluateSupervisor($event,sched.id)' ng-if='!enableToSchedule && sched.type=="supervisor"')
                         md-icon.mdi.mdi-pen
-                      md-button.md-primary.md-icon-button(ng-click='toEvaluateMember($event,sched.id)' ng-if='enableToSchedule && sched.type=="member"')
-                        md-icon.mdi.mdi-pen
+
                   tr(md-row ng-show='!selectedTeam.teamSchedules.length')
                     td(md-cell) No Evaluation Found
-              md-button.md-fab.md-primary.md-raised(ng-click='memberEvaluationRequest($event)', flex='100', flex-gt-md='auto' style='position:absolute; right:15px;top:20px' ng-show='enableToSchedule')
+              md-button.md-fab.md-primary.md-raised(ng-click='memberEvaluationRequest($event)', flex='100', flex-gt-md='auto' style='position:absolute; right:15px;top:20px')
                 md-icon.mdi.mdi-calendar-plus
 
           md-tab(label='structure')

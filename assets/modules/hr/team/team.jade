@@ -67,6 +67,8 @@ md-content(layout="column", flex)
                   span(flex)
                   //- md-chips(style="box-shadow:0;")
                   //-   md-chip {{member.fistname.length/3 + 5 | number : 2}}
+                  md-button.md-icon-button(ng-show='removeEnabled && member.id != selectedTeam.supervisor' ng-click='removeMember($index,member.id)')
+                    md-icon.mdi.mdi-close
                   md-button.md-icon-button(aria-label="Promote this ****" ng-click="promote(member)" md-tooltip="set as supervisor")
                     i.mdi(class="{{(member.id == selectedTeam.supervisor)? 'mdi-star':'mdi-star-outline'}}", style="color:#FBB546")
                 md-list-item(ng-hide="memberlist.length")
@@ -74,13 +76,38 @@ md-content(layout="column", flex)
             span(flex)
             md-content(layout="row" layout-padding)
               span(flex)
-              md-button.md-raised.md-warn(ng-click="test()", aria-label="Add memeber", md-ripple-size="full") Remove Members
+              md-button.md-raised.md-warn(ng-click="toggleRemove()", aria-label="Remove Member", md-ripple-size="full") Remove Members
               md-button.md-raised.md-primary(ng-click="showMemberBottomSheet()", aria-label="Add memeber", md-ripple-size="full") Add Member
           md-tab(label='schedules')
-            md-content.md-padding
-              h1.md-display-2 Schedules
-              p
-                | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+            table(md-table='' md-progress='promise')
+              thead(md-head='' md-order="sortScheds")
+                tr(md-row='')
+                  th(md-column='', md-order-by='sched.date')
+                    span Date
+                  th(md-column='', md-order-by='sched.notes')
+                    span Notes
+                  th(md-column='', md-order-by='sched.type')
+                    span Type
+                  th(md-column='', md-order-by='sched.rating')
+                    span Rating
+                  th(md-column='', md-order-by='sched.status')
+                    span Status
+                  th(md-column='')
+                    span Action
+              tbody(md-body='' style='min-height:300px')
+                //- h4 {{selectedTeam.teamSchedules.length}}
+                tr(md-row='',ng-repeat='sched in selectedTeam.teamSchedules | orderBy: sortScheds ')
+
+                  td(md-cell='') {{sched.date | date}}
+                  td(md-cell='') {{sched.notes}}
+                  td(md-cell='') {{sched.type}}
+                  td(md-cell='') {{sched.rating}}
+                  td(md-cell='') {{sched.status}}
+                  td(md-cell='')
+
+            md-button.md-raised.md-primary.md-icon-button(ng-click='supervisorEvaluationRequest()' style='position:absolute; right:15px;top:30px')
+              md-icon.mdi.mdi-calendar-plus
+
           md-tab(label='structure')
             md-content.md-padding
               h1.md-display-2 Structure

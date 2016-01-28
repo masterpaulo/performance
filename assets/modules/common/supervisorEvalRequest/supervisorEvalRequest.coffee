@@ -53,9 +53,9 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
       type: 'supervisor'
       notes: newSched.notes
       status: 'active'
-      evaluationLimit: 1
+      evaluationLimit: newSched.selected.length
       selectedMember: newSched.selected
-    # console.log newSchedule
+    console.log newSchedule
     scheduleService.checkForExist($scope.activeSchedules,newSchedule)
     .then (result) ->
       # $mdDialog.hide()

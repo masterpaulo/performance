@@ -15,6 +15,7 @@ html(ng-app='HR')
     link(rel="stylesheet", href="/styles/styles.css")
     link(rel="stylesheet", href="/styles/xeditable.css")
     link(rel="stylesheet", href="/styles/hr/employee/employee.css")
+    link(rel="stylesheet", href="/styles/hr/evaluationView/evaluationView.css")
     link(rel="stylesheet", href="/styles/hr/schedule/schedule.css")
     link(rel="stylesheet", href="/styles/hr/team/team.css")
     link(rel="stylesheet", href="/styles/common/evaluationForm/evaluation.css")
@@ -49,12 +50,18 @@ html(ng-app='HR')
           h1 {{routes}}
 
         div(flex='20' layout='row')
-          md-menu(md-position-mode="target-right target")
+          md-menu(md-position-mode="target-right target" ng-show='newEmployeeNotif.length')
             md-button.md-icon-button(ng-click='showNotifs(0)')
               md-icon.mdi.mdi-account-plus
-          md-menu(md-position-mode='target-right target')
+                .button-badge
+                  h5 {{newEmployeeNotif.length}}
+            md-menu-content
+          md-menu(md-position-mode='target-right target' ng-show='newRequestNotif.length')
             md-button.md-icon-button(ng-click='showNotifs(1)')
               md-icon.mdi.mdi-calendar-plus
+                .button-badge
+                  h5 {{newRequestNotif.length}}
+            md-menu-content
           md-menu(md-position-mode="target-right target")
             md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
               md-icon.mdi.mdi-account(style="font-size:30px;", md-menu-origin)
@@ -119,7 +126,7 @@ html(ng-app='HR')
         div(layout='column')
           md-content(layout-padding)
             md-tabs.md-dynamic-height(md-selected='notifSelected')
-              md-tab(layout='column')
+              md-tab(layout='column' ng-disabled='!newEmployeeNotif.length')
                 md-tab-label
                   md-icon.mdi.mdi-account-plus
                 md-tab-body
@@ -128,7 +135,7 @@ html(ng-app='HR')
                   md-list
                     md-list-item(ng-repeat='new in newEmployeeNotif' layout='row' ng-click='toAddTeam(new.sender,new.id)')
 
-                      img.img-circle(src='{{new.sender.photo}}' style='width:50px;height:auto;padding:5px' flex='20')
+                      img.img-circle(src='{{new.sender.photo}}' style='width:50px;height:auto;padding:5px' flex='20' ng-if='new.sender.photo')
                       div(flex='50')
                         h5 {{new.sender.firstname + " " + new.sender.lastname}}
                         h5 {{new.sender.email}}
@@ -138,12 +145,13 @@ html(ng-app='HR')
                 md-tab-label
                   md-icon.mdi.mdi-calendar-plus
                 md-tab-body
-                  h5.md-title New Member Evaluation Request
+                  .md-title Member Evaluation Request
                   md-divider
                   md-list
-                    md-list-item(ng-repeat='new in newRequestNotif' layout='row' ng-click='memberEvaluationRequest($event,$index,new)')
+                    md-list-item.md-primary(ng-repeat='new in newRequestNotif' layout='row' ng-click='memberEvaluationRequest($event,$index,new)')
 
-                      h5 {{new.teamName}}
+                      .md-subhead(flex='70') {{new.teamName}}
+                      .md-body-1(flex='30' style='color:#757575') 10 minutes ago
                       md-divider
                       //- md-button(ng-click="toConfirmRequest($index,new,'active')") ok
                       //- md-button(ng-click="toConfirmRequest($index,new,'cancelled')") cancel
@@ -182,6 +190,7 @@ html(ng-app='HR')
     script(src="/js/hr/HrService.js")
     script(src="/js/hr/TeamService.js")
     script(src="/js/hr/employee/employeeCtrl.js")
+    script(src="/js/hr/evaluationView/evaluationViewCtrl.js")
     script(src="/js/hr/schedule/scheduleCtrl.js")
     script(src="/js/hr/team/teamCtrl.js")
     script(src="/js/common/AppService.js")

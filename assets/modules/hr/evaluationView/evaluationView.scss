@@ -1,0 +1,137 @@
+#appContent {
+}
+
+.md-active {
+
+}
+
+.kra-form{
+	md-card{
+	    md-toolbar{
+	      	.md-toolbar-tools{
+	        	.md-caption{
+
+	    		}
+	    	}
+	    }
+
+	}
+}
+
+
+#appContent {
+	ng-view {
+		md-content.form-window {
+
+			md-card {
+				>md-toolbar:nth-child(1){
+					>div.md-toolbar-tools:nth-of-type(1){
+						height: 100%;
+					    flex-direction: column;
+					    text-align: left;
+					    align-items: flex-start;
+					    align-content: flex-start;
+					    padding-top: 25px;
+					    white-space: pre-line;
+						>h1{
+							font-weight: bold;
+						}
+
+						>md-input-container{
+							width: 100%;
+							padding-bottom: 0;
+
+							>input{
+								color: white;
+							    font-weight: bold;
+							    border: 0px;
+							}
+							>textarea{
+								color: white;
+								font-size: 12px;
+							    border: 0px;
+							    line-height: 16px;
+							}
+						}
+					}
+					>div.md-toolbar-tools:nth-of-type(2){
+
+					    height: 100%;
+					    flex-direction: column;
+					    text-align: left;
+					    align-items: center;
+					    padding-top: 25px;
+						>h1{
+							font-size: 60px;
+						}
+
+						>md-input-container{
+							width: 100%;
+							padding-bottom: 0;
+
+							>input{
+								color: white;
+							    font-size: 60px;
+							    text-align: center;
+							    border: 0px;
+							}
+						}
+					}
+				}
+				>md-toolbar:nth-child(2){
+					>div{
+						>div.md-caption{
+							text-align:center
+						}
+					}
+				}
+				>md-card-content {
+					padding:0;
+					>md-list{
+						padding: 8px 0px;
+						>md-list-item{
+							padding: 5px 16px;
+							>div.md-caption{
+	        					white-space: pre-line;
+							}
+						}
+					}
+					>md-list.editable{
+						>div{
+							display: flex;
+							border-bottom: solid 1px;
+    						border-color: rgba(0,0,0,0.12);
+							padding: 5px;
+							>md-input-container{
+	        					padding-bottom:0;
+	        					>input{
+	        						font-size: 11px;
+	        						border:0
+	        					}
+	        					>textarea{
+	        						font-size: 11px;
+	        						border:0;
+	        						line-height:14px;
+	        					}
+	        					>md-checkbox{
+	        						margin:auto;
+	        					}
+							}
+							>md-input-container:nth-child(n+3){
+	        					>input{
+	        						text-align: center;
+	        					}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// #evalDialog {
+// 	min-height:800px;
+// 	min-width:1000px;
+// 	overflow:hidden;
+// }

@@ -10,7 +10,9 @@ app.controller "TeamCtrl", [
   '$mdMedia'
   'teamService'
   '$rootScope'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, teamService,$rootScope) ->
+  'appService'
+  'scheduleService'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, teamService,$rootScope,appService,scheduleService) ->
 
     $scope.teamSearch = ""
 
@@ -36,8 +38,11 @@ app.controller "TeamCtrl", [
           if data
             console.log data
             $scope.selectedTeam = data
-            $scope.updatedTeam = angular.copy data
-            $scope.showUpdateButton = false
+            scheduleService.findByTeam team.id
+            .success (data) ->
+              $scope.selectedTeam.teamSchedules = data
+              $scope.updatedTeam = angular.copy data
+              $scope.showUpdateButton = false
       return
 
     $scope.updateTeam = () ->
@@ -55,17 +60,24 @@ app.controller "TeamCtrl", [
       return
 
     $scope.promote = (member) ->
+      console.log member
       teamService.setSupervisor($scope.selectedTeam,member)
       .then (data) ->
+        # console.log 'promote'
         $scope.selectedTeam.supervisor = member.id
+        appService.alert.success 'Supervisor Promotion Success'
 
     $scope.toggleSidenav = (menuId) ->
       $mdSidenav(menuId).toggle()
       return
+    $scope.toggleRemove = ()->
+      console.log $scope.removeEnabled = if $scope.removeEnabled then false else true
+    $scope.removeMember = (i,accountId) ->
+      teamService.removeMember accountId,$scope.selectedTeam.id
+      .then (data) ->
+        appService.alert.success 'Success Deleting Member'
+        $scope.selectedTeam.members.splice i,1
 
-    $scope.test = ()->
-      console.log "Testing"
-      return
 
 
     $scope.showAddTeamForm = (ev) ->
@@ -98,6 +110,18 @@ app.controller "TeamCtrl", [
         return
       return
 
+    $scope.supervisorEvaluationRequest = (ev) ->
+      # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+      console.log 'scheduling'
+      $mdDialog.show(
+        controller: 'supervisorEvalRequestController'
+        template: JST['common/supervisorEvalRequest/supervisorEvalRequest.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope, accountType:'hr' }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
+
     $scope.showMemberBottomSheet = ($event) ->
       $scope.alert = ''
       $mdBottomSheet.show(
@@ -106,15 +130,30 @@ app.controller "TeamCtrl", [
         parent: "#member-tab"
         locals: {Team:$scope.selectedTeam}
         targetEvent: $event).then (user) ->
+          console.log $scope.selectedTeam.members.length
+          console.log user
           newMembership = {
-            accountId : user.id
-            teamId : $scope.selectedTeam.id
-          }
-          teamService.addMember newMembership
-          .then (data) ->
-            console.log "in TeamCtrl"
-            console.log data
-            $scope.selectedTeam.members.push user
+              accountId : user.id
+              teamId : $scope.selectedTeam.id
+            }
+          if $scope.selectedTeam.members.length
+            exist = appService.checkForExist($scope.selectedTeam.members,user.id)
+            if exist
+              appService.alert.success 'Already member in the team'
+            else
+              teamService.addMember newMembership
+              .then (data) ->
+                console.log data
+                $scope.selectedTeam.members.push user
+          else
+            # console.log 'empty team'
+            teamService.addMember newMembership
+            .then (data) ->
+              console.log "in TeamCtrl"
+              console.log data
+              $scope.promote user
+              $scope.selectedTeam.members.push user
+
 
         return
       return
@@ -153,7 +192,7 @@ AddTeamController = ($scope, $mdDialog, Teams) ->
         if data
           console.log data
           $scope.users = data
-
+  console.log 'team', Team.members
   $scope.name = Team.name
   $scope.addMember = (user) ->
     $mdBottomSheet.hide user

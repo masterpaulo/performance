@@ -98,7 +98,24 @@ app.controller "ScheduleCtrl", [
         clickOutsideToClose: true
       )
 
+    $scope.toViewEvaluation = (ev,sched) ->
+      # console.log sched
+      $scope.scheduleId = sched.id
+      $scope.type = sched.type
+      # $rootScope.toEvaluate =
+      #   scheduleId: scheduleId
+      #   evaluator: $scope.accountId
+      #   evaluatee:'member'
 
+      # console.log $rootScope.toEvaluate
+      $mdDialog.show(
+        controller: 'evaluationViewController'
+        template: JST['hr/evaluationView/evaluationView.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
     $scope.$parent.routes = 'Evaluation Schedules'
 
 

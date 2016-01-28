@@ -5,29 +5,67 @@ div
       md-icon.mdi.mdi-magnify(style='color:#0288d1')
       input(type='text' ng-model='search' placeholder='Search Schedule')
 
-    .table-responsive
-      table.table.table-striped()
-        thead
-          tr
-            th( ) Evaluation Date
-            th( ) Team
-            th( ) Type
-            th( ) Notes
-            th( ) Status
-            th( ) Completed
-            th( ) Rating
-            th( ) Action
+    md-table-container
+      table(md-table='' md-progress='promise')
+        thead(md-head='' md-order="sortScheds")
+          tr(md-row='')
+            th(md-column='', md-order-by='date')
+              span Evaluation Date
+            th(md-column='', md-order-by='teamId.name')
+              span Team
+            th(md-column='', md-order-by='type')
+              span Type
+            th(md-column='')
+              span Notes
+            th(md-column='')
+              span Count
+            th(md-column='' md-order-by='done')
+              span Status
+            th(md-column='')
+              span Rating
+            th(md-column='')
+              span Action
+        tbody(md-body='' style='min-height:300px')
+          //- h4 {{selectedTeam.teamSchedules.length}}
+          tr(md-row='',ng-repeat='sched in activeSchedules | filter:search | orderBy: sortScheds ')
+
+            td(md-cell='') {{sched.date | date}}
+            td(md-cell='') {{sched.teamId.name}}
+            td(md-cell='') {{sched.type}}
+            td(md-cell='') {{sched.notes}}
+            td(md-cell='') {{sched.evaluationCount + '/'+ sched.evaluationLimit}}
+            td(md-cell='')  {{sched.done? "complete":"incomplete"}}
+            td(md-cell='') {{sched.rating}}
+            td(md-cell)
+              md-button.md-icon-button(ng-click='toViewEvaluation($event,sched)' ng-show='sched.evaluationCount')
+                md-icon.mdi.mdi-eye
+
+    //- .table-responsive
+    //-   table.table.table-striped()
+    //-     thead
+    //-       tr
+    //-         th( ) Evaluation Date
+    //-         th( ) Team
+    //-         th( ) Type
+    //-         th( ) Notes
+    //-         th( ) Status
+    //-         th( ) Completed
+    //-         th( ) Rating
+    //-         th( ) Action
 
 
-        tbody
-          tr(ng-repeat='sched in activeSchedules | filter:search' ng-click='sample()')
-            td {{sched.date | date}}
-            td {{sched.teamId.name}}
-            td {{sched.type}}
-            td {{sched.notes}}
-            td {{sched.evaluationCount + '/'+ sched.evaluationLimit}}
-            td {{sched.done? "complete":"incomplete"}}
-            td {{sched.rating}}
+    //-     tbody
+    //-       tr(ng-repeat='sched in activeSchedules | filter:search' ng-click='sample()')
+    //-         td {{sched.date | date}}
+    //-         td {{sched.teamId.name}}
+    //-         td {{sched.type}}
+    //-         td {{sched.notes}}
+    //-         td {{sched.evaluationCount + '/'+ sched.evaluationLimit}}
+    //-         td {{sched.done? "complete":"incomplete"}}
+    //-         td {{sched.rating}}
+    //-         td
+    //-           md-button.md-icon-button(ng-click='toViewEvaluation($event,sched)' ng-show='sched.evaluationCount')
+    //-             md-icon.mdi.mdi-eye
 
 
   md-button.md-fab.md-hue-3(style="right: 25px;position: fixed;bottom: 30px;" ng-click='supervisorEvaluationRequest()')

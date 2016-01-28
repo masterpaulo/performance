@@ -20,6 +20,14 @@ appService = ($http, $mdToast) ->
             .hideDelay(5000)
         );
     }
+    checkForExist: (arr,findId) ->
+      i = 0
+      while i<arr.length
+        if arr[i].id is findId
+          console.log 'already exist in list'
+          return true
+          break
+        i++
 
     # viewSwitcher: (roleId) ->
     #   $http.put 'view/switch/' + roleId

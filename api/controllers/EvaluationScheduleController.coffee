@@ -217,6 +217,39 @@ module.exports =
       if data
         res.json data
 
+  incrementCount: (req,res) ->
+    console.log scheduleId = req.param 'id'
+    # d = req.allParams().params
+    # console.log d
+    # console.log d
+    # console.log typeof d
+    # console.log d.scheduleId
+    # console.log
+
+    EvaluationSchedule.findOne scheduleId
+    .exec (err,data) ->
+      if data
+        console.log 'zzz',data
+        data.evaluationCount++
+
+        data.done = true if data.evaluationCount is data.evaluationLimit
+
+        data.save (err,data) ->
+          if data
+            console.log 'succccess updatingggg',data
+            res.json data
+
+
+  evaluationView: (req,res) ->
+    console.log scheduleId = req.param 'id'
+    Evaluation.find {scheduleId:scheduleId}
+    .populate 'evaluator'
+    .populate 'evaluatee'
+    .exec (err,data) ->
+      if data
+        console.log 'evaluationview', data
+        res.json data
+
   # submitEvaluation: (req,res) ->
   #   evalId = req.param 'id'
 

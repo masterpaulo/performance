@@ -13,7 +13,7 @@ module.exports =
 
   newEvalRequest: (req,res) ->
 
-    # console.log 'newEvalRequest'
+    console.log 'newEvalRequest', accountId
     accountId = req.param 'id'
 
     async.waterfall [
@@ -38,7 +38,8 @@ module.exports =
 
     ], (err,result) ->
       if result
-        # console.log 'result newEvalRequest', result
+        # console.log result
+        console.log 'result newEvalRequest', result
         res.json result
 
 

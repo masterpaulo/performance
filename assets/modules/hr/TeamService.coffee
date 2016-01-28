@@ -31,6 +31,17 @@ teamService = ($http) ->
 				if newMembership
 					return newMembership.data
 
+		removeMember : (accountId, teamId) ->
+			console.log 'removing', accountId,teamId
+
+			data =
+				accountId: accountId
+				teamId: teamId
+			$http.delete 'team/removeMember/',params: {data}
+			.then (data) ->
+				console.log 'success deleting', data
+				return data
+
 		setSupervisor : (team, member) ->
 			supervisor =
 				team : team.id
@@ -39,6 +50,7 @@ teamService = ($http) ->
 			.then (newTeam) ->
 				if newTeam
 					return newTeam.data
+
 
 	}
 

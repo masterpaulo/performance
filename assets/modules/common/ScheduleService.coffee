@@ -26,6 +26,14 @@ scheduleService = ($http,$q,$timeout) ->
       .success (data) ->
         return data
 
+    incrementCount: (schedId) ->
+      # data =
+      #   scheduleId:schedId
+      #   newData: newData
+      $http.put 'evaluationschedule/incrementCount/' + schedId
+      .success (data) ->
+        return data
+
     checkForExist: (arr,newArr) ->
       return $q (resolve,reject) ->
         $timeout () ->
@@ -51,6 +59,11 @@ scheduleService = ($http,$q,$timeout) ->
             reject(found)
           # resolve found = false
         , 1000
+
+    evaluationView: (scheduleId) ->
+      $http.get 'evaluationschedule/evaluationView/' + scheduleId
+      .success (data) ->
+        return data
 
   }
 

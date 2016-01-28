@@ -12,7 +12,8 @@ app.controller "EvaluateCtrl", [
   '$rootScope'
   'scopes'
   'appService'
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, formService,$rootScope,scopes,appService) ->
+  'scheduleService'
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, formService,$rootScope,scopes,appService,scheduleService) ->
     console.log $scope.teamId = scopes.teamId
 
 
@@ -110,13 +111,12 @@ app.controller "EvaluateCtrl", [
             $scope.supervisorEvaluation.status = true
             appService.alert.success 'Supervisor Evaluation Success'
           else
-            # memberEvaluated++
             $scope.memberEvaluations[i].status = true
             appService.alert.success 'Member Evaluation Success'
-            # if $scope.memberEvaluations.length is memberEvaluated
-            #   $scope.hide()
 
-
+          scheduleService.incrementCount data[0].scheduleId
+            .success (data) ->
+              console.log 'success updating schedule'
 
 
     $scope.hide = () ->

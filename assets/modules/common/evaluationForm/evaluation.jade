@@ -41,11 +41,11 @@ md-dialog(ng-cloak='' style='min-width:1000px')
     div(ng-if='data.evaluatee=="member"')
       md-tabs.md-primary(md-dynamic-height)
         div(ng-repeat='eval in memberEvaluations')
-          md-tab(md-dynamic-height )
-            md-tab-label {{eval.evaluatee.lastname + ", "+eval.evaluatee.firstname}}
-              md-icon.mdi.mdi-account(ng-if='eval.status')
-            md-tab-body
-              md-content(ng-repeat='kra in eval.kras')
+          md-tab(md-dynamic-height)
+            md-tab-label(flex-order='1') {{eval.evaluatee.lastname + ", "+eval.evaluatee.firstname}}
+              md-icon.mdi.mdi-account-check(ng-if='eval.status' style='color:white; margin-left:5px')
+            md-tab-body(flex-order='2' style='overflow-y:scroll')
+              md-content(ng-repeat='kra in eval.kras' )
                 md-card.md-whiteframe-12dp(flex)
                   md-toolbar.md-tall.md-hue-2(layout='row')
                     .md-toolbar-tools

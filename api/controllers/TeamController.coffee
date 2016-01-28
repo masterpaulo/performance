@@ -83,6 +83,21 @@ module.exports =
 
     return
 
+  removeMember: (req,res) ->
+    data = JSON.parse req.params.all().data
+
+    console.log data.accountId,data.teamId
+    # console.log typeof data
+
+    Teammember.destroy {accountId:data.accountId,teamId:data.teamId}
+    .exec (err,data) ->
+      if err
+        console.log err
+      if data
+        console.log data
+        console.log 'success deleting from backend'
+        res.json data
+
   membersForEvaluation: (req,res) ->
     scheduleId = req.param 'id'
     Evaluation.find({scheduleId:scheduleId})
