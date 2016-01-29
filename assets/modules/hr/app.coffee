@@ -1,10 +1,9 @@
 app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails','md.data.table']
 
-app.run ($rootScope,teamService) ->
-  # $rootScope.teams = []
+app.run (teamService,$rootScope) ->
   teamService.listTeams()
   .success (result) ->
-    # console.log result
+    console.log 'teams', result
     return $rootScope.teams = result
 
 
@@ -59,7 +58,7 @@ app.controller 'HrCtrl', [
 
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService,scheduleService) ->
     $scope.userSession = JSON.parse window.userSession
-    console.log $scope.accountId = $scope.userSession.id
+    $scope.accountId = $scope.userSession.id
     # $http.get 'team/list'
     # .success (result) ->
     #   return $scope.allTeams = result
@@ -83,10 +82,10 @@ app.controller 'HrCtrl', [
       if result
         console.log result
         return $scope.newRequestNotif = result
+      else
+        console.log 'empty request'
 
-    scheduleService.activeSchedules()
-    .success (result) ->
-      $rootScope.activeSchedules = result
+
 
 
     $scope.deleteOnArray = (array,deleteId) ->
@@ -154,9 +153,9 @@ app.controller 'HrCtrl', [
     };
 
 
-    $scope.logPagination = (page, limit) ->
-      console
-      log('limit: ', limit);
+    # $scope.logPagination = (page, limit) ->
+    #   console
+    #   log('limit: ', limit);
 
 
     $scope.toAddTeam = (account,notifId) ->

@@ -89,13 +89,15 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
 
           appService.alert.success 'Success! Wait for confirmation from HR'
         else
+          appService.alert.error 'Need to create a form first!'
           console.log 'error',result
       # .error (err) ->
       #   console.log err
       #   console.log 'not successful'
 
   $scope.toConfirmRequest = (status) ->
-    console.log 'to confirm'
+    console.log 'to confirm',status
+
     $scope.hide()
     # console.log notif
     console.log scopes.indexNotif
@@ -117,7 +119,7 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
         newActiveSched.teamId = {}
         newActiveSched.teamId.name = res[0].teamName if res[0]
         console.log newActiveSched
-        scopes.activeSchedules.push newActiveSched
+        scopes.allSchedules.push newActiveSched
         appService.alert.success 'Evaluation Request Granted'
       else
         appService.alert.error 'Evaluation Request Cancelled'

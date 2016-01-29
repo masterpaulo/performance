@@ -1,16 +1,41 @@
 div
   .md-whiteframe-z2(layout-padding)
-    md-input-container
-      //- label SEARCH
-      md-icon.mdi.mdi-magnify(style='color:#0288d1')
-      input(type='text' ng-model='search' placeholder='Search Schedule')
+    div(layout='row')
+
+      md-input-container(flex='90')
+        //- label SEARCH
+        md-icon.mdi.mdi-magnify(style='color:#0288d1')
+        input(type='text' ng-model='search' placeholder='Search Schedule')
+
+      md-menu(md-position-mode="target-right target")
+        md-button.md-icon-button.md-primary.md-raised.md-icon-button(ng-click='$mdOpenMenu($event)' md-menu-origin)
+          md-icon.mdi.mdi-filter-variant
+
+        md-menu-content(width="3", style="max-height:800px;")
+            md-menu-item(layout="row")
+              h6.md-title(flex, md-menu-align-target) Filter by:
+            md-divider(flex)
+
+            md-menu-item
+                div(layout='row')
+                  p(flex) Incomplete
+                  md-checkbox(ng-model='schedStatus[0]' ng-change='checkedFilter(schedStatus[0],0)')
+            md-menu-item
+                div(layout='row')
+                  p(flex) Complete
+                  md-checkbox(ng-model='schedStatus[1]' ng-change='checkedFilter(schedStatus[1],1)')
+            md-menu-item
+                div(layout='row')
+                  p(flex) Archive
+                  md-checkbox(ng-model='schedStatus[2]' ng-change='checkedFilter(schedStatus[2],2)')
+
 
     md-table-container
       table(md-table='' md-progress='promise')
         thead(md-head='' md-order="sortScheds")
           tr(md-row='')
             th(md-column='', md-order-by='date')
-              span Evaluation Date
+              span Evaluation Date {{filter}}
             th(md-column='', md-order-by='teamId.name')
               span Team
             th(md-column='', md-order-by='type')
@@ -27,7 +52,7 @@ div
               span Action
         tbody(md-body='' style='min-height:300px')
           //- h4 {{selectedTeam.teamSchedules.length}}
-          tr(md-row='',ng-repeat='sched in activeSchedules | filter:search | orderBy: sortScheds ')
+          tr(md-row='',ng-repeat='sched in allSchedules | filter:search | orderBy: sortScheds | customFilter:checkedStatus')
 
             td(md-cell='') {{sched.date | date}}
             td(md-cell='') {{sched.teamId.name}}

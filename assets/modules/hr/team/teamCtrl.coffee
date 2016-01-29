@@ -13,16 +13,21 @@ app.controller "TeamCtrl", [
   'appService'
   'scheduleService'
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, teamService,$rootScope,appService,scheduleService) ->
+    $scope.$parent.routes = 'Teams'
 
     $scope.teamSearch = ""
 
     $scope.selectedTeam = '';
-    $scope.teams = []
+    # $scope.teams = []
 
-    teamService.listTeams()
-    .success (data) ->
-      console.log data
-      $scope.teams = data
+    # teamService.listTeams()
+    # .success (data) ->
+    #   console.log data
+    #   $scope.teams = data
+
+
+
+
 
 
 

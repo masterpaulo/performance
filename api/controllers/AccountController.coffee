@@ -1,13 +1,8 @@
 module.exports =
   list: (req,res) ->
-    # id = req.param 'id'
-    # if id
-    #   Account.find(id)
-    #   .exec (err,data) ->
-    #     if data
-    #       res.json data
-    # else
+
     Account.find()
+    .sort 'lastname ASC'
     .exec (err,data) ->
       if err
         console.log err

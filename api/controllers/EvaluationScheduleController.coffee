@@ -31,7 +31,7 @@ module.exports =
               console.log 'findONE form for supervisor',data
               callback null,data
             else
-              # console.log 'missing form'
+              console.log 'missing form'
               # console.log err
               res.json err
         else
@@ -210,8 +210,17 @@ module.exports =
         if data
           res.json data
 
-  active: (req,res) ->
-    EvaluationSchedule.find {status:'active'}
+  allSchedules: (req,res) ->
+    EvaluationSchedule.find({where:
+      or:[{
+        status: 'active'
+        },{
+        status: 'complete'
+        },{
+        status: 'archive'
+        }]
+      })
+
     .populate 'teamId'
     .exec (err,data) ->
       if data
@@ -232,7 +241,32 @@ module.exports =
         console.log 'zzz',data
         data.evaluationCount++
 
-        data.done = true if data.evaluationCount is data.evaluationLimit
+        if data.evaluationCount is data.evaluationLimit
+          data.done = true
+          data.status = 'complete'
+          newNotif =
+            receiver: d.accountId
+            scheduleId: data.id
+
+          Notification.create {newNotif}
+          .exec (err,data) ->
+            if data
+              console.log 'success notif'
+
+          if data.type is 'supervisor'
+            type = 'Supervisor Evaluation is Finished'
+          else
+            type = 'Member Evaluation is Finished'
+
+          UserRole.find {roleId:'2'}
+          .exec (err,data) ->
+            if data
+              data.forEach (d) ->
+                Notification.create newNotif
+                .exec (err,data) ->
+                  if data
+                    console.log 'success notif'
+
 
         data.save (err,data) ->
           if data

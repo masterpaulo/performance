@@ -64,4 +64,11 @@ app.controller 'EmployeeCtrl', [
 
     $scope.routes = ''
 
+    $scope.notifRead = (notifId,i) ->
+      $http.put 'notification/read/'+notifId
+      .success (data) ->
+        console.log 'notif set to read',data
+        $scope.notifications.splice i,1
+
+
 ]

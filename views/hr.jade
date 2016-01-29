@@ -37,10 +37,10 @@ html(ng-app='HR')
   body(layout='column', ng-controller='HrCtrl' style='overflow:hidden; z-index:0;')
     div(ng-show="cover", style="position:fixed;width:100%;height:100%;background-color:white;z-index:100;")
       md-progress-circular(md-mode="indeterminate")
-    md-toolbar(layout='row')
+    md-toolbar(layout='row' flex)
       .md-toolbar-tools
 
-        div(flex='80' layout='row')
+        div(flex='85' layout='row')
           //- md-button(ng-click ="toast1()") caching button1
           //- md-button(ng-click ="toast2()") button2
 
@@ -49,36 +49,45 @@ html(ng-app='HR')
 
           h1 {{routes}}
 
-        div(flex='20' layout='row')
+        div(layout='row' flex)
+          //-
           md-menu(md-position-mode="target-right target" ng-show='newEmployeeNotif.length')
             md-button.md-icon-button(ng-click='showNotifs(0)')
               md-icon.mdi.mdi-account-plus
                 .button-badge
                   h5 {{newEmployeeNotif.length}}
             md-menu-content
+              //-
           md-menu(md-position-mode='target-right target' ng-show='newRequestNotif.length')
             md-button.md-icon-button(ng-click='showNotifs(1)')
               md-icon.mdi.mdi-calendar-plus
                 .button-badge
                   h5 {{newRequestNotif.length}}
             md-menu-content
+
+          md-menu
+            md-button.md-icon-button(ng-click='showNotifs(2)')
+              md-icon.mdi.mdi-message
+                .button-badge
+                  h5 0
+
           md-menu(md-position-mode="target-right target")
-            md-button.md-icon-button(aria-label='Open phone interactions menu', ng-click='$mdOpenMenu($event)')
-              md-icon.mdi.mdi-account(style="font-size:30px;", md-menu-origin)
-            md-menu-content(width='2')
+            md-button.md-icon-button(ng-click='$mdOpenMenu($event)' )
+              md-icon.mdi.mdi-account
+            md-menu-content
               md-menu-item
                 md-button(ng-click='logout()')
                   i.mdi.mdi-logout(style="font-size:24px;vertical-align:middle;")
                   | Logout
+          md-icon.mdi.mdi-dots-vertical
 
-          md-icon.mdi.mdi-apps
 
     div(layout='row')
       md-sidenav.md-whiteframe-z2( md-component-id='left', md-is-locked-open="$mdMedia('gt-sm')", md-theme="default" style='width:100px; z-index:0;')
         md-content(style='height:94%', layout="column")
           md-content.sidenav-header(layout-padding style='padding-left:20px')
             div(style="height:100px;")
-              img.img-circle(src='{{userSession.photo}}')
+              img.img-circle(ng-src='{{userSession.photo}}')
 
             .md-title {{userSession.firstname + " " + userSession.lastname}}
             .md-subhead {{userSession.email}}
@@ -135,7 +144,7 @@ html(ng-app='HR')
                   md-list
                     md-list-item(ng-repeat='new in newEmployeeNotif' layout='row' ng-click='toAddTeam(new.sender,new.id)')
 
-                      img.img-circle(src='{{new.sender.photo}}' style='width:50px;height:auto;padding:5px' flex='20' ng-if='new.sender.photo')
+                      img.img-circle(ng-src='{{new.sender.photo}}' style='width:50px;height:auto;padding:5px' flex='20' ng-if='new.sender.photo')
                       div(flex='50')
                         h5 {{new.sender.firstname + " " + new.sender.lastname}}
                         h5 {{new.sender.email}}

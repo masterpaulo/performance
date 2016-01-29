@@ -1,3 +1,8 @@
+# app.run ($rootScope,scheduleService) ->
+
+
+
+
 app.controller "ScheduleCtrl", [
   '$scope'
   '$sails'
@@ -14,6 +19,14 @@ app.controller "ScheduleCtrl", [
   'teamService'
   'appService'
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$mdUtil, $timeout, $rootScope,$q,scheduleService,teamService,appService) ->
+
+    scheduleService.allSchedules()
+    .success (result) ->
+      console.log 'schedules',result
+      return $rootScope.allSchedules = result
+
+    # console.log 'sched', $rootScope.allSchedules
+    # console.log 'dlie root', $scope.allSchedules
     # $scope.teams = []
     $scope.accountId = $scope.$parent.accountId
     $scope.newSched = {}
@@ -35,25 +48,6 @@ app.controller "ScheduleCtrl", [
       $scope.newSched = {}
       $mdSidenav('right').close()
 
-    # $http.get 'team/list'
-    # .success (result) ->
-    #   if result
-    #     # console.log result
-    #     $rootScope.teams = result
-    # teamService.listTeams()
-    # .success (result) ->
-    #   $rootScope.teams = result
-
-    # scheduleService.activeSchedules()
-    # .success (result) ->
-    #   $rootScope.activeSchedules = result
-
-    $scope.toSchedule = () ->
-      $scope.newSched = {}
-      $scope.toggleRight()
-
-
-
     $scope.submitSchedule = (sched) ->
       console.log 'submitting'
       # newdate = scheduleService.formatDate(sched.date)
@@ -67,7 +61,7 @@ app.controller "ScheduleCtrl", [
         evaluationLimit: 1
         status: 'active'
 
-      scheduleService.checkForExist($scope.activeSchedules,newSched)
+      scheduleService.checkForExist($scope.allSchedules,newSched)
       .then (found) ->
         if found
           appService.alert.error 'You need to finish the previous evaluation'
@@ -81,12 +75,15 @@ app.controller "ScheduleCtrl", [
             data.teamId = {}
             data.teamId.id = tempId
             data.teamId.name = sched.team.name
-            $scope.activeSchedules.push data
+            $scope.allSchedules.push data
 
             $scope.close()
             appService.alert.success 'Success'
 
     $scope.supervisorEvaluationRequest = (ev) ->
+      # console.log 'root',$rootScope.allSchedules
+      # console.log 'dli root', $scope.allSchedules
+
       # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
       console.log 'scheduling'
       $mdDialog.show(
@@ -117,6 +114,44 @@ app.controller "ScheduleCtrl", [
         clickOutsideToClose: true
       )
     $scope.$parent.routes = 'Evaluation Schedules'
+    $scope.schedStatus =[
+      true
+      false
+      false
 
+    ]
+    $scope.checkedStatus = [0]
+    $scope.checkedFilter = (checked,id) ->
+      console.log checked,id
+      i = $scope.checkedStatus.indexOf id
+      if i is -1
+        $scope.checkedStatus.push id
+
+      else
+
+        $scope.checkedStatus.splice(i,1)
+
+      console.log $scope.checkedStatus
 
 ]
+
+app.filter 'customFilter', ->
+  (schedules,checkedStatus) ->
+    console.log schedules,checkedStatus
+    out = []
+    incomplete = complete= archive = ''
+    checkedStatus.forEach (checked) ->
+      switch checked
+        when 0 then incomplete = 'active'
+        when 1 then complete = 'complete'
+        when 2 then archive = 'archive'
+
+    if schedules
+      schedules.forEach (sched) ->
+        if sched.status is incomplete || sched.status is complete || sched.status is archive
+          out.push sched
+      out
+    else
+      schedules
+
+

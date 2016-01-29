@@ -2,8 +2,8 @@
 scheduleService = ($http,$q,$timeout) ->
 
   return  {
-    activeSchedules: () ->
-      $http.get 'evaluationschedule/active'
+    allSchedules: () ->
+      $http.get 'evaluationschedule/allSchedules', cache:true
       .success (data) ->
         return data
 
@@ -35,6 +35,7 @@ scheduleService = ($http,$q,$timeout) ->
         return data
 
     checkForExist: (arr,newArr) ->
+      # console.log 'check for exist',arr.length
       return $q (resolve,reject) ->
         $timeout () ->
           console.log 'checking'
@@ -44,13 +45,16 @@ scheduleService = ($http,$q,$timeout) ->
           while (i < arr.length)
             # console.log arr[i]
             # console.log newSched
-            if arr[i].teamId.id is newArr.teamId and arr[i].type is newArr.type and arr[i].done is false
-              found = true
+            if arr[i].teamId
+              if arr[i].teamId.id is newArr.teamId and arr[i].type is newArr.type and arr[i].done is false
+                found = true
+                console.log 'nakitan'
 
 
-              break
+                break
             i++
 
+          console.log 'console',found,arr.length,i
           if found
             console.log 'exist'
             resolve(found)

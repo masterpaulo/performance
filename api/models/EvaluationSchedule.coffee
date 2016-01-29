@@ -29,7 +29,7 @@ module.exports = {
     #   defaultsTo: false
     status:
       type: 'string'
-      enum: ['pending','cancelled','active','completed','archive']
+      enum: ['pending','cancelled','active','complete','archive']
 
     # evaluations:
     #   collections: "evaluation"

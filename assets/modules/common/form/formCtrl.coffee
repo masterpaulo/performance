@@ -10,13 +10,13 @@ app.controller "FormCtrl", [
   '$mdMedia'
   'formService'
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, formService) ->
-
+    $scope.$parent.routes = 'Form'
     $scope.teamSearch = ""
     $scope.editForm = 0;
 
     $scope.selectedTeam = '';
     $scope.teams = []
-
+    $scope.form = {}
     $scope.errors = [
       {
         code:1
@@ -54,7 +54,7 @@ app.controller "FormCtrl", [
 #       console.log "in FormCtrl"
 
 
-#       form = data.data[0] 
+#       form = data.data[0]
 #       if(form)
 #         $scope.form = form
 
@@ -146,7 +146,7 @@ app.controller "FormCtrl", [
 
           $scope.selectedTeam = $scope.myteams[0]
           $scope.loadForm()
-          
+
         else
           console.log 'error man'
 
@@ -256,9 +256,9 @@ app.controller "FormCtrl", [
           fail = true
 
       $scope.form.fail = fail
-      
 
-      
+
+
     true
     )
 

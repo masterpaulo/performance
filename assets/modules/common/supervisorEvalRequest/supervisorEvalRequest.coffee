@@ -3,8 +3,8 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
   $scope.newSched = {}
   $scope.newSched.selected = [];
   $scope.newSched.date = new Date()
-  $scope.activeSchedules = $rootScope.activeSchedules
-  # console.log 'teams',$scope.teams
+  $scope.allSchedules = $rootScope.allSchedules
+  console.log 'allsched',$scope.allSchedules
   # console.log $scope.teams.supervisor
   $scope.teamSelected = (team) ->
     $scope.supervisor = team.supervisor
@@ -44,7 +44,7 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
     $mdDialog.hide answer
     return
   $scope.submit = (newSched) ->
-    console.log newSched
+    # console.log newSched
     newSchedule =
       accountId: $scope.accountId
       date: newSched.date
@@ -55,23 +55,26 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
       status: 'active'
       evaluationLimit: newSched.selected.length
       selectedMember: newSched.selected
-    console.log newSchedule
-    scheduleService.checkForExist($scope.activeSchedules,newSchedule)
+    # console.log newSchedule
+    scheduleService.checkForExist($scope.allSchedules,newSchedule)
     .then (result) ->
       # $mdDialog.hide()
       # console.log 'exist nmn'
       appService.alert.error 'Need to finish the previous evaluation!'
     , (error) ->
-      console.log 'creating new sched'
+      # console.log 'creating new sched'
       $mdDialog.hide()
 
       scheduleService.create newSchedule
       .success (result) ->
         console.log result
-        tempId = result.teamId
-        result.teamId = {}
-        result.teamId.id = tempId
-        result.teamId.name = newSchedule.teamName
-        $scope.activeSchedules.push result
+        if result
+          tempId = result.teamId
+          result.teamId = {}
+          result.teamId.id = tempId
+          result.teamId.name = newSchedule.teamName
+          $scope.allSchedules.push result
 
-        appService.alert.success 'Success! Wait for confirmation from HR'
+          appService.alert.success 'Success! Wait for confirmation from HR'
+        else
+          appService.alert.error 'Create a form first!'

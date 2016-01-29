@@ -35,7 +35,7 @@ div
               tr(md-row='' md-select='e' ng-repeat='e in employees | filter:searchEmployee | orderBy: sortEmployees | limitTo: query.limit : (query.page -1) * query.limit' )
 
                 td(md-cell='')
-                  img(src='{{e.photo}}' style='height:50px;width:50px;padding:1px;border-radius: 48px;')
+                  img(ng-src='{{e.photo}}' style='height:50px;width:50px;padding:1px;border-radius: 48px;')
                 td(md-cell='') {{e.lastname}}
                 td(md-cell='') {{e.firstname}}
                 td(md-cell='') {{e.email}}

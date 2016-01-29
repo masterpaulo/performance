@@ -27,7 +27,7 @@ app.controller "EmployeeCtrl", [
 
 
 
-    $scope.employees = []
+    # $scope.employees = []
     $scope.searchOn = false
     $scope.viewEmployee = () ->
       console.log 'this is it'
