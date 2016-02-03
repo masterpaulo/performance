@@ -15,8 +15,7 @@ app.controller "EvaluateCtrl", [
   'scheduleService'
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $mdBottomSheet, $mdMedia, formService,$rootScope,scopes,appService,scheduleService) ->
     console.log $scope.teamId = scopes.teamId
-
-
+    $scope.teamName = scopes.teamName
     $scope.teamSearch = ""
     $scope.editForm = 0;
 
@@ -45,7 +44,8 @@ app.controller "EvaluateCtrl", [
 
         # else
         data.kras = data.formId.kras if data.kras is undefined
-        $scope.supervisorEvaluation = data
+
+        console.log $scope.supervisorEvaluation = data
 
     else
       $http.get 'form/evaluatemember', {params: $scope.data}
@@ -56,43 +56,11 @@ app.controller "EvaluateCtrl", [
           data[key].kras = result.formId.kras if data[key].kras is undefined
           if (key+1) is data.length
             console.log $scope.memberEvaluations = data
-        # $scope.memberEvaluations
-        # console.log 'member forms',data
-    # formService.getForm($scope.teamId)
-    # .success (data) ->
-    #   # console.log "in FormCtrl"
-    #   # console.log 'form',data
-    #   console.log 'dataaaa',data
-    #   # form = data.data[0]
-    #   if data
-    #     $scope.form = data
 
-    #   else
-    #     form = {
-    #       "kras" : [
-    #         {
-    #           "kpis" : [
-    #             {
-    #                 "name" : ""
-    #                 "description" : ""
-    #                 "goal" : 0
-    #                 "weight" : 0
-    #             }
-    #           ]
-    #           "weight" : 0
-    #           "tmp" : {}
-    #           "name" : ""
-    #           "description" : ""
-    #         },
-
-    #       ],
-    #       "type" : "supervisor"
-    #       "status" : true
-    #       "version" : 0
-    #     }
-    #     $scope.form = form
-    # memberEvaluated = 0
-
+    $scope.cancel = ->
+      console.log 'cancelling'
+      $mdDialog.cancel()
+      return
     $scope.submitEvaluation = (evalId,kras,i) ->
       # console.log evalId,kras,i
       # console.log data

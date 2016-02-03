@@ -50,7 +50,7 @@ module.exports =
     form = req.body
     if !form.version
       form.version = 1
-    
+
     form.version = form.version+1
 
     Form.create form
@@ -69,6 +69,8 @@ module.exports =
 
     Evaluation.findOne {scheduleId: evaluate.scheduleId, evaluator:evaluate.evaluator}
     .populate 'formId'
+    .populate 'evaluatee'
+    .populate 'evaluator'
     .exec (err,data) ->
       if data
         console.log 'evaluate', data
@@ -83,6 +85,7 @@ module.exports =
     Evaluation.find {scheduleId: evaluate.scheduleId, evaluator:evaluate.evaluator}
     .populate 'evaluatee'
     .populate 'formId'
+    .populate 'evaluator'
     .exec (err,data) ->
       if data
         console.log 'evaluate', data

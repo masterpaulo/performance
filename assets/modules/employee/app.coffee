@@ -44,14 +44,18 @@ app.controller 'EmployeeCtrl', [
   '$rootScope'
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$rootScope) ->
     #parse user session data from server
-    $scope.userSession = JSON.parse window.userSession
+    console.log $scope.userSession = JSON.parse window.userSession
+    $scope.accountId = $scope.userSession.id
+
     $scope.cover = false;
 
     $scope.notifications = $http.get 'notification/employeeNotif/' + $scope.userSession.id
     .success (result) ->
       if result
         console.log result
+
         $scope.notifications = result
+
 
     $scope.logout = ->
       console.log "send request to logout"
@@ -71,4 +75,38 @@ app.controller 'EmployeeCtrl', [
         $scope.notifications.splice i,1
 
 
+
+    $rootScope.toEvaluateSupervisor = (ev,scheduleId,teamName) ->
+      $scope.teamName = teamName
+      $rootScope.toEvaluate =
+        scheduleId: scheduleId
+        evaluator: $scope.accountId
+        evaluatee:'supervisor'
+
+
+      $mdDialog.show(
+        controller: 'EvaluateCtrl'
+        template: JST['common/evaluationForm/evaluation.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
+    $rootScope.toEvaluateMember = (ev,scheduleId,teamName) ->
+      # console.log 'eval member'
+      $scope.teamName = teamName
+      $rootScope.toEvaluate =
+        scheduleId: scheduleId
+        evaluator: $scope.accountId
+        evaluatee:'member'
+
+      console.log $rootScope.toEvaluate
+      $mdDialog.show(
+        controller: 'EvaluateCtrl'
+        template: JST['common/evaluationForm/evaluation.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
 ]

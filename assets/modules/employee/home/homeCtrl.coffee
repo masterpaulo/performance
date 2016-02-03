@@ -17,6 +17,7 @@ app.controller "HomeCtrl", [
   ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog, $rp,$mdMedia,$mdToast,scheduleService,appService, employeeService,$location,$rootScope) ->
     $scope.accountId = $scope.userSession.id
     $scope.enableToSchedule = false
+    $scope.viewTeam = false
     employeeService.myteam $scope.accountId
     .success (data) ->
       $scope.myteams = data
@@ -25,7 +26,7 @@ app.controller "HomeCtrl", [
       # console.log team
       # $scope.supervisor = true if team.accountId is team.teamId.supervisor
       $scope.supervisor = team.supervisor
-
+      $scope.viewTeam = true
       $scope.teamName = team.teamId.name
       $scope.teamId =  team.teamId.id
       $scope.enableToSchedule = true if team.accountId is team.teamId.supervisor

@@ -79,7 +79,22 @@ app.controller "ScheduleCtrl", [
 
             $scope.close()
             appService.alert.success 'Success'
+    $scope.toDeleteSchedule = (ev, schedId,index) ->
+      console.log 'index',index
 
+      confirm = $mdDialog.confirm()
+        .title('Are you sure you want to delete it?')
+        .content('Deleted evaluation schedule cant be recovered ')
+        .targetEvent(ev)
+        .ok('Yes')
+        .cancel('Cancel');
+      $mdDialog.show(confirm)
+      .then () ->
+        # console.log 'confirming'
+        $http.delete 'EvaluationSchedule/delete/'+schedId
+        .success (data) ->
+          $rootScope.allSchedules.splice index,1
+          console.log 'success deleting',data
     $scope.supervisorEvaluationRequest = (ev) ->
       # console.log 'root',$rootScope.allSchedules
       # console.log 'dli root', $scope.allSchedules

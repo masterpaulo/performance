@@ -85,7 +85,7 @@ module.exports =
                   sender: accountId
                   receiver: member.accountId
                   scheduleId: scheduleId
-                  type: "Team Leader Evaluation"
+                  type: "Supervisor Evaluation"
 
                 evaluation =
                   evaluatee: data.supervisor
@@ -185,14 +185,26 @@ module.exports =
     id = req.param 'id'
     EvaluationSchedule.destroy id
     .exec (err,data) ->
-      if data[0].status is 'pending'
+      if data[0].status is 'pending' or data[0].status is 'active'
         console.log 'data',data
-        Notification.destroy({scheduleId: id})
-        .exec (err,data) ->
-          if data
-            res.json data
-      else
-        res.json data
+        async.parallel([
+          (callback) ->
+            Notification.destroy({scheduleId: id})
+            .exec (err,data) ->
+              if data
+                callback(null,data)
+          (callback) ->
+            Evaluation.destroy({scheduleId:id})
+            .exec (err,data) ->
+              if data
+                callback(null,data)
+
+          ], (err,results) ->
+            if results
+              console.log 'success overall delete'
+              res.json results
+            )
+
   list: (req, res) ->
     teamId = req.param 'id'
     if teamId
@@ -245,23 +257,23 @@ module.exports =
           data.done = true
           data.status = 'complete'
           newNotif =
-            receiver: d.accountId
             scheduleId: data.id
 
-          Notification.create {newNotif}
-          .exec (err,data) ->
-            if data
-              console.log 'success notif'
+          # Notification.create {newNotif}
+          # .exec (err,data) ->
+          #   if data
+          #     console.log 'success notif'
 
           if data.type is 'supervisor'
-            type = 'Supervisor Evaluation is Finished'
+            newNotif.type = 'Supervisor Evaluation is Finished'
           else
-            type = 'Member Evaluation is Finished'
+            newNotif.type = 'Member Evaluation is Finished'
 
-          UserRole.find {roleId:'2'}
+          UserRole.find {roleId:'1'}
           .exec (err,data) ->
             if data
               data.forEach (d) ->
+                newNotif.receiver = d.accountId
                 Notification.create newNotif
                 .exec (err,data) ->
                   if data

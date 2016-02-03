@@ -8,7 +8,7 @@ module.exports =
       'Member Evaluation Request Granted'
       'Member Evaluation Request Declined'
       # 'Member Evaluation'
-      'Team Leader Evaluation'
+      'Supervisor Evaluation'
       'Member Evaluation is Finished'
       'Supervisor Evaluation is Finished'
       ]

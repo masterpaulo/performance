@@ -64,6 +64,8 @@ div
             td(md-cell)
               md-button.md-icon-button(ng-click='toViewEvaluation($event,sched)' ng-show='sched.evaluationCount')
                 md-icon.mdi.mdi-eye
+              md-button.md-icon-button(ng-click='toDeleteSchedule($event,sched.id,$index)' ng-show='!sched.evaluationCount && sched.type=="supervisor"')
+                md-icon.md-warn.mdi.mdi-delete
 
     //- .table-responsive
     //-   table.table.table-striped()

@@ -1,4 +1,4 @@
-app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails','md.data.table']
+app = angular.module "HR",["ngResource","ngRoute","ngAnimate", 'ngMaterial', 'ngSails','md.data.table','angular-momentjs']
 
 app.run (teamService,$rootScope) ->
   teamService.listTeams()
@@ -54,9 +54,10 @@ app.controller 'HrCtrl', [
   'teamService'
   'appService'
   'scheduleService'
+  '$moment'
 
 
-  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService,scheduleService) ->
+  ($scope, $sails, $http, $filter, $interval, $mdSidenav, $mdDialog,$location,$mdUtil,$mdMedia,$cacheFactory,$q,$timeout,$mdToast,$rootScope,teamService,appService,scheduleService,$moment) ->
     $scope.userSession = JSON.parse window.userSession
     $scope.accountId = $scope.userSession.id
     # $http.get 'team/list'
@@ -81,12 +82,31 @@ app.controller 'HrCtrl', [
     .success (result) ->
       if result
         console.log result
+
         return $scope.newRequestNotif = result
       else
         console.log 'empty request'
+    $scope.newHrNotifLength = 0
+    $http.get 'notification/hrNotif/'+$scope.accountId
+    .success (result) ->
+      if result
+        console.log 'result',result
+        $scope.HrNotif = result
+        $scope.HrNotif.forEach (newNotif,key) ->
+          # $scope.HrNotif[key].createdAt = $moment(newNotif.createdAt).fromNow()
+
+          if newNotif.done is false
+            $scope.newHrNotifLength++
 
 
-
+    $scope.notifRead = (notif) ->
+      notifId = notif.id
+      # console.log notif
+      if notif.done is false
+        $http.put 'notification/read/'+notifId
+        .success (result) ->
+          console.log 'done read',result
+          $scope.newHrNotifLength--
 
     $scope.deleteOnArray = (array,deleteId) ->
       return $q (resolve,reject) ->
@@ -182,6 +202,14 @@ app.controller 'HrCtrl', [
       return
 ]
 
+app.filter 'timeago', ($moment) ->
+  (date) ->
+    # console.log 'dateeee', $moment(date).fromNow()
+    return $moment(date).fromNow()
+
+
+
+
 EmployeeAddTeamController = ($scope, $mdDialog, $http,account,scopes,notifId) ->
   # console.log notifId
   $scope.notifId = notifId
@@ -239,3 +267,4 @@ EmployeeAddTeamController = ($scope, $mdDialog, $http,account,scopes,notifId) ->
   $scope.answer = (answer) ->
     $mdDialog.hide answer
     return
+

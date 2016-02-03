@@ -6,6 +6,7 @@ module.exports =
     .exec (err,data) ->
       if err
         console.log err
+        res.json err
       if data
         # console.log data
         res.json data
@@ -14,7 +15,8 @@ module.exports =
     Account.findOne accountId
     .exec (err,data) ->
       if err
-        console.log 'error',err
+        # console.log 'error',err
+        res.json err
       else
         res.json data
 

@@ -68,8 +68,9 @@ html(ng-app='HR')
           md-menu
             md-button.md-icon-button(ng-click='showNotifs(2)')
               md-icon.mdi.mdi-message
-                .button-badge
-                  h5 0
+                .button-badge(ng-show='newHrNotifLength')
+                  h5 {{newHrNotifLength}}
+
 
           md-menu(md-position-mode="target-right target")
             md-button.md-icon-button(ng-click='$mdOpenMenu($event)' )
@@ -97,21 +98,21 @@ html(ng-app='HR')
             md-divider
             md-list-item(flex ng-click="redirect('/')")
               //- i.mdi.mdi-24px.mdi-forum(style="padding-right:10px;")
-              md-icon(class='mdi mdi-calendar')
+              md-icon.md-primary(class='mdi mdi-calendar')
               p Evaluation Schedules
 
               md-divider
             md-list-item(flex ng-click="redirect('/teams')")
-              md-icon(class='mdi mdi-account-multiple')
+              md-icon.md-primary(class='mdi mdi-account-multiple')
               p Teams
               md-divider
 
             md-list-item(flex ng-click="redirect('/employee')")
-              md-icon(class='mdi mdi-account')
+              md-icon.md-primary(class='mdi mdi-account')
               p Employee
               md-divider
             md-list-item(flex ng-click="redirect('/form')")
-              md-icon(class='mdi mdi-file-document')
+              md-icon.md-primary(class='mdi mdi-file-document')
               p Form
 
             //- md-list-item
@@ -150,7 +151,7 @@ html(ng-app='HR')
                         h5 {{new.sender.email}}
                         //- h5 {{new.sender.id}}
                       md-divider
-              md-tab
+              md-tab(ng-disabled='!newRequestNotif.length')
                 md-tab-label
                   md-icon.mdi.mdi-calendar-plus
                 md-tab-body
@@ -160,16 +161,26 @@ html(ng-app='HR')
                     md-list-item.md-primary(ng-repeat='new in newRequestNotif' layout='row' ng-click='memberEvaluationRequest($event,$index,new)')
 
                       .md-subhead(flex='70') {{new.teamName}}
-                      .md-body-1(flex='30' style='color:#757575') 10 minutes ago
+                      .md-body-1(flex='30' style='color:#757575') {{new.createdAt | timeago}}
                       md-divider
                       //- md-button(ng-click="toConfirmRequest($index,new,'active')") ok
                       //- md-button(ng-click="toConfirmRequest($index,new,'cancelled')") cancel
 
-              md-tab
+              md-tab()
                 md-tab-label
                   md-icon.mdi.mdi-message
                 md-tab-body
-                  p three
+                  .md-title Notification
+                  md-divider
+                    md-list
+                      md-list-item(ng-repeat='notif in HrNotif' ng-click='notifRead(notif)')
+                        .md-subhead(flex='75') {{notif.type}}
+                          .md-body-1 {{notif.scheduleId.teamId.name}}
+                        .md-body-1(flex='25' style='color:#757575') {{notif.createdAt | timeago}}
+                        md-icon.mdi.mdi-new-box
+
+                      md-divider
+
 
 
 
@@ -187,12 +198,14 @@ html(ng-app='HR')
     script(src="/js/dependencies/angular-aria.min.js")
     script(src="/js/dependencies/angular-cache.js")
     script(src="/js/dependencies/angular-material.js")
+    script(src="/js/dependencies/angular-momentjs.js")
     script(src="/js/dependencies/angular-resource.js")
     script(src="/js/dependencies/angular-route.js")
     script(src="/js/dependencies/angular-sails.min.js")
     script(src="/js/dependencies/angular-ui-router.js")
     script(src="/js/dependencies/lodash.js")
     script(src="/js/dependencies/md-data-table.js")
+    script(src="/js/dependencies/moment.js")
     script(src="/js/dependencies/xeditable.js")
     script(src="/js/hr/app.js")
     script(src="/js/global.js")

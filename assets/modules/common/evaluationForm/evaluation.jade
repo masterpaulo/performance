@@ -2,8 +2,10 @@ md-dialog(ng-cloak='' style='min-width:1000px')
 
   md-toolbar(flex-order='1')
     .md-toolbar-tools
-      h2 {{supervisorEvaluation.formId.type === 'supervisor' ? "Supervisor":"Member"}} Evaluation
+      h2 {{supervisorEvaluation.formId.type === 'supervisor' ? "Supervisor":"Member"}} Evaluations for {{teamName}} Team
       span(flex='')
+      h2(ng-if="supervisorEvaluation.formId.type === 'supervisor'") Supervisor: {{supervisorEvaluation.evaluatee.firstname + " " + supervisorEvaluation.evaluatee.lastname}}
+      //- h2(ng-if="supervisorEvaluation.formId.type !== 'supervisor'") Evaluator: {{supervisorEvaluation.evaluator.firstname + " " + supervisorEvaluation.evaluator.lastname}}
       md-button.md-icon-button(ng-click='cancel()')
         md-icon.mdi.mdi-window-close
   md-dialog-content(flex-order='2')
@@ -36,7 +38,6 @@ md-dialog(ng-cloak='' style='min-width:1000px')
 
                 md-input-container(flex ng-if='!supervisorEvaluation.status')
                   input(type="number" step="any" name="rate" ng-model="kpi.score" min="0" max="kpi.goal")
-
                 md-divider
     div(ng-if='data.evaluatee=="member"')
       md-tabs.md-primary(md-dynamic-height)

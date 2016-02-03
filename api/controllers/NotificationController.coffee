@@ -99,13 +99,45 @@ module.exports =
     .where {done:false,or:[
       {type:'Member Evaluation Request Granted'}
       {type:'Member Evaluation Request Declined'}
-      {type:'Team Leader Evaluation'}
+      {type:'Supervisor Evaluation'}
       ]}
-    .populate 'scheduleId'
-    .exec (err,data) ->
-      if data
-        console.log 'message',data
-        res.json data
+    .then (data) ->
+      # console.log data
+      data.forEach (d,key) ->
+        EvaluationSchedule.findOne d.scheduleId
+        .populate 'teamId'
+        .exec (err,sched) ->
+          # if sched
+          #   console.log 'sched',sched
+          if sched
+            data[key].scheduleId = sched
+            if key+1 is data.length
+              console.log 'final data',data
+              res.json data
+  hrNotif: (req,res) ->
+    id = req.param 'id'
+    Notification.find {receiver: id}
+    .where {or:[
+      {type:'Supervisor Evaluation is Finished'}
+      {type:'Member Evaluation is Finished'}
+      ]}
+    .then (data) ->
+      # console.log data
+      data.forEach (d,key) ->
+        EvaluationSchedule.findOne d.scheduleId
+        .populate 'teamId'
+        .exec (err,sched) ->
+          # if sched
+          #   console.log 'sched',sched
+          if sched
+            data[key].scheduleId = sched
+            if key+1 is data.length
+              console.log 'hr final data',data
+              res.json data
+    # .exec (err,data) ->
+    #   if data
+    #     console.log 'message',data
+    #     res.json data
 
   read: (req,res) ->
     notifId = req.param 'id'

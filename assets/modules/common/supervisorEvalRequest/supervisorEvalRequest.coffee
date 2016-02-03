@@ -17,7 +17,7 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
 
     # $scope.teamSchedules =
 
-
+    # member.accountId.id===supervisor.id
 
 
 

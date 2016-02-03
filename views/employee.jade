@@ -47,8 +47,11 @@ html(ng-app='EMPLOYEE')
                 .button-badge
                   h5 {{notifications.length}}
             md-menu-content
-              md-menu-item(ng-repeat='notif in notifications' layout='column' ng-click='notifRead(notif.id,$index)')
-                span {{notif.type}}
+              md-list
+                //- md-list-item(ng-repeat='notif in notifications' layout='column' ng-click='notifRead(notif.id,$index);toEvaluateSupervisor($event,notif.scheduleId.id,notif.scheduleId.teamId.name)' ng-if='notif.type=="Supervisor Evaluation"')
+                //-   span {{notif.type+ " for "+ notif.scheduleId.teamId.name}}
+                md-list-item(ng-repeat='notif in notifications' layout='column' ng-click='notifRead(notif.id,$index);notif.type=="Supervisor Evaluation"? toEvaluateSupervisor($event,notif.scheduleId.id,teamId.name) : toEvaluateMember($event,notif.scheduleId.id,teamId.name)')
+                  span {{notif.type+ " for "+ notif.scheduleId.teamId.name}}
                 md-divider
 
           md-menu(md-offset="0 35")
@@ -85,13 +88,13 @@ html(ng-app='EMPLOYEE')
 
             md-list-item(flex ng-click="redirect('/')")
               //- i.mdi.mdi-24px.mdi-forum(style="padding-right:10px;")
-              md-icon(class='mdi mdi-calendar')
+              md-icon.md-primary(class='mdi mdi-calendar')
               p Home
 
               md-divider
             //- md-list-item
             md-list-item(flex ng-click="redirect('/form')")
-              md-icon(class='mdi mdi-file-document')
+              md-icon.md-primary(class='mdi mdi-file-document')
               p Form
               md-divider
           md-list
@@ -115,12 +118,14 @@ html(ng-app='EMPLOYEE')
     script(src="/js/dependencies/angular-aria.min.js")
     script(src="/js/dependencies/angular-cache.js")
     script(src="/js/dependencies/angular-material.js")
+    script(src="/js/dependencies/angular-momentjs.js")
     script(src="/js/dependencies/angular-resource.js")
     script(src="/js/dependencies/angular-route.js")
     script(src="/js/dependencies/angular-sails.min.js")
     script(src="/js/dependencies/angular-ui-router.js")
     script(src="/js/dependencies/lodash.js")
     script(src="/js/dependencies/md-data-table.js")
+    script(src="/js/dependencies/moment.js")
     script(src="/js/dependencies/xeditable.js")
     script(src="/js/employee/app.js")
     script(src="/js/global.js")
