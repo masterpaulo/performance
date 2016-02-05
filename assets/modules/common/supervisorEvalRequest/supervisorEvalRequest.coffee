@@ -4,7 +4,28 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
   $scope.newSched.selected = [];
   $scope.newSched.date = new Date()
   $scope.allSchedules = $rootScope.allSchedules
+  # $scope.changeCount = -1
   console.log 'allsched',$scope.allSchedules
+  $scope.action = scopes.action
+  # console.log 'action',action
+  if $scope.action is 'edit'
+    console.log 'to edittt'
+    scheduleService.editEvaluation scopes.schedId
+    .success (sched) ->
+      console.log 'to edit sched', sched
+      $scope.newSched = sched
+      $scope.newSched.date = new Date($scope.newSched.date)
+      $scope.oldSched = angular.copy $scope.newSched
+      # $scope.$watch 'newSched',
+      #   () ->
+      #     console.log $scope.changeCount += 1
+      #   , true
+
+      # $scope.oldSched = Copy $scope.newSched
+      # $scope.newSched.team = 'Bus'
+
+      # $scope.newSched.team = $scope.newSched.teamId.name
+
   # console.log $scope.teams.supervisor
   $scope.teamSelected = (team) ->
     $scope.supervisor = team.supervisor
@@ -32,17 +53,37 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
     list.indexOf(item) > -1
 
   $scope.hide = ->
+    $scope.newSched = {}
     $mdDialog.hide()
     return
 
   $scope.cancel = ->
     console.log 'cancelling'
+    $scope.newSched = {}
     $mdDialog.cancel()
     return
 
   $scope.answer = (answer) ->
     $mdDialog.hide answer
     return
+
+
+
+  $scope.editFinish = (sched) ->
+    if $scope.oldSched.selected.sort().toString() isnt sched.selected.sort().toString()
+      console.log sched.selectedEdit = true
+
+    scheduleService.editFinish sched
+    .success (data) ->
+      $scope.cancel()
+      scopes.allSchedules[scopes.index].date = data[0][0].date
+      scopes.allSchedules[scopes.index].notes = data[0][0].notes
+      scopes.allSchedules[scopes.index].evaluationLimit = data[0][0].evaluationLimit
+
+
+      appService.alert.success 'Editing is success'
+      console.log 'success edit', data
+
   $scope.submit = (newSched) ->
     # console.log newSched
     newSchedule =

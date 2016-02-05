@@ -62,6 +62,8 @@ div
             td(md-cell='')  {{sched.done? "complete":"incomplete"}}
             td(md-cell='') {{sched.rating}}
             td(md-cell)
+              md-button.md-icon-button(ng-click='toEditEvaluation($event,sched.id,$index)' ng-show='!sched.evaluationCount')
+                md-icon.mdi.mdi-pencil
               md-button.md-icon-button(ng-click='toViewEvaluation($event,sched)' ng-show='sched.evaluationCount')
                 md-icon.mdi.mdi-eye
               md-button.md-icon-button(ng-click='toDeleteSchedule($event,sched.id,$index)' ng-show='!sched.evaluationCount && sched.type=="supervisor"')
