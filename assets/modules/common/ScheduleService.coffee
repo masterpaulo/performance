@@ -69,6 +69,15 @@ scheduleService = ($http,$q,$timeout) ->
       .success (data) ->
         return data
 
+    editEvaluation: (scheduleId) ->
+      $http.get 'evaluationschedule/editevaluation/'+scheduleId
+      .success (data) ->
+        return data
+    editFinish: (sched) ->
+      $http.put 'evaluationschedule/editFinish', params: sched
+      .success (data) ->
+        return data
+
   }
 
 app.factory 'scheduleService', scheduleService

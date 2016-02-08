@@ -94,7 +94,7 @@ md-content(layout="column", flex)
                       div(ng-if='enableToSchedule && sched.type=="member"')
                         md-button.md-accent.md-icon-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
                           md-icon.mdi.mdi-delete
-                        md-button.md-primary.md-icon-button(ng-click='toEvaluateMember($event,sched.id)' )
+                        md-button.md-primary.md-icon-button(ng-if='sched.status=="active"' ng-click='toEvaluateMember($event,sched.id)' )
                           md-icon.mdi.mdi-pen
 
                       md-button.md-primary.md-icon-button(ng-click='toEvaluateSupervisor($event,sched.id)' ng-if='!enableToSchedule && sched.type=="supervisor"')

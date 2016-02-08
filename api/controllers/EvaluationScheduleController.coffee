@@ -1,4 +1,5 @@
 async = require 'async'
+array = require 'lodash/array'
 
 module.exports =
   create: (req,res) ->
@@ -10,7 +11,7 @@ module.exports =
     notes = req.body.notes
     status = req.body.status
     evaluationLimit = req.body.evaluationLimit
-    selectedMember = req.body.selectedMember
+    console.log 'member',selectedMember = req.body.selectedMember
 
 
     evaluationSched =
@@ -78,49 +79,49 @@ module.exports =
               i = 1
 
               # console.log 'success finding team',data
-              data.members.forEach (member) ->
+              selectedMember.forEach (member,key) ->
                 console.log 'line 49 memberrrrrr',member
                 # console.log 'memmmmmmmmmmber', member
                 notif =
                   sender: accountId
-                  receiver: member.accountId
+                  receiver: member
                   scheduleId: scheduleId
                   type: "Supervisor Evaluation"
 
                 evaluation =
                   evaluatee: data.supervisor
-                  evaluator: member.accountId
+                  evaluator: member
                   scheduleId: scheduleId
                   formId: results.formId
                   # status: false
                 # if data.supervisor is not member.id
                 # console.log data.supervisor, member.accountId,data.members.length
-                if data.supervisor isnt member.accountId
+                # if data.supervisor isnt member.accountId
                   # console.log 'is not'
-                  async.parallel([
-                    (callback) ->
-                      console.log 'evaluation',evaluation
-                      Evaluation.create evaluation
-                      .exec (err,data) ->
-                        if data
-                          # console.log 'success eval'
-                          callback null,'success'
-                    (callback) ->
-                      console.log 'notif',notif
+                async.parallel([
+                  (callback) ->
+                    console.log 'evaluation',evaluation
+                    Evaluation.create evaluation
+                    .exec (err,data) ->
+                      if data
+                        # console.log 'success eval'
+                        callback null,'success'
+                  (callback) ->
+                    console.log 'notif',notif
 
-                      Notification.create notif
-                      .exec (err,data) ->
-                        if data
-                          # console.log 'success notif'
-                          callback null,'success'
-                  ], (err,results) ->
-                    if results
-                      i++
-                      # console.log i,data.members.length
-                      if data.members.length is i
-                        console.log 'successssss'
-                        res.json newEval
-                  )
+                    Notification.create notif
+                    .exec (err,data) ->
+                      if data
+                        # console.log 'success notif'
+                        callback null,'success'
+                ], (err,results) ->
+                  if results
+                    i++
+                    # console.log i,data.members.length
+                    if selectedMember.length is (key+1)
+                      console.log 'successssss'
+                      res.json newEval
+                )
 
         else
 
@@ -296,18 +297,136 @@ module.exports =
         console.log 'evaluationview', data
         res.json data
 
-  # submitEvaluation: (req,res) ->
-  #   evalId = req.param 'id'
+  editEvaluation: (req,res) ->
+    schedId = req.param 'id'
+    async.parallel([
+      (callback) ->
+        async.waterfall([
+          (callback) ->
+            EvaluationSchedule.findOne schedId
+            .exec (err,data) ->
+              callback(null,data)
+          (arg1,callback) ->
+            evaluation = Copy arg1;
+            Team.findOne arg1.teamId
+            .populate 'supervisor'
+            .populate 'members'
+            .exec (err,team) ->
+              if team
+                evaluation.teamId = team
+                callback(null,evaluation)
 
-    # Evaluation.find evalId
-    # .exec (err,data) ->
-    #   if data
-    #     res.json data
+          (arg1, callback) ->
+            evaluation = Copy arg1
+            evaluation.teamId.members.forEach (member,key) ->
+              Account.findOne member.accountId
+              .exec (err,acc) ->
+                if acc
+                  evaluation.teamId.members[key].accountId = acc
+                  setTimeout () ->
+                    if evaluation.teamId.members.length is (key+1)
+                      callback(null,evaluation)
+                  , 100
+        ],(err,result1) ->
+          if result1
+            # console.log 'result1',results
+            callback(null,result1)
+        )
+      (callback) ->
+        selected = []
+        Evaluation.find {scheduleId: schedId}
+        .exec (err,data) ->
+          if data
+            data.forEach (mem,key) ->
+              selected.push mem.evaluator
+              if data.length is (key+1)
+                callback(null,selected)
 
-  # evaluationFind: () ->
-  #   evalId = req.param 'id'
-  #   Evaluation.find evalId
-  #   .exec (err,data) ->
-  #     if data
-  #       res.json data
+      ],(err,final) ->
+        if final
+          # console.log 'final na jud ni', final
+          # console.log final.length
+          results = Copy final[0]
+          results.selected = final[1]
+          # final[0].selectedEvaluator = final
+          console.log 'last results',results
+          res.json results
+
+        )
+  editFinish: (req,res) ->
+    console.log 'edit finish'
+    console.log req.body
+    sched = req.params.all().params
+    console.log sched.selected
+
+    if sched.selectedEdit
+      Evaluation.find {scheduleId:sched.id}
+      .exec (err,data) ->
+        if data
+          tempArr = []
+          data.forEach (d) ->
+            tempArr.push d.evaluator
+            console.log tempArr
+          console.log 'newId',newId = array.difference sched.selected, tempArr
+          console.log 'delId',delId = array.difference tempArr, sched.selected
+          async.parallel [
+            (callback) ->
+              EvaluationSchedule.update sched.id, {date: sched.date,notes: sched.notes, evaluationLimit:sched.selected.length}
+              .exec (err,data) ->
+                if data
+                  callback null,data
+
+            (callback) ->
+              if newId.length
+                newId.forEach (n,k) ->
+                  newEval =
+                    evaluatee: data[0].evaluatee
+                    evaluator: n
+                    formId: data[0].formId
+                    scheduleId: data[0].scheduleId
+                  Evaluation.create newEval
+                  .exec (err,result) ->
+                    if data
+                      # console.log 'successss adding', data
+
+                      newNotif =
+                        receiver: result.evaluator
+                        scheduleId: result.scheduleId
+                        type: 'Supervisor Evaluation'
+                      Notification.create newNotif
+                      .exec (err,data) ->
+                        if data
+                          console.log 'ssccess adding notifs',data
+                  if newId.length is (k+1)
+                    callback null,'success adding evaluation and notifs'
+              else
+                callback null,'no to add'
+            (callback) ->
+              if delId.length
+                delId.forEach (del,key) ->
+                  # console.log 'sched and evaluator', sched.id, del
+                  Evaluation.destroy {scheduleId: sched.id,evaluator: del}
+                  .exec (err,data) ->
+                    if data
+                      # console.log 'success deleting',data
+                      Notification.destroy {scheduleId:sched.id, receiver: del}
+                      .exec (err,data) ->
+                        if data
+                          console.log 'success deleting notifs'
+
+
+                    # else
+                    #   console.log 'error',err
+                    if delId.length is (key+1)
+                      callback(null,'success deleting evaluation and notifs')
+              else
+                callback null,'no to delete'
+
+
+
+
+          ], (err,result) ->
+            if result
+              console.log 'overall result',result
+              res.json result
 

@@ -41,6 +41,9 @@ app.controller "ScheduleCtrl", [
       debounceFn
     $scope.toggleRight = buildToggler('right')
 
+    # $scope.cancel = ->
+    #   $scope.newSched = {}
+    #   $mdDialog.cancel();
 
 
     # $scope.close = buildToggler('right').close
@@ -96,6 +99,8 @@ app.controller "ScheduleCtrl", [
           $rootScope.allSchedules.splice index,1
           console.log 'success deleting',data
     $scope.supervisorEvaluationRequest = (ev) ->
+      $scope.action = 'toSchedule'
+
       # console.log 'root',$rootScope.allSchedules
       # console.log 'dli root', $scope.allSchedules
 
@@ -109,8 +114,23 @@ app.controller "ScheduleCtrl", [
         targetEvent: ev
         clickOutsideToClose: true
       )
+    $scope.toEditEvaluation =(ev,schedId,i) ->
+      $scope.index = i
+      $scope.schedId = schedId
+      $scope.action = 'edit'
+      $mdDialog.show(
+        controller: 'supervisorEvalRequestController'
+        template: JST['common/supervisorEvalRequest/supervisorEvalRequest.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope, accountType:'hr' }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
+
 
     $scope.toViewEvaluation = (ev,sched) ->
+      $scope.action = 'view'
+
       # console.log sched
       $scope.scheduleId = sched.id
       $scope.type = sched.type
