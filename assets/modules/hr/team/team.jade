@@ -108,11 +108,22 @@ md-content(layout="column", flex)
             md-button.md-raised.md-primary.md-icon-button(ng-click='supervisorEvaluationRequest()' style='position:absolute; right:15px;top:30px')
               md-icon.mdi.mdi-calendar-plus
 
+
+                
           md-tab(label='structure')
             md-content.md-padding
+              script(type='text/ng-template', id='nodes_renderer.html').
+                {{node.name}}
+                <ul ng-model="node.child" ng-class="{hidden: collapsed}">
+                  <li ng-repeat="node in node.child" ng-include="'nodes_renderer.html'">
+                  </li>
+                </ul>
+                
               h1.md-display-2 Structure
-              p
-                | Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.
+              //- h3 {{selectedTeam.structure}}
+              ul
+                li(ng-repeat="node in  selectedTeam.structure" ng-include="'nodes_renderer.html'")
+              
           md-tab(label='settings')
             md-content.md-padding()
               h3.md-display-1 Team Info
@@ -138,5 +149,3 @@ md-content(layout="column", flex)
 
 //- md-button.md-fab.md-hue-3(aria-label='Eat cake', style="right: 25px;position: fixed;bottom: 30px;")
 //-   i.mdi.mdi-24px.mdi-plus
-
-

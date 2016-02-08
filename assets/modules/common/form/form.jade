@@ -135,7 +135,7 @@ form(name="kraForm" )
 
 div( ng-show="editForm", style="right: 50px;position: fixed;bottom: 80px; text-align:right")
 
-  md-card.md-warn.md-hue-2( style="overflow:hidden;width:400px;height:auto;text-align:left;background-color: #c62828;color: white;", ng-show="selectedTeam", ng-repeat="error in errors | filter: {status:true}")
+  md-card.md-warn.md-hue-2( style="overflow:hidden;width:400px;height:auto;text-align:left;background-color: #c62828;color: white;", ng-repeat="error in errors | filter: {status:true}")
     md-card-content()
       p() {{error.msg}}
 
@@ -149,4 +149,3 @@ div( ng-show="editForm", style="right: 50px;position: fixed;bottom: 80px; text-a
 
 md-button.md-fab.md-primary(ng-show="!editForm" aria-label='Eat cake', style="right: 50px;position: fixed;bottom: 80px;", ng-click="editForm=!editForm")
   i.mdi.mdi-24px.mdi-pencil()
-

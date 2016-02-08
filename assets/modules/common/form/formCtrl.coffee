@@ -238,6 +238,8 @@ app.controller "FormCtrl", [
       fail = false
 
       totalKras = 0
+      console.log "showing form"
+      console.log form
       if form
         form.kras.forEach (kra)->
           totalKpis = 0
@@ -256,6 +258,7 @@ app.controller "FormCtrl", [
           fail = true
 
       $scope.form.fail = fail
+      console.log fail
 
 
 
@@ -266,7 +269,3 @@ app.controller "FormCtrl", [
     return
 
 ]
-
-
-
-

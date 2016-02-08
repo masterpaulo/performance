@@ -51,6 +51,15 @@ teamService = ($http) ->
 				if newTeam
 					return newTeam.data
 
+		getStructure : (teamId) ->
+
+			data =
+				id : teamId
+			$http.get 'team/getStructure', params: data
+			.then (teamStructure) ->
+				if teamStructure
+					return teamStructure.data
+
 
 	}
 
@@ -62,4 +71,3 @@ teamService = ($http) ->
 
 
 app.factory "teamService", teamService
-
