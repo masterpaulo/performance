@@ -131,12 +131,79 @@ module.exports =
           if c is team.members.length
             res.json team
 
+  getStructure: (req,res) ->
+    console.log teamId = req.param 'id'
+
+    getParent = (team, structure, next)->
+
+      if team
+        Team.findOneById team
+        .then (team) ->
+          if !structure
+            structure = [ team ]
+
+          if team.parent
+            Team.findOneById team.parent
+            .exec (err,data)->
+              if err
+                console.log err
+              else if data
+                console.log "Showing parent"
+                console.log data.parent
+                data.child = JSON.parse JSON.stringify structure
+                structure = [data]
+                console.log "showing structure"
+                console.log structure
+                getParent data.id, structure, getParent
+                return data
+          else
+            console.log "No parent"
+            res.json structure
+      else
+        console.log "no team"
+        res.json structure
+
+    getChildren = (teamId, family, path) ->
+      if teamId
+        Team.findOneById teamId
+        .then (team) ->
+
+          if !family
+            family = [ team ]
+            path.push 0
+          Team.find {parent:team.id}
+          .then (childTeams)->
+            console.log path
+            console.log "children count: "+childTeams.length
+            console.log family
+            if childTeams.length
+              console.log childTeams
+              temp = family
+              path.forEach (index) ->
+                pointer = temp[index]
+                # delete temp ==============================================TODO
+                temp = pointer
+                console.log "showing pointer"
+                console.log temp
+              temp.child = childTeams
+              childTeams.forEach (childTeam, i)->
+                path.push i
+                getChildren childTeam.id, family, JSON.parse JSON.stringify path
+
+            else
+              console.log "No more children"
+              console.log "RESPONES ==========================================="
+              console.log family
+              return null
+
+
+    path = []
+    getChildren teamId, null, path
+    # getParent teamId, null, getParent
+
+
 
 
     # teamId = req.param 'id'
     # # console.log 'info now'
     # Team.find
-
-
-
-

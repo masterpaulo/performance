@@ -30,8 +30,6 @@ app.controller "TeamCtrl", [
 
 
 
-
-
     $scope.addTeam = ()->
       console.log "Adding team"
       $scope.showAddTeamForm()
@@ -43,11 +41,16 @@ app.controller "TeamCtrl", [
           if data
             console.log data
             $scope.selectedTeam = data
+            $scope.updatedTeam = angular.copy data
             scheduleService.findByTeam team.id
             .success (data) ->
               $scope.selectedTeam.teamSchedules = data
-              $scope.updatedTeam = angular.copy data
               $scope.showUpdateButton = false
+            teamService.getStructure team.id
+            .then (data) ->
+              console.log "here we go"
+              console.log data
+              $scope.selectedTeam.structure = data
       return
 
     $scope.updateTeam = () ->
