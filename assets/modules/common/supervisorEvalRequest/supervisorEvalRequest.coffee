@@ -67,8 +67,6 @@ app.controller 'supervisorEvalRequestController', ($scope, $filter,$mdDialog, $h
     $mdDialog.hide answer
     return
 
-
-
   $scope.editFinish = (sched) ->
     if $scope.oldSched.selected.sort().toString() isnt sched.selected.sort().toString()
       console.log sched.selectedEdit = true

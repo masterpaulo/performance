@@ -11,13 +11,18 @@ md-dialog(ng-cloak='' )
         h2 {{teamName}} Members
         md-divider
         md-list
-          div(flex='50', ng-repeat='member in teammembers')
-            md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-click='toggle(member.accountId.id, newSched.selected)' ng-hide='member.accountId.id==member.teamId.supervisor' ng-if='accountType=="employee"')
-              | {{ member.accountId.lastname +" "+ member.accountId.firstname}}
-            md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-hide='member.accountId.id==member.teamId.supervisor' ng-if='accountType=="hr"')
-              | {{ member.accountId.lastname +" "+ member.accountId.firstname}}
-              //- p {{member}}
-              //- p {{member.accountId.id + " " + newSched.selected}}
+          div(ng-if='action!="edit"')
+            div(flex='50', ng-repeat='member in teammembers')
+              md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-click='toggle(member.accountId.id, newSched.selected)' ng-hide='member.accountId.id==member.teamId.supervisor' ng-if='accountType=="employee"')
+                | {{ member.accountId.lastname +" "+ member.accountId.firstname}}
+              md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-hide='member.accountId.id==member.teamId.supervisor' ng-if='accountType=="hr"')
+                | {{ member.accountId.lastname +" "+ member.accountId.firstname}}
+                //- p {{member}}
+                //- p {{member.accountId.id + " " + newSched.selected}}
+          div(ng-if='action=="edit"')
+            h1 mmember
+            div(ng-repeat='member in newSched.teamId.members')
+              md-checkbox(ng-checked='exists(member.accountId.id, newSched.selected)', ng-click='toggle(member.accountId.id, newSched.selected)' ng-if='!(member.accountId.id===newSched.teamId.supervisor.id)') {{ member.accountId.lastname +" "+ member.accountId.firstname}}
         md-datepicker.md-primary(ng-model='newSched.date', md-placeholder='Enter Date' type='string' ng-disabled='accountType=="hr"') {{newSched.date}}
 
         md-input-container

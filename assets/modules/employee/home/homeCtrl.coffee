@@ -57,6 +57,19 @@ app.controller "HomeCtrl", [
     #     targetEvent: ev
     #     clickOutsideToClose: true
     #   )
+    $scope.editMemberEvaluation = (ev, sched) ->
+      console.log 'to editmember evaluation ',sched
+      $scope.action = 'edit'
+      $scope.schedule = sched
+      # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
+      $mdDialog.show(
+        controller: 'memberEvalRequestController'
+        template: JST['common/evaluationRequest/memberEvalRequest.html']()
+        parent: angular.element(document.body)
+        locals: { scopes: $scope, accountType:'employee' }
+        targetEvent: ev
+        clickOutsideToClose: true
+      )
 
     $scope.toEvaluateSupervisor = (ev,scheduleId) ->
 
@@ -103,6 +116,7 @@ app.controller "HomeCtrl", [
         appService.alert.success 'Success Deleting Evaluation Schedule'
 
     $scope.memberEvaluationRequest = (ev) ->
+      $scope.action = 'toEvaluate'
       # useFullScreen = ($mdMedia('sm') or $mdMedia('xs')) and $scope.customFullscreen
       $mdDialog.show(
         controller: 'memberEvalRequestController'

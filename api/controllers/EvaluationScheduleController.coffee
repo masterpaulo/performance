@@ -335,12 +335,21 @@ module.exports =
       (callback) ->
         selected = []
         Evaluation.find {scheduleId: schedId}
+        .populate 'scheduleId'
         .exec (err,data) ->
-          if data
+          if data[0].scheduleId.type is 'supervisor'
             data.forEach (mem,key) ->
               selected.push mem.evaluator
               if data.length is (key+1)
                 callback(null,selected)
+          else
+            console.log 'for memeber ni ahhh'
+            data.forEach (mem,key) ->
+
+              selected.push mem.evaluatee
+              if data.length is (key+1)
+                console.log 'selected ni ahh for evaluatee', selected
+                callback null,selected
 
       ],(err,final) ->
         if final

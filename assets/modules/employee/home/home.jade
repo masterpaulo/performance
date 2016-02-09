@@ -95,10 +95,12 @@ md-content(layout="column", flex)
                         md-button.md-accent.md-icon-button(ng-click='showConfirm($event,$index,sched.id)' ng-show='(sched.status=="pending" || sched.status=="cancelled")')
                           md-icon.mdi.mdi-delete
                         md-button.md-primary.md-icon-button(ng-if='sched.status=="active"' ng-click='toEvaluateMember($event,sched.id)' )
-                          md-icon.mdi.mdi-pen
+                          md-icon.mdi.mdi-steam
+                        md-button.md-primary.md-icon-button(ng-show='!sched.evaluationCount' ng-click='editMemberEvaluation($event,sched)')
+                          md-icon.mdi.mdi-pencil
 
                       md-button.md-primary.md-icon-button(ng-click='toEvaluateSupervisor($event,sched.id)' ng-if='!enableToSchedule && sched.type=="supervisor"')
-                        md-icon.mdi.mdi-pen
+                        md-icon.mdi.mdi-steam
 
                   tr(md-row ng-show='!selectedTeam.teamSchedules.length')
                     td(md-cell) No Evaluation Found

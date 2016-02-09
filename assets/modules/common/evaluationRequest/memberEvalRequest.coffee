@@ -3,6 +3,7 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
   $scope.teamName = scopes.teamName
   $scope.newSched = {}
   $scope.newSched.selected = [];
+  $scope.action = scopes.action
 
   # console.log $scope.accountId
   if accountType is 'employee'
@@ -12,7 +13,16 @@ app.controller 'memberEvalRequestController', ($scope, $filter,$mdDialog, $http,
     $scope.teamId = scopes.teamId
     $scope.accountId = scopes.accountId
     $scope.newSched.date = new Date()
-
+    if $scope.action is 'edit'
+      console.log 'to edit'
+      $http.get 'evaluationschedule/editEvaluation/'+scopes.schedule.id
+      .success (result) ->
+        console.log 'going to edit'
+        console.log $scope.newSched = angular.copy result
+        # $scope.newSched.notes = result.notes
+        $scope.newSched.date = new Date(result.date)
+        $scope.newSched.selected = result.selected
+        # console.log 'going to edit evlauation',result
     # $scope.items = [1,2,3,4,5];
 
 
