@@ -19,9 +19,12 @@ app.controller "EvaluateCtrl", [
     $scope.teamSearch = ""
     $scope.editForm = 0;
 
+
     $scope.selectedTeam = '';
     $scope.teams = []
     $scope.forView = false
+    $scope.validKRA = false
+    $scope.validEvaluation = false
     $scope.data = $rootScope.toEvaluate
     if $scope.data.evaluatee is 'supervisor'
       # console.log $scope.data.evaluatee
@@ -61,14 +64,16 @@ app.controller "EvaluateCtrl", [
       console.log 'cancelling'
       $mdDialog.cancel()
       return
-    $scope.submitEvaluation = (evalId,kras,i) ->
+    $scope.submitEvaluation = (evaluation,i) ->
+      console.log evaluation
       # console.log evalId,kras,i
       # console.log data
       console.log updateEval =
-        evaluationId: evalId
+        evaluationId: evaluation.id
         evaluator: $scope.data.evaluator
         scheduleId: $scope.data.scheduleId
-        kras: kras
+        kras: evaluation.kras
+        score: evaluation.score
       # console.log updateEval
       $http.put 'form/submitevaluation', updateEval
       .success (data) ->
@@ -86,9 +91,122 @@ app.controller "EvaluateCtrl", [
             .success (data) ->
               console.log 'success updating schedule'
 
+    console.log $scope.totalScore= 0
 
     $scope.hide = () ->
       $mdDialog.hide()
+    # $scope.memberSelected = (i) ->
+    #   console.log i, 'kkkkkkkkkkkkkkkkkkkkkkkk'
+    $scope.$watch 'memberEvaluations', (evaluations) ->
+      # evaluations = evals
+
+
+
+      console.log 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
+      i = 0
+      while(i <evaluations.length)
+        console.log 'iiii', i
+        kras = evaluations[i].kras
+        k = kraCount=0
+
+        overAllScore=0
+
+
+        while(k < kras.length)
+          console.log 'kkkk',k
+          kpis = kras[k].kpis
+          l = scoreKRA= totalKPI = 0
+          validKRA = false
+          # console.log overAllScore, 'first'
+          while(l < kpis.length)
+            console.log 'llll', l
+            # kpis[l]
+            # console.log kpis[l].score
+            if kpis[l].score is null
+              evaluations[i].valid = false
+              return
+              # $scope.validEvaluation = false
+              # console.log 'nullllllllllllllllllllllllllllllllllllllllllllll'
+              # break
+            if kpis[l].score && kpis[l].score > -1 && kpis[l].score < kpis[l].goal
+              # console.log 'valid'
+              validKRA = true
+              kpiScore = (kpis[l].score / kpis[l].goal) * (kpis[l].weight)
+              totalKPI += kpiScore
+            else
+              # console.log kpis[l].score, 'current'
+              # console.log 'invalid'
+              totalKPI = 0
+              # $scope.validEvaluation = false
+              evaluations[i].valid = false
+              validKRA = false
+              # break
+            l++
+            # console.log l,'lllll'
+            if kpis.length is l and validKRA
+              console.log 'inside the equal length'
+              scoreKRA = (totalKPI/100) * evaluations[i].kras[k].weight
+              overAllScore += scoreKRA
+              # console.log 'current overl', overAllScore
+              kraCount++
+          k++
+          if kraCount is kras.length
+            console.log 'final score', overAllScore
+            $scope.validEvaluation = true
+            console.log evaluations[i].score = overAllScore
+            evaluations[i].valid = true
+
+        i++
+
+        # while(k < kras.length)
+        #   kpis = kras[k]
+        #   l = 0
+        #   while(l < kpis.length)
+
+      # evaluations.forEach (evaluation,i) ->
+      #   # console.log evaluation
+      #   # console.log evaluation, 'joke ra'
+      #   totalScore=0
+      #   evaluation.kras.forEach (kra,k) ->
+      #     addKPIS = aveKPIS= validKRACount= scoreKRA=0
+      #     kra.kpis.forEach (kpi,i) ->
+      #       console.log 'in'
+      #       console.log kpi
+
+      #       if kpi.score
+      #         validKRACount++
+
+      #       if kra.kpis.length is validKRACount
+              # console.log kra.kpis.length, validKRACount
+            # console.log addKPIS, aveKPIS, validKRACount, scoreKRA
+            # if kpi.score > kpi.goal || kpi.score < 0 || !kpi.score
+            #   console.log 'score is invalid'
+            #   $scope.validKRA = false
+            #   $scope.validEvaluation = false
+
+            # else if kpi.score
+            #   console.log 'score is valid'
+            #   $scope.validKRA = true
+            #   divKPI = (kpi.score / kpi.goal) * (kpi.weight/100)
+            #   addKPIS += divKPI
+            #   validKRACount++
+
+            # if kra.kpis.length is validKRACount and $scope.validKRA
+            #   console.log kra.kpis.length,validKRACount, $scope.validKRA
+              # console.log 'kra score', scoreKRA = (addKPIS * 100) / (100/evaluations[i].kras[k].weight)
+              # # console.log 'weight', evaluations[i].kras[k].weight
+              # evaluations[i].kras[k].score = scoreKRA
+              # console.log totalScore += scoreKRA
+              # validEvalCount++
+
+          # if evaluation.kras.length is validEvalCount and $scope.validKRA
+          #   console.log $scope.totalScore = totalScore
+          #   $scope.validEvaluation = true
+          #   evaluations[i].score = $scope.totalScore
+            # console.log evaluation
+
+    , true
+
 
 
 

@@ -100,11 +100,26 @@ module.exports =
       evaluator:newEval.evaluator
       scheduleId: newEval.scheduleId
 
-    Evaluation.update search, {kras:newEval.kras, status:true}
+    Evaluation.update search, {kras:newEval.kras, rating:newEval.score,status:true}
     .exec (err,data) ->
       if data
+        console.log 'SUCCCEESSSS',data
+        EvaluationSchedule.findOne data[0].scheduleId
+        .exec (err,ev) ->
+          if ev
+            console.log 'evaluationsched', ev
+            # if ev.rating
+            #   ev.rating = (ev.rating +=data.rating)/2
+            # else
+            if ev.rating
+              ev.rating = (ev.rating+=data[0].rating)/2
+            else
+              ev.rating = data[0].rating
+            ev.save (err,result) ->
+              if result
+                console.log 'result', result
+
         res.json data
-        # console.log 'SUCCCEESSSS',data
 
 
 

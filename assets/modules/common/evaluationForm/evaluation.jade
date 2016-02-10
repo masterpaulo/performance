@@ -42,10 +42,10 @@ md-dialog(ng-cloak='' style='min-width:1000px')
     div(ng-if='data.evaluatee=="member"')
       md-tabs.md-primary(md-dynamic-height)
         div(ng-repeat='eval in memberEvaluations')
-          md-tab(md-dynamic-height)
+          md-tab(md-dynamic-height ng-click='$root.a=$index')
             md-tab-label(flex-order='1') {{eval.evaluatee.lastname + ", "+eval.evaluatee.firstname}}
               md-icon.mdi.mdi-account-check(ng-if='eval.status' style='color:white; margin-left:5px')
-            md-tab-body(flex-order='2' style='overflow-y:scroll')
+            md-tab-body(flex-order='2' style='overflow-y:scroll' )
               md-content(ng-repeat='kra in eval.kras' )
                 md-card.md-whiteframe-12dp(flex)
                   md-toolbar.md-tall.md-hue-2(layout='row')
@@ -54,7 +54,9 @@ md-dialog(ng-cloak='' style='min-width:1000px')
                         .md-title(flex='1') {{kra.name}}
                         .md-caption(flex='2') {{kra.description}}
                     .md-toolbar-tools
-                      .md-display-1(layout='row' flex layout-align='end center') {{kra.weight}}
+                      .md-display-1(layout='row' flex layout-align='end center')
+                        span() {{validKRA? (kra.score|number:2 ): 0}}
+                        span() / {{kra.weight}}
                   md-toolbar.md-hue-2(layout='row')
                     .md-toolbar-tools()
                       .md-subhead( flex='20') KPI
@@ -78,16 +80,21 @@ md-dialog(ng-cloak='' style='min-width:1000px')
                         md-divider
               div(style='position:fixed; bottom:3%; right:45%; z-index:3')
                 md-button.md-icon-button.md-primary.md-raised(ng-disabled='true' ng-if='eval.status')
-                  md-icon.mdi.mdi-account-check(ng-if='eval.status')
-                md-button.md-icon-button.md-raised.md-accent(ng-if='!eval.status' ng-click='submitEvaluation(eval.id,eval.kras,$index)' )
+                  md-icon.mdi.mdi-account-check
+                md-button.md-icon-button.md-raised.md-accent(ng-show='!eval.status' ng-click='submitEvaluation(eval,$index)' ng-disabled='!memberEvaluations[$index].valid')
                   md-icon.mdi.mdi-content-save
+                  //- {{validEvaluation}}
   md-toolbar.md-hue-3(flex-order='3')
     .md-toolbar-tools
       .md-title Total:
+        //- span(ng-show='memberEvaluations[$root.a].valid')  {{$root.a ? memberEvaluations[$root.a].score : memberEvaluations[0].score}} %
+        span(ng-if='$root.a') {{" "+memberEvaluations[$root.a].score}}
+        span(ng-if='!$root.a') {{" "+memberEvaluations[0].score}}
+        //- span {{}}
   div.md-raised(style='position:fixed; bottom:7%; right:5%; z-index: 2' ng-if='data.evaluatee=="supervisor"')
     md-button.md-fab.md-raised.md-accent(ng-disabled='true' ng-if='supervisorEvaluation.status')
       md-icon.mdi.mdi-account-check
-    md-button.md-fab.md-raised.md-accent(ng-click='submitEvaluation(supervisorEvaluation.id,supervisorEvaluation.kras)' ng-if='!supervisorEvaluation.status')
+    md-button.md-fab.md-raised.md-accent(ng-click='submitEvaluation(supervisorEvaluation.id,supervisorEvaluation.kras)' ng-if='!supervisorEvaluation.status' )
       md-icon.mdi.mdi-content-save-all
 
 
